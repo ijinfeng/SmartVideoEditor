@@ -1,0 +1,6 @@
+framework module Pods_SmartVideoEditor {
+  umbrella header "Pods-SmartVideoEditor-umbrella.h"
+
+  export *
+  module * { export * }
+}
