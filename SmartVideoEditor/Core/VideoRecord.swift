@@ -37,6 +37,16 @@ public class VideoRecord: NSObject {
     /// 视频片段管理
     public let partsManager = VideoPartsManager()
     
+    private let write: AVAssetWriter!
+    private let audioInput: AVAssetWriterInput!
+    private let videoInput: AVAssetWriterInput!
+    
+    
+    private override init() {
+        
+        super.init()
+        
+    }
     
     public func startPreview(on view: UIView) {
         collector.startCollect(preview: view)

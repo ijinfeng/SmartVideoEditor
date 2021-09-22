@@ -11,7 +11,7 @@ import AVFoundation
 /// 视频采集器，捕捉从摄像头，麦克风采集的数据流。或者从本地相册读取的视频
 public class VideoCollector: NSObject {
     
-    private let session = AVCaptureSession()
+    public let session = AVCaptureSession()
     private let videoQueue = DispatchQueue.init(label: "ijf_video")
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     
