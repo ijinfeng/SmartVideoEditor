@@ -9,17 +9,20 @@ import UIKit
 import AVFoundation
 
 /// 视频采集器，捕捉从摄像头，麦克风采集的数据流。或者从本地相册读取的视频
-class VideoCollector: NSObject {
+public class VideoCollector: NSObject {
     
     private let session = AVCaptureSession()
     private let videoQueue = DispatchQueue.init(label: "ijf_video")
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    
+    public let config: VideoCollectorConfig!
     
     static func realCollector() -> VideoCollector {
         VideoCollector(config: VideoCollectorConfig())
     }
     
     init(config: VideoCollectorConfig) {
+        self.config = config
         super.init()
         if session.canSetSessionPreset(.hd1280x720) {
             session.sessionPreset = .hd1280x720
@@ -60,7 +63,11 @@ class VideoCollector: NSObject {
             session.stopRunning()
         }
     }
+ 
     
+    public func switchCamera(to camera: VideoCollectorConfig.Camera) {
+        
+    }
 }
 
 extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate {
