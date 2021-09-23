@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import AVFoundation
 
 public class VideoCollectorConfig: NSObject {
     /// 是否允许点击曝光聚焦，默认值：true
-    public var touchFocus = true
+    public var focusPoint: CGPoint?
+    /// 是否自动对焦
+    public var autoFocus = true
     /// 是否允许双指手势放大预览画面，默认值：true
     public var enableZoom = true
  
@@ -24,16 +27,9 @@ public class VideoCollectorConfig: NSObject {
     public var mirrorType: MirrorType = .auto
     
     /// 视频帧率，默认值：15FPS
-    public var videoFPS: UInt8 = 15
+    public var videoFPS: Int32 = 15
     
-    public enum VideoQuality {
-        case q_360_640
-        case q_540_960
-        case q_720_1280
-        case q_1080_1920
-        case q_2160_3840
-    }
-    public var videoQuality: VideoQuality = .q_540_960
+    public var videoQuality: AVCaptureSession.Preset = .high
     
     public enum Camera {
         /// 前置
