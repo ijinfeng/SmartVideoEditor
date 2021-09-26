@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FileBox
 
 class ViewController: UIViewController {
 
@@ -16,12 +17,13 @@ class ViewController: UIViewController {
 
     @IBAction func onClickRecord(_ sender: Any) {
         let vc = RecordViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        let navi = UINavigationController(rootViewController: vc)
+        navi.modalPresentationStyle = .fullScreen
+        navigationController?.present(navi, animated: true, completion: nil)
     }
     
     @IBAction func onClickLookForDir(_ sender: UIButton) {
-        let vc = DirPreviewViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        FileBox.default.openRecently(dir: FileBox.cachePath())
     }
 }
 

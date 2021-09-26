@@ -11,5 +11,6 @@ target 'SmartVideoEditor' do
   pod 'SnapKit'
   pod 'Kingfisher'
   pod 'SwifterSwift'
+  pod 'FileBox', :path => './modules/FileBox'
 
 end

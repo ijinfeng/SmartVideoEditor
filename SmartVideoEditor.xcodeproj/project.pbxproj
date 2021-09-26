@@ -18,9 +18,9 @@
 		7855ADD326FB26060056A39A /* VideoRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855ADD226FB26060056A39A /* VideoRecord.swift */; };
 		7855ADD526FB28680056A39A /* AVAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855ADD426FB28680056A39A /* AVAuthorization.swift */; };
 		7855ADD726FB38880056A39A /* VideoPartsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855ADD626FB38880056A39A /* VideoPartsManager.swift */; };
-		78CD6C6326FC71A000F3D583 /* DirPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6226FC71A000F3D583 /* DirPreviewViewController.swift */; };
 		78CD6C6726FC812900F3D583 /* VideoRecordConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6626FC812900F3D583 /* VideoRecordConfig.swift */; };
 		78CD6C6926FC84D000F3D583 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6826FC84D000F3D583 /* RecordViewController.swift */; };
+		78F03F75270071970002DF11 /* YJFVideoAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */; };
 		968F261642B0ADF7C6DC6622 /* Pods_SmartVideoEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EB54F102C271E9BDCE3ED83 /* Pods_SmartVideoEditor.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,9 +40,9 @@
 		7855ADD226FB26060056A39A /* VideoRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecord.swift; sourceTree = "<group>"; };
 		7855ADD426FB28680056A39A /* AVAuthorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAuthorization.swift; sourceTree = "<group>"; };
 		7855ADD626FB38880056A39A /* VideoPartsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPartsManager.swift; sourceTree = "<group>"; };
-		78CD6C6226FC71A000F3D583 /* DirPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirPreviewViewController.swift; sourceTree = "<group>"; };
 		78CD6C6626FC812900F3D583 /* VideoRecordConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordConfig.swift; sourceTree = "<group>"; };
 		78CD6C6826FC84D000F3D583 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = YJFVideoAssets.xcassets; sourceTree = "<group>"; };
 		EF00FC7541DAF9C16EE1CFEA /* Pods-SmartVideoEditor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.debug.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,11 +82,11 @@
 				37D4714226F8BF63000A4610 /* AppDelegate.swift */,
 				37D4714426F8BF63000A4610 /* SceneDelegate.swift */,
 				37D4714626F8BF63000A4610 /* ViewController.swift */,
-				78CD6C6226FC71A000F3D583 /* DirPreviewViewController.swift */,
 				78CD6C6826FC84D000F3D583 /* RecordViewController.swift */,
 				37D4715626F8C00A000A4610 /* Core */,
 				37D4714826F8BF63000A4610 /* Main.storyboard */,
 				37D4714B26F8BF65000A4610 /* Assets.xcassets */,
+				78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */,
 				37D4714D26F8BF65000A4610 /* LaunchScreen.storyboard */,
 				37D4715026F8BF65000A4610 /* Info.plist */,
 			);
@@ -184,6 +184,7 @@
 			files = (
 				37D4714F26F8BF65000A4610 /* LaunchScreen.storyboard in Resources */,
 				37D4714C26F8BF65000A4610 /* Assets.xcassets in Resources */,
+				78F03F75270071970002DF11 /* YJFVideoAssets.xcassets in Resources */,
 				37D4714A26F8BF63000A4610 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,7 +239,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				37D4714726F8BF63000A4610 /* ViewController.swift in Sources */,
-				78CD6C6326FC71A000F3D583 /* DirPreviewViewController.swift in Sources */,
 				37D4715926F8C444000A4610 /* VideoCollector.swift in Sources */,
 				37D4714326F8BF63000A4610 /* AppDelegate.swift in Sources */,
 				78CD6C6726FC812900F3D583 /* VideoRecordConfig.swift in Sources */,

@@ -17,6 +17,10 @@ public class VideoCollector: NSObject {
     
     private var videoDevice: AVCaptureDevice?
     private var audioDevice: AVCaptureDevice?
+    private var videoInput: AVCaptureDeviceInput?
+    private var audioInput: AVCaptureDeviceInput?
+    
+    public private(set) var camera = VideoCollectorConfig.Camera.back
     
     public var config: VideoCollectorConfig! {
         didSet {
@@ -36,14 +40,9 @@ public class VideoCollector: NSObject {
         } else {
             session.sessionPreset = .high
         }
-        if let videoDevice = AVCaptureDevice.default(for: .video) {
-            self.videoDevice = videoDevice
-            if let input = try? AVCaptureDeviceInput.init(device: videoDevice) {
-                if session.canAddInput(input) {
-                    session.addInput(input)
-                }
-            }
-        }
+
+        switchCamera(to: .back)
+        
         if let audioDevice = AVCaptureDevice.default(for: .audio) {
             self.audioDevice = audioDevice
             if let input = try? AVCaptureDeviceInput.init(device: audioDevice) {
@@ -64,6 +63,10 @@ public class VideoCollector: NSObject {
         if session.canAddOutput(audioOutput) {
             session.addOutput(audioOutput)
         }
+    }
+    
+    deinit {
+        print("-collector deinit-")
     }
 }
 
@@ -92,8 +95,46 @@ extension VideoCollector {
     }
  
     
+    /// 切换摄像头
+    /// - Parameter camera: 前置和、后置
     public func switchCamera(to camera: VideoCollectorConfig.Camera) {
-        
+        if let device = getVideoDevice(camera: camera) {
+            self.camera = camera
+            self.videoDevice = device
+            updateSession {
+                if let videoInput = self.videoInput {
+                    session.removeInput(videoInput)
+                }
+                if let input = try? AVCaptureDeviceInput.init(device: device) {
+                    if session.canAddInput(input) {
+                        session.addInput(input)
+                        self.videoInput = input
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension VideoCollector {
+    private func getVideoDevice(camera: VideoCollectorConfig.Camera) -> AVCaptureDevice? {
+        var device: AVCaptureDevice?
+        let videoDevices = AVCaptureDevice.devices(for: .video)
+        for videoDevice in videoDevices {
+            if camera == .back {
+                if videoDevice.position == .back {
+                    device = videoDevice
+                    break
+                }
+            }
+            else {
+                if videoDevice.position == .front {
+                    device = videoDevice
+                    break
+                }
+            }
+        }
+        return device
     }
     
     private func updateDevice(lock configure: (() -> Void), device: AVCaptureDevice) throws {
@@ -117,9 +158,12 @@ extension VideoCollector {
             return
         }
         do {
-            try updateDevice(lock: {
-                videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: config.videoFPS)
-                videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: config.videoFPS)
+            try updateDevice(lock: { [weak self] in
+                guard let self = self  else {
+                    return
+                }
+                videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
+                videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
             }, device: videoDevice)
         } catch {
              throw CollectorError.updateDevice

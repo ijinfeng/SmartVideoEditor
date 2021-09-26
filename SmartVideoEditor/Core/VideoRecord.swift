@@ -16,7 +16,7 @@ public class VideoRecord: NSObject {
     public let config: VideoRecordConfig!
     
     /// 视频信息采集
-    private let collector = VideoCollector(config: VideoCollectorConfig())
+    public let collector = VideoCollector.realCollector()
     
     /// 视频录制的存放地址
     private var recordSavePath: String?
@@ -38,6 +38,13 @@ public class VideoRecord: NSObject {
         fileOutput.maxRecordedDuration = CMTime.init(seconds: config.maxRecordedDuration, preferredTimescale: 1)
     }
     
+    deinit {
+        print("-record deinit-")
+    }
+}
+
+
+extension VideoRecord {
     public func startCollect(preview : UIView?) {
         collector.startCollect(preview: preview)
     }
@@ -95,7 +102,6 @@ public class VideoRecord: NSObject {
         
     }
 }
-
 
 public extension VideoRecord {
     enum RecordError {

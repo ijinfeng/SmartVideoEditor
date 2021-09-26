@@ -1,5 +1,7 @@
 PODS:
   - Alamofire (5.4.3)
+  - FileBox (0.2.0):
+    - SnapKit
   - Kingfisher (6.3.1)
   - Moya (15.0.0):
     - Moya/Core (= 15.0.0)
@@ -33,6 +35,7 @@ PODS:
   - SwifterSwift/UIKit (5.2.0)
 
 DEPENDENCIES:
+  - FileBox (from `./modules/FileBox`)
   - Kingfisher
   - Moya
   - SnapKit
@@ -46,13 +49,18 @@ SPEC REPOS:
     - SnapKit
     - SwifterSwift
 
+EXTERNAL SOURCES:
+  FileBox:
+    :path: "./modules/FileBox"
+
 SPEC CHECKSUMS:
   Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
+  FileBox: 38bc261255ba75637c77360bdf03ccca74610ba8
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
 
-PODFILE CHECKSUM: 078f0e8b1140ff9b3bcb47eecec8496a36d23589
+PODFILE CHECKSUM: 8ca3c081572192483b2de3338a1e5187dd9dee5f
 
 COCOAPODS: 1.10.1

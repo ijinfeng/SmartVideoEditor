@@ -12,12 +12,35 @@ class RecordViewController: UIViewController {
     
     let record = VideoRecord.shared
     
+    let closeButton = UIButton()
+    
     let recordButton = UIButton()
+    
+    let rotateButton = UIButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
+        
+        closeButton.setImage(UIImage.init(named: "YJFVideoClose"), for: .normal)
+        closeButton.addTarget(self, action: #selector(onClickClose), for: .touchUpInside)
+        view.addSubview(closeButton)
+        closeButton.snp.makeConstraints { make in
+            make.top.equalTo(20)
+            make.left.equalTo(20)
+            make.size.equalTo(CGSize(width: 32, height: 32))
+        }
+        
+        rotateButton.setImage(UIImage(named: "YJFVideoReverse"), for: .normal)
+        rotateButton.addTarget(self, action: #selector(onClickRotate), for: .touchUpInside)
+        view.addSubview(rotateButton)
+        rotateButton.snp.makeConstraints { make in
+            make.right.equalTo(-12)
+            make.top.equalTo(100)
+            make.size.equalTo(CGSize(width: 40, height: 40))
+        }
+        
         // Do any additional setup after loading the view.
         
         recordButton.setTitle("开始录制", for: .normal)
@@ -44,7 +67,27 @@ class RecordViewController: UIViewController {
         record.startCollect(preview: self.view)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        record.stopRecord()
+        record.stopCollect()
+    }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    
+    
+}
+
+extension RecordViewController {
     @objc func onClickRecord() {
         recordButton.isSelected = !record.isRecording
         if record.isRecording {
@@ -54,14 +97,12 @@ class RecordViewController: UIViewController {
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func onClickClose() {
+        navigationController?.dismiss(animated: true, completion: nil)
     }
-    */
-
+    
+    @objc func onClickRotate() {
+        record.switchCamera(to: record.collector.camera == .back ? .front : .back)
+    }
+    
 }
