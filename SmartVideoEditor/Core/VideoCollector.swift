@@ -12,15 +12,20 @@ import AVFoundation
 public class VideoCollector: NSObject {
     
     public let session = AVCaptureSession()
-    private let sampleQueue = DispatchQueue.init(label: "ijf_sample_queue", qos: .default, attributes: [], autoreleaseFrequency: .never)
-    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    public private(set) var camera = Camera.back
     
+    private let sampleQueue = DispatchQueue.init(label: "ijf_sample_queue", qos: .default, attributes: [], autoreleaseFrequency: .never)
+    
+    public weak var delegate: VideoCollectorDelegate?
+    
+    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     private var videoDevice: AVCaptureDevice?
     private var audioDevice: AVCaptureDevice?
     private var videoInput: AVCaptureDeviceInput?
     private var audioInput: AVCaptureDeviceInput?
+    private var videoConnection: AVCaptureConnection?
+    private var audioConnection: AVCaptureConnection?
     
-    public private(set) var camera = VideoCollectorConfig.Camera.back
     
     public var config: VideoCollectorConfig! {
         didSet {
@@ -41,7 +46,7 @@ public class VideoCollector: NSObject {
             session.sessionPreset = .high
         }
 
-        switchCamera(to: .back)
+        switchCamera(to: config.camera)
         
         if let audioDevice = AVCaptureDevice.default(for: .audio) {
             self.audioDevice = audioDevice
@@ -63,6 +68,8 @@ public class VideoCollector: NSObject {
         if session.canAddOutput(audioOutput) {
             session.addOutput(audioOutput)
         }
+        videoConnection = videoOutput.connection(with: .video)
+        audioConnection = audioOutput.connection(with: .audio)
     }
     
     deinit {
@@ -96,8 +103,11 @@ extension VideoCollector {
  
     
     /// 切换摄像头
-    /// - Parameter camera: 前置和、后置
-    public func switchCamera(to camera: VideoCollectorConfig.Camera) {
+    /// - Parameter camera: 前置、后置
+    public func switchCamera(to camera: Camera) {
+        guard self.camera == camera else {
+            return
+        }
         if let device = getVideoDevice(camera: camera) {
             self.camera = camera
             self.videoDevice = device
@@ -117,7 +127,7 @@ extension VideoCollector {
 }
 
 extension VideoCollector {
-    private func getVideoDevice(camera: VideoCollectorConfig.Camera) -> AVCaptureDevice? {
+    private func getVideoDevice(camera: Camera) -> AVCaptureDevice? {
         var device: AVCaptureDevice?
         let videoDevices = AVCaptureDevice.devices(for: .video)
         for videoDevice in videoDevices {
@@ -173,6 +183,7 @@ extension VideoCollector {
             session.sessionPreset = config.videoQuality
         }
         
+        switchCamera(to: config.camera)
     }
 }
 
@@ -185,6 +196,6 @@ extension VideoCollector {
 extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     // 采集的原始数据
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+        delegate?.captureOutput(output, didOutput: sampleBuffer, from: connection)
     }
 }

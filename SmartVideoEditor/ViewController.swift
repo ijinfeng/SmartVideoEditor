@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+//        try? FileManager.default.removeItem(atPath: VideoRecordConfig.defaultRecordOutputDirPath)
     }
 
     @IBAction func onClickRecord(_ sender: Any) {

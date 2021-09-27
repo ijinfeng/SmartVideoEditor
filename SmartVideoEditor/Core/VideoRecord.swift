@@ -24,18 +24,68 @@ public class VideoRecord: NSObject {
     /// 视频片段管理
     public let partsManager = VideoPartsManager()
 
-    private let fileOutput = AVCaptureMovieFileOutput()
+    private let writeVideoInput: AVAssetWriterInput!
+    private let writeAudioInput: AVAssetWriterInput!
     
-    public var isRecording: Bool {
-        fileOutput.isRecording
-    }
+    /// 录制是否暂停
+    private var isPause: Bool = false
+    /// 是否正在录制
+    public private(set) var isRecording: Bool = false
+    
+    public weak var delegate: VideoRecordDelegate?
     
     public init(config: VideoRecordConfig) {
         self.config = config
-        if collector.session.canAddOutput(fileOutput) {
-            collector.session.addOutput(fileOutput)
+        
+        let screenSize = UIScreen.main.bounds.size
+        var bitRate = Int(screenSize.width * screenSize.height) * 12 /*b*/
+        if let customBitRate = config.customBitRate {
+            bitRate = customBitRate
         }
-        fileOutput.maxRecordedDuration = CMTime.init(seconds: config.maxRecordedDuration, preferredTimescale: 1)
+        var codecType: Any?
+        if #available(iOS 11.0, *) {
+            codecType = AVVideoCodecType.h264
+        } else {
+            codecType = AVVideoCodecH264
+        }
+        let compression: [String: Any] = [
+            // 编码时的平均比特率
+            AVVideoAverageBitRateKey: bitRate,
+            // 期望帧率
+            AVVideoExpectedSourceFrameRateKey: config.videoFPS,
+            // 两个关键帧之间最大的间隔帧数
+            AVVideoMaxKeyFrameIntervalKey: 10,
+            // 画质级别：https://www.cnblogs.com/DMDD/p/4996765.html
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264BaselineAutoLevel
+        ]
+        let videoSetting: [String: Any] = [
+            // 编码格式
+            AVVideoCodecKey: codecType!,
+            // 分辨率
+            AVVideoWidthKey: screenSize.width * 2,
+            AVVideoHeightKey: screenSize.height * 2,
+            AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
+            // 编码配置
+            AVVideoCompressionPropertiesKey: compression
+        ]
+        writeVideoInput = AVAssetWriterInput.init(mediaType: .video, outputSettings: videoSetting, sourceFormatHint: nil)
+        writeVideoInput.expectsMediaDataInRealTime = true
+        
+        let audioSetting: [String: Any] = [
+            // 编码格式
+            AVFormatIDKey: kAudioFormatMPEG4AAC,
+            // 声道数
+            AVNumberOfChannelsKey: 1,
+            // 采样率
+            AVSampleRateKey: 44100,
+            // 码率
+            AVEncoderBitRateKey: 128000
+        ]
+        writeAudioInput = AVAssetWriterInput.init(mediaType: .audio, outputSettings: audioSetting, sourceFormatHint: nil)
+        writeAudioInput.expectsMediaDataInRealTime = true
+        
+        super.init()
+        collector.delegate = self
     }
     
     deinit {
@@ -53,45 +103,64 @@ extension VideoRecord {
         collector.stopCollcet()
     }
     
-    @discardableResult
-    public func startRecord() -> VideoRecord.RecordError {
-        startRecord(in: nil)
+    public func startRecord() throws {
+        try startRecord(in: nil)
     }
     
     /// 开始录制
     /// - Parameter videoPath: 录制输出路径
     /// - Returns: 录制状态
-    @discardableResult
-    public func startRecord(in videoPath: String?) -> VideoRecord.RecordError {
-        if let path = videoPath {
+    public func startRecord(in outputVideoPath: String?) throws {
+        guard !isRecording else {
+            print("the recording has begun")
+            return
+        }
+        if let path = outputVideoPath {
             recordSavePath = path
         } else {
-            recordSavePath = VideoRecordConfig.defaultRecordPath
+            recordSavePath = VideoRecordConfig.defaultRecordOutputDirPath + "record.mp4"
+            FileHelper.createDir(at: VideoRecordConfig.defaultRecordOutputDirPath)
         }
-        print("record path=\(recordSavePath ?? "")")
+        print("record path is: \(recordSavePath ?? "")")
         if recordSavePath?.count == 0 {
-            return .videoPathError
+            throw RecordError.outputRecordPathError
         }
-        let url = URL.init(fileURLWithPath: recordSavePath!)
-        fileOutput.startRecording(to: url, recordingDelegate: self)
         
-        return .noError
+        isRecording = true
+        isPause = false
+        
+        let url = URL(fileURLWithPath: partsManager.autoincrementPath)
+        print("start record in url: \(url)")
+        // 初始化片段录制器
+        let part = try VideoPartsManager.RecordPart(url: url, videoInput: writeVideoInput, audioInput: writeAudioInput)
+        partsManager.add(part: part)
+        // 第一次录制需要清空parts目录
+        
     }
     
     public func resume() {
-        
+        print("resume record")
+        isPause = false
     }
     
     /// 每次暂停，都会生成一个视频片段
     public func pauseRecord() {
-        
+        print("pause record")
+        isPause = true
     }
     
     public func stopRecord() {
-        fileOutput.stopRecording()
+        print("stop record")
+        isRecording = false
+        isPause = false
+        if let writer = partsManager.currentPart?.writer {
+            writer.finishWriting {
+                self.delegate?.didFinishRecord(outputURL: writer.outputURL)
+            }
+        }
     }
     
-    public func switchCamera(to camera: VideoCollectorConfig.Camera) {
+    public func switchCamera(to camera: Camera) {
         collector.switchCamera(to: camera)
     }
     
@@ -103,16 +172,12 @@ extension VideoRecord {
     }
 }
 
-public extension VideoRecord {
-    enum RecordError {
-        /// 没有错误
-        case noError
-        /// 正在录制
-        case recording
+extension VideoRecord {
+    public enum RecordError: Error {
         /// 初始化失败
         case initfail(errorMsg: String)
         /// 视频录制存放地址错误
-        case videoPathError
+        case outputRecordPathError
         /// 没有打开摄像头
         case unOpenCamera
         /// 没有打开麦克风
@@ -120,15 +185,44 @@ public extension VideoRecord {
     }
 }
 
-extension VideoRecord: AVCaptureFileOutputRecordingDelegate {
-    public func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-        print("=========start record=========")
-    }
-    
-    public func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        print("=========stop record=========")
+
+extension VideoRecord: VideoCollectorDelegate {
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        guard isRecording && !isPause else {
+            return
+        }
+        guard let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer)  else {
+            return
+        }
         
+        let type = CMFormatDescriptionGetMediaType(formatDesc)
         
-        
+        if let writer = partsManager.currentPart?.writer {
+            
+            if writer.status == .unknown {
+                if writer.startWriting() {
+                    print("start the first recording")
+                    let startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                    writer.startSession(atSourceTime: startTime)
+                    delegate?.didStartRecord(outputURL: writer.outputURL)
+                }
+            }
+            
+            if writer.status == .failed {
+                print("write failed with error: \(String(describing: writer.error))")
+                return
+            }
+            
+            if type == kCMMediaType_Video {
+                if writeVideoInput.isReadyForMoreMediaData {
+                    writeVideoInput.append(sampleBuffer)
+                }
+            } else if type == kCMMediaType_Audio {
+                if writeAudioInput.isReadyForMoreMediaData {
+                    writeAudioInput.append(sampleBuffer)
+                }
+            }
+        }
     }
 }
+

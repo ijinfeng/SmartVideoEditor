@@ -90,10 +90,11 @@ class RecordViewController: UIViewController {
 extension RecordViewController {
     @objc func onClickRecord() {
         recordButton.isSelected = !record.isRecording
+        record.delegate = self
         if record.isRecording {
             record.stopRecord()
         } else {
-            record.startRecord()
+            try? record.startRecord()
         }
     }
 
@@ -105,4 +106,15 @@ extension RecordViewController {
         record.switchCamera(to: record.collector.camera == .back ? .front : .back)
     }
     
+}
+
+
+extension RecordViewController: VideoRecordDelegate {
+    func didStartRecord(outputURL: URL) {
+        
+    }
+    
+    func didFinishRecord(outputURL: URL) {
+        
+    }
 }
