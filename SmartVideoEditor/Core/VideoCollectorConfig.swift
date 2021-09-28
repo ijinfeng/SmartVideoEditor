@@ -28,6 +28,9 @@ public class VideoCollectorConfig: NSObject {
     
     /// 打开闪光灯
     public var toggleTorch = false
+    
+    /// 视频方向
+    public var videoOrientation: Orientation = .portrait
 }
 
 public enum Camera {
@@ -46,3 +49,12 @@ public enum MirrorType {
     case mirror
 }
 
+public enum Orientation {
+    case portrait
+
+    case portraitUpsideDown
+
+    case landscapeRight
+
+    case landscapeLeft
+}

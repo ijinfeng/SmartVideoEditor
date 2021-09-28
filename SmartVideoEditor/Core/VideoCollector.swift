@@ -70,6 +70,7 @@ public class VideoCollector: NSObject {
         }
         videoConnection = videoOutput.connection(with: .video)
         audioConnection = audioOutput.connection(with: .audio)
+        setVideoOrientation()
     }
     
     deinit {
@@ -105,8 +106,10 @@ extension VideoCollector {
     /// 切换摄像头
     /// - Parameter camera: 前置、后置
     public func switchCamera(to camera: Camera) {
-        guard self.camera == camera else {
-            return
+        if videoDevice != nil {
+            guard self.camera != camera else {
+                return
+            }
         }
         if let device = getVideoDevice(camera: camera) {
             self.camera = camera
@@ -153,7 +156,7 @@ extension VideoCollector {
             configure()
             device.unlockForConfiguration()
         } catch {
-            throw CollectorError.updateDevice
+            throw VideoSessionError.Collector.updateDevice
         }
     }
     
@@ -176,7 +179,7 @@ extension VideoCollector {
                 videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
             }, device: videoDevice)
         } catch {
-             throw CollectorError.updateDevice
+             throw VideoSessionError.Collector.updateDevice
         }
         
         updateSession {
@@ -185,13 +188,16 @@ extension VideoCollector {
         
         switchCamera(to: config.camera)
     }
-}
-
-extension VideoCollector {
-    enum CollectorError: Error {
-        case updateDevice
+    
+    private func setVideoOrientation(_ o: AVCaptureVideoOrientation = .portrait) {
+        if let videoConnection = videoConnection {
+            if videoConnection.isVideoOrientationSupported {
+                videoConnection.videoOrientation = o
+            }
+        }
     }
 }
+
 
 extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     // 采集的原始数据

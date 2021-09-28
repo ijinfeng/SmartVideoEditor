@@ -1,0 +1,6 @@
+framework module AlertMaker {
+  umbrella header "AlertMaker-umbrella.h"
+
+  export *
+  module * { export * }
+}

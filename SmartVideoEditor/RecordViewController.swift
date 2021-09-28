@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import AlertMaker
 
 class RecordViewController: UIViewController {
     
@@ -17,6 +18,8 @@ class RecordViewController: UIViewController {
     let recordButton = UIButton()
     
     let rotateButton = UIButton()
+    
+    let exportButton = UIButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,10 +48,9 @@ class RecordViewController: UIViewController {
         
         recordButton.setTitle("开始录制", for: .normal)
         recordButton.setTitle("停止录制", for: .selected)
-        recordButton.setTitleColor(.blue, for: .normal)
-        recordButton.setTitleColor(.blue, for: .selected)
-        recordButton.layer.borderColor = UIColor.blue.cgColor
-        recordButton.layer.borderWidth = 1
+        recordButton.setTitleColor(.white, for: .normal)
+        recordButton.setTitleColor(.white, for: .selected)
+        recordButton.backgroundColor = .red
         view.addSubview(recordButton)
         
         recordButton.snp.makeConstraints { make in
@@ -59,6 +61,15 @@ class RecordViewController: UIViewController {
         }
         
         recordButton.addTarget(self, action: #selector(onClickRecord), for: .touchUpInside)
+        
+        exportButton.setImage(UIImage(named: "YJFVideoFinish"), for: .normal)
+        view.addSubview(exportButton)
+        exportButton.addTarget(self, action: #selector(onClickExportVideo), for: .touchUpInside)
+        
+        exportButton.snp.makeConstraints { make in
+            make.centerY.equalTo(recordButton)
+            make.left.equalTo(recordButton.snp_rightMargin).offset(20)
+        }
     }
     
     
@@ -106,6 +117,22 @@ extension RecordViewController {
         record.switchCamera(to: record.collector.camera == .back ? .front : .back)
     }
     
+    @objc func onClickExportVideo() {
+        do {
+            let f = DateFormatter()
+            f.dateFormat = "yyyy-MM-dd-HH:mm:ss"
+            let videoName = f.string(from: Date())
+            try record.partsManager.mixtureAllParts(outputPath: VideoRecordConfig.defaultRecordOutputDirPath + "/\(videoName).mp4") { success in
+                print(success)
+                if success {
+                    XCCustomAlertMaker.alert().setTitle("成功了").addDefaultAction("确定", action: nil).present(from: self)
+                }
+            }
+        } catch {
+            print(error)
+            XCCustomAlertMaker.alert().setTitle("失败了").setContent("\(error)").addDefaultAction("确定", action: nil).present(from: self)
+        }
+    }
 }
 
 

@@ -33,7 +33,7 @@ public class VideoPartsManager: NSObject {
                     }
                 }
             } catch {
-                throw VideoRecord.RecordError.initfail(errorMsg: "init AVAssetWriter error: \(error)")
+                throw VideoSessionError.initfail(errorMsg: "init AVAssetWriter error: \(error)")
             }
         }
         
@@ -56,8 +56,6 @@ public class VideoPartsManager: NSObject {
     public override init() {
         FileHelper.cleanDir(at: VideoRecordConfig.recordPartsDirPath)
     }
-    
-    private lazy var composition = AVMutableComposition()
 }
 
 
@@ -88,11 +86,13 @@ extension VideoPartsManager {
     }
     
     public func deleteLastPart() {
-        parts.removeLast()
+        let last = parts.removeLast()
+        FileHelper.removeFile(at: last.outputURL.absoluteString)
     }
     
     public func deleteAllParts() {
         parts = []
+        FileHelper.cleanDir(at: VideoRecordConfig.recordPartsDirPath)
     }
     
     public func insertPart(path: String, at index: Int) {
@@ -104,10 +104,12 @@ extension VideoPartsManager {
         }
     }
     
-    public func mixtureAllParts(outputPath: String) {
+    public func mixtureAllParts(outputPath: String, complication: @escaping (Bool) -> Void) throws {
         guard parts.count > 0 else {
             return
         }
+        
+        let composition = AVMutableComposition()
         
         // 音频轨道
         let audioTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -124,19 +126,26 @@ extension VideoPartsManager {
         
         for part in parts {
             let asset = AVURLAsset(url: part.outputURL)
-            if let assetAuditoTrack = asset.tracks(withMediaType: .audio).first {
-                audioTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: asset.duration), of: assetAuditoTrack, at: totalDuration)
-            }
-            if let assetVideoTrack = asset.tracks(withMediaType: .video).first {
-                videoTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: asset.duration), of: assetVideoTrack, at: totalDuration)
+            do {
+                if let assetAuditoTrack = asset.tracks(withMediaType: .audio).first {
+                    try audioTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetAuditoTrack.timeRange.duration), of: assetAuditoTrack, at: totalDuration)
+                }
+                if let assetVideoTrack = asset.tracks(withMediaType: .video).first {
+                    try videoTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetVideoTrack.timeRange.duration), of: assetVideoTrack, at: totalDuration)
+                }
+            } catch {
+                throw VideoSessionError.Export.mixtureTrack
             }
             totalDuration = CMTimeAdd(totalDuration, asset.duration)
         }
         
-        let outputURL = URL(fileURLWithPath: outputPath)
         if !FileManager.default.fileExists(atPath: outputPath) {
-            print("开始导入")
-            print(outputURL)
+            try VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL) { finished in
+                if finished {
+                    self.deleteAllParts()
+                }
+                complication(finished)
+            }
         }
     }
 }

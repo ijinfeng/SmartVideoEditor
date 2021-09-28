@@ -36,4 +36,9 @@ class FileHelper {
             }
         }
     }
+    
+    static func fileExists(at path: String) -> Bool {
+        let fileManager = FileManager.default
+        return fileManager.fileExists(atPath: path)
+    }
 }

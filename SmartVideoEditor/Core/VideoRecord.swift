@@ -56,7 +56,7 @@ public class VideoRecord: NSObject {
             // 两个关键帧之间最大的间隔帧数
             AVVideoMaxKeyFrameIntervalKey: 10,
             // 画质级别：https://www.cnblogs.com/DMDD/p/4996765.html
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264BaselineAutoLevel
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
         ]
         let videoSetting: [String: Any] = [
             // 编码格式
@@ -123,7 +123,7 @@ extension VideoRecord {
         }
         print("record path is: \(recordSavePath ?? "")")
         if recordSavePath?.count == 0 {
-            throw RecordError.outputRecordPathError
+            throw VideoSessionError.Record.outputRecordPathError
         }
         
         isRecording = true
@@ -169,19 +169,6 @@ extension VideoRecord {
     /// - Parameter mute: 静音
     public func setMute(_ mute: Bool) {
         
-    }
-}
-
-extension VideoRecord {
-    public enum RecordError: Error {
-        /// 初始化失败
-        case initfail(errorMsg: String)
-        /// 视频录制存放地址错误
-        case outputRecordPathError
-        /// 没有打开摄像头
-        case unOpenCamera
-        /// 没有打开麦克风
-        case unOpenMicrophone
     }
 }
 
