@@ -28,7 +28,7 @@ public class VideoRecord: NSObject {
     private let writeAudioInput: AVAssetWriterInput!
     
     /// 录制是否暂停
-    private var isPause: Bool = false
+    public private(set) var isPause: Bool = false
     /// 是否正在录制
     public private(set) var isRecording: Bool = false
     
@@ -37,8 +37,7 @@ public class VideoRecord: NSObject {
     public init(config: VideoRecordConfig) {
         self.config = config
         
-        let screenSize = UIScreen.main.bounds.size
-        var bitRate = Int(screenSize.width * screenSize.height) * 12 /*b*/
+        var bitRate = config.pixelsSize().height * config.pixelsSize().width * 32 /*没像素比特*/
         if let customBitRate = config.customBitRate {
             bitRate = customBitRate
         }
@@ -62,8 +61,8 @@ public class VideoRecord: NSObject {
             // 编码格式
             AVVideoCodecKey: codecType!,
             // 分辨率
-            AVVideoWidthKey: screenSize.width * 2,
-            AVVideoHeightKey: screenSize.height * 2,
+            AVVideoWidthKey: config.pixelsSize().width,
+            AVVideoHeightKey: config.pixelsSize().height,
             AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
             // 编码配置
             AVVideoCompressionPropertiesKey: compression
@@ -129,24 +128,25 @@ extension VideoRecord {
         isRecording = true
         isPause = false
         
-        let url = URL(fileURLWithPath: partsManager.autoincrementPath)
-        print("start record in url: \(url)")
-        // 初始化片段录制器
-        let part = try VideoPartsManager.RecordPart(url: url, videoInput: writeVideoInput, audioInput: writeAudioInput)
-        partsManager.add(part: part)
-        // 第一次录制需要清空parts目录
-        
+        try addOnePart()
     }
     
-    public func resume() {
+    public func resume() throws {
         print("resume record")
         isPause = false
+        
+        try addOnePart()
     }
     
     /// 每次暂停，都会生成一个视频片段
     public func pauseRecord() {
         print("pause record")
         isPause = true
+        if let writer = partsManager.currentPart?.writer {
+            writer.finishWriting {
+                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
+            }
+        }
     }
     
     public func stopRecord() {
@@ -155,7 +155,7 @@ extension VideoRecord {
         isPause = false
         if let writer = partsManager.currentPart?.writer {
             writer.finishWriting {
-                self.delegate?.didFinishRecord(outputURL: writer.outputURL)
+                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
             }
         }
     }
@@ -172,10 +172,23 @@ extension VideoRecord {
     }
 }
 
+extension VideoRecord {
+    private func addOnePart() throws {
+        let url = URL(fileURLWithPath: partsManager.autoincrementPath)
+        print("start record in url: \(url)")
+        // 初始化片段录制器
+        let part = try VideoPartsManager.RecordPart(url: url, videoInput: writeVideoInput, audioInput: writeAudioInput)
+        partsManager.add(part: part)
+    }
+}
+
 
 extension VideoRecord: VideoCollectorDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard isRecording && !isPause else {
+        guard isRecording else {
+            return
+        }
+        guard !isPause else {
             return
         }
         guard let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer)  else {
@@ -191,7 +204,7 @@ extension VideoRecord: VideoCollectorDelegate {
                     print("start the first recording")
                     let startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                     writer.startSession(atSourceTime: startTime)
-                    delegate?.didStartRecord(outputURL: writer.outputURL)
+                    delegate?.didStartPartRecord(outputURL: writer.outputURL)
                 }
             }
             

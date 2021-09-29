@@ -21,16 +21,17 @@ public class VideoCollectorConfig: NSObject {
     /// 视频采样帧率，默认值：15FPS
     public var videoFPS: Int32 = 15
     
+    /// 分辨率、质量
     public var videoQuality: AVCaptureSession.Preset = .high
     
     /// 摄像头位置
     public var camera: Camera = .back
     
     /// 打开闪光灯
-    public var toggleTorch = false
+    public var toggleTorch: Torch = .off
     
     /// 视频方向
-    public var videoOrientation: Orientation = .portrait
+    public var videoOrientation: AVCaptureVideoOrientation = .portrait
 }
 
 public enum Camera {
@@ -40,6 +41,7 @@ public enum Camera {
     case back
 }
 
+/// 镜像模式
 public enum MirrorType {
     /// 即前置摄像头镜像，后置摄像头不镜像
     case auto
@@ -49,12 +51,12 @@ public enum MirrorType {
     case mirror
 }
 
-public enum Orientation {
-    case portrait
-
-    case portraitUpsideDown
-
-    case landscapeRight
-
-    case landscapeLeft
+/// 闪光灯
+public enum Torch {
+    /// 自动，根据光线判断
+    case auto
+    /// 总是开启
+    case on
+    /// 总是关闭
+    case off
 }

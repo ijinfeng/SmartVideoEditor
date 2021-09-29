@@ -17,6 +17,8 @@ public class VideoPartsManager: NSObject {
         
         internal var writer: AVAssetWriter?
         
+//       internal var adaptor: AVAssetWriterInputPixelBufferAdaptor?
+        
         init(url: URL, fileType: AVFileType = .mp4, videoInput: AVAssetWriterInput, audioInput: AVAssetWriterInput) throws {
             outputURL = url
             do {
@@ -56,6 +58,8 @@ public class VideoPartsManager: NSObject {
     public override init() {
         FileHelper.cleanDir(at: VideoRecordConfig.recordPartsDirPath)
     }
+    
+    public var filter: VideoFilter?
 }
 
 

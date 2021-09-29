@@ -17,6 +17,8 @@
 		37D4715B26F8D028000A4610 /* VideoCollectorConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4715A26F8D028000A4610 /* VideoCollectorConfig.swift */; };
 		7800A2692702C82B00974651 /* VideoExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7800A2682702C82B00974651 /* VideoExport.swift */; };
 		7800A26B2702EBE000974651 /* VideoSessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7800A26A2702EBE000974651 /* VideoSessionError.swift */; };
+		7834EDC127044214008891A5 /* VideoPreviewLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7834EDC027044214008891A5 /* VideoPreviewLayer.swift */; };
+		7834EDC327044AB3008891A5 /* VideoFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7834EDC227044AB3008891A5 /* VideoFilter.swift */; };
 		7855ADD326FB26060056A39A /* VideoRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855ADD226FB26060056A39A /* VideoRecord.swift */; };
 		7855ADD526FB28680056A39A /* VideoPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855ADD426FB28680056A39A /* VideoPermission.swift */; };
 		7855ADD726FB38880056A39A /* VideoPartsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7855ADD626FB38880056A39A /* VideoPartsManager.swift */; };
@@ -44,6 +46,8 @@
 		595CBB1CCBD342A4192D02BA /* Pods-SmartVideoEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.release.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.release.xcconfig"; sourceTree = "<group>"; };
 		7800A2682702C82B00974651 /* VideoExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoExport.swift; sourceTree = "<group>"; };
 		7800A26A2702EBE000974651 /* VideoSessionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSessionError.swift; sourceTree = "<group>"; };
+		7834EDC027044214008891A5 /* VideoPreviewLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewLayer.swift; sourceTree = "<group>"; };
+		7834EDC227044AB3008891A5 /* VideoFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFilter.swift; sourceTree = "<group>"; };
 		7855ADD226FB26060056A39A /* VideoRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecord.swift; sourceTree = "<group>"; };
 		7855ADD426FB28680056A39A /* VideoPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPermission.swift; sourceTree = "<group>"; };
 		7855ADD626FB38880056A39A /* VideoPartsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPartsManager.swift; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				37D4715826F8C443000A4610 /* VideoCollector.swift */,
+				7834EDC027044214008891A5 /* VideoPreviewLayer.swift */,
+				7834EDC227044AB3008891A5 /* VideoFilter.swift */,
 				78D222922701A02E0008418A /* VideoCollectorDelegate.swift */,
 				37D4715A26F8D028000A4610 /* VideoCollectorConfig.swift */,
 				7855ADD226FB26060056A39A /* VideoRecord.swift */,
@@ -255,6 +261,8 @@
 			files = (
 				37D4714726F8BF63000A4610 /* ViewController.swift in Sources */,
 				37D4715926F8C444000A4610 /* VideoCollector.swift in Sources */,
+				7834EDC127044214008891A5 /* VideoPreviewLayer.swift in Sources */,
+				7834EDC327044AB3008891A5 /* VideoFilter.swift in Sources */,
 				7800A26B2702EBE000974651 /* VideoSessionError.swift in Sources */,
 				37D4714326F8BF63000A4610 /* AppDelegate.swift in Sources */,
 				78CD6C6726FC812900F3D583 /* VideoRecordConfig.swift in Sources */,

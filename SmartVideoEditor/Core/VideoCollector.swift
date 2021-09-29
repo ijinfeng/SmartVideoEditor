@@ -18,14 +18,23 @@ public class VideoCollector: NSObject {
     
     public weak var delegate: VideoCollectorDelegate?
     
-    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    public lazy var filter = VideoFilter()
+    
+    private var videoPreviewLayer: VideoPreviewLayer?
     private var videoDevice: AVCaptureDevice?
     private var audioDevice: AVCaptureDevice?
     private var videoInput: AVCaptureDeviceInput?
     private var audioInput: AVCaptureDeviceInput?
-    private var videoConnection: AVCaptureConnection?
-    private var audioConnection: AVCaptureConnection?
-    
+    private lazy var context: CIContext = {
+        if #available(iOS 12.0, *) {
+            return CIContext()
+        } else {
+            if let eaglContext = EAGLContext.init(api: EAGLRenderingAPI.openGLES2) {
+                return CIContext.init(eaglContext: eaglContext)
+            }
+            return CIContext.init(options: nil)
+        }
+    }()
     
     public var config: VideoCollectorConfig! {
         didSet {
@@ -68,9 +77,6 @@ public class VideoCollector: NSObject {
         if session.canAddOutput(audioOutput) {
             session.addOutput(audioOutput)
         }
-        videoConnection = videoOutput.connection(with: .video)
-        audioConnection = audioOutput.connection(with: .audio)
-        setVideoOrientation()
     }
     
     deinit {
@@ -79,23 +85,27 @@ public class VideoCollector: NSObject {
 }
 
 extension VideoCollector {
+    
+    /// 开始采集
+    /// - Parameter preview: 展示到哪里
     public func startCollect(preview: UIView?) {
         if session.isRunning {
             return
         }
-        session.startRunning()
         if let onView = preview {
             onView.layer.backgroundColor = UIColor.black.cgColor
-            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
+//            videoPreviewLayer?.videoGravity = .resizeAspectFill
+            videoPreviewLayer = VideoPreviewLayer()
             videoPreviewLayer?.frame = onView.bounds
-            videoPreviewLayer?.videoGravity = .resizeAspectFill
             onView.layer.insertSublayer(videoPreviewLayer!, at: 0)
         } else {
             videoPreviewLayer?.removeFromSuperlayer()
             videoPreviewLayer = nil
         }
+        session.startRunning()
     }
     
+    /// 停止采集
     public func stopCollcet() {
         if session.isRunning {
             session.stopRunning()
@@ -125,6 +135,38 @@ extension VideoCollector {
                     }
                 }
             }
+        }
+    }
+    
+    /// 设置画面镜像
+    /// - Parameter mirror: 当设置为 auto 时，即前置摄像头镜像，后置摄像头不镜像
+    public func setMirror(_ mirror: MirrorType) {
+        config.mirrorType = mirror
+    }
+    
+    /// 设置闪光灯
+    /// - Parameter torch: 模式
+    public func setTorch(_ torch: Torch) {
+        guard config.toggleTorch != torch else {
+            return
+        }
+        if let currentDevice = self.videoDevice {
+            try? updateDevice(lock: {
+                if currentDevice.hasFlash && currentDevice.isFlashAvailable {
+                    var support: AVCaptureDevice.TorchMode = .auto
+                    if torch == .auto {
+                        support = .auto
+                    } else if torch == .on {
+                        support = .on
+                    } else {
+                        support = .off
+                    }
+                    if currentDevice.isTorchModeSupported(support) {
+                        currentDevice.torchMode = support
+                        config.toggleTorch = torch
+                    }
+                }
+            }, device: currentDevice)
         }
     }
 }
@@ -189,10 +231,24 @@ extension VideoCollector {
         switchCamera(to: config.camera)
     }
     
-    private func setVideoOrientation(_ o: AVCaptureVideoOrientation = .portrait) {
-        if let videoConnection = videoConnection {
-            if videoConnection.isVideoOrientationSupported {
-                videoConnection.videoOrientation = o
+    private func setVideoOrientation(connection: AVCaptureConnection, _ o: AVCaptureVideoOrientation = .portrait) {
+        if connection.isVideoOrientationSupported && connection.videoOrientation != o {
+            connection.videoOrientation = o
+        }
+    }
+    
+    private func setVideoMirror(connection: AVCaptureConnection, _ mirror: MirrorType = .auto) {
+        if connection.isVideoMirroringSupported {
+            if mirror == .auto {
+                if camera == .front {
+                    connection.isVideoMirrored = true
+                } else {
+                    connection.isVideoMirrored = false
+                }
+            } else if mirror == .none {
+                connection.isVideoMirrored = false
+            } else {
+                connection.isVideoMirrored = true
             }
         }
     }
@@ -202,6 +258,25 @@ extension VideoCollector {
 extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     // 采集的原始数据
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if let previewLayer = videoPreviewLayer {
+            if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
+                var oimage = CIImage.init(cvPixelBuffer: imageBuffer)
+                oimage = filter.apply(to: oimage)
+                let outputImage = context.createCGImage(oimage, from: oimage.extent)
+                DispatchQueue.main.async {
+                    previewLayer.contents = outputImage
+                }
+            }
+        }
+        
+        if let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer) {
+            let type = CMFormatDescriptionGetMediaType(formatDesc)
+            if type == kCMMediaType_Video {
+                setVideoOrientation(connection: connection, config.videoOrientation)
+                setVideoMirror(connection: connection, config.mirrorType)
+            }
+        }
+        
         delegate?.captureOutput(output, didOutput: sampleBuffer, from: connection)
     }
 }

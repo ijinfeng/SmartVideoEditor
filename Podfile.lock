@@ -1,16 +1,10 @@
 PODS:
-  - Alamofire (5.4.3)
   - AlertMaker (0.1.27):
     - Masonry
-  - FileBox (0.2.0):
+  - FileBox (0.3.1):
     - SnapKit
-  - Kingfisher (6.3.1)
   - Masonry (1.1.0)
-  - Moya (15.0.0):
-    - Moya/Core (= 15.0.0)
-  - Moya/Core (15.0.0):
-    - Alamofire (~> 5.0)
-  - SnapKit (5.0.1)
+  - SnapKit (4.2.0)
   - SwifterSwift (5.2.0):
     - SwifterSwift/AppKit (= 5.2.0)
     - SwifterSwift/CoreAnimation (= 5.2.0)
@@ -24,51 +18,28 @@ PODS:
     - SwifterSwift/StoreKit (= 5.2.0)
     - SwifterSwift/SwiftStdlib (= 5.2.0)
     - SwifterSwift/UIKit (= 5.2.0)
-  - SwifterSwift/AppKit (5.2.0)
-  - SwifterSwift/CoreAnimation (5.2.0)
-  - SwifterSwift/CoreGraphics (5.2.0)
-  - SwifterSwift/CoreLocation (5.2.0)
-  - SwifterSwift/Dispatch (5.2.0)
-  - SwifterSwift/Foundation (5.2.0)
-  - SwifterSwift/MapKit (5.2.0)
-  - SwifterSwift/SceneKit (5.2.0)
-  - SwifterSwift/SpriteKit (5.2.0)
-  - SwifterSwift/StoreKit (5.2.0)
-  - SwifterSwift/SwiftStdlib (5.2.0)
-  - SwifterSwift/UIKit (5.2.0)
 
 DEPENDENCIES:
   - AlertMaker
-  - FileBox (from `./modules/FileBox`)
-  - Kingfisher
-  - Moya
+  - FileBox (~> 0.3.1)
   - SnapKit
   - SwifterSwift
 
 SPEC REPOS:
   trunk:
-    - Alamofire
     - AlertMaker
-    - Kingfisher
+    - FileBox
     - Masonry
-    - Moya
     - SnapKit
     - SwifterSwift
 
-EXTERNAL SOURCES:
-  FileBox:
-    :path: "./modules/FileBox"
-
 SPEC CHECKSUMS:
-  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
   AlertMaker: 9a50b6247f938d712f93c07cfc18e05ca3066db7
-  FileBox: 38bc261255ba75637c77360bdf03ccca74610ba8
-  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  FileBox: ceac3c12493a43a3c670dfd8d8947627b44dd586
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
-  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
 
-PODFILE CHECKSUM: f9116de7d436953cd77a5d022eb2733d08d524fb
+PODFILE CHECKSUM: 948eefffa9b3553cacf85d1ffd5e76a3250c2010
 
 COCOAPODS: 1.10.1

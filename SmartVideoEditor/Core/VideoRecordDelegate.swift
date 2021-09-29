@@ -9,11 +9,12 @@ import Foundation
 import AVFoundation
 
 public protocol VideoRecordDelegate: AnyObject {
-    func didStartRecord(outputURL: URL)
+    func didStartPartRecord(outputURL: URL)
     
-    func didFinishRecord(outputURL: URL)
+    func didFinishPartRecord(outputURL: URL)
 }
 
 extension VideoRecordDelegate {
-    func didStartRecord(outputURL: URL) {}
+    func didStartPartRecord(outputURL: URL) {}
+    func didFinishPartRecord(outputURL: URL) {}
 }
