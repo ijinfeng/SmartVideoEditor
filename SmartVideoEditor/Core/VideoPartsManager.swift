@@ -73,6 +73,11 @@ extension VideoPartsManager {
 
 extension VideoPartsManager {
     
+    public func resetPart() {
+        partAutoIncrementKey = 0
+        deleteAllParts()
+    }
+    
     public func add(part: RecordPart) {
         parts.append(part)
         partAutoIncrementKey += 1
@@ -131,11 +136,11 @@ extension VideoPartsManager {
         for part in parts {
             let asset = AVURLAsset(url: part.outputURL)
             do {
-                if let assetAuditoTrack = asset.tracks(withMediaType: .audio).first {
-                    try audioTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetAuditoTrack.timeRange.duration), of: assetAuditoTrack, at: totalDuration)
-                }
                 if let assetVideoTrack = asset.tracks(withMediaType: .video).first {
                     try videoTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetVideoTrack.timeRange.duration), of: assetVideoTrack, at: totalDuration)
+                }
+                if let assetAuditoTrack = asset.tracks(withMediaType: .audio).first {
+                    try audioTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetAuditoTrack.timeRange.duration), of: assetAuditoTrack, at: totalDuration)
                 }
             } catch {
                 throw VideoSessionError.Export.mixtureTrack
@@ -144,10 +149,7 @@ extension VideoPartsManager {
         }
         
         if !FileManager.default.fileExists(atPath: outputPath) {
-            try VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL) { finished in
-                if finished {
-                    self.deleteAllParts()
-                }
+            try VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL, filter: filter) { finished in
                 complication(finished)
             }
         }

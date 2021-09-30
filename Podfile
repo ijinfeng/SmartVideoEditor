@@ -12,6 +12,6 @@ target 'SmartVideoEditor' do
   #pod 'Kingfisher'
   pod 'SwifterSwift'
 #  pod 'FileBox', :path => './modules/FileBox'
-  pod 'FileBox', '~> 0.3.1'
+  pod 'FileBox', '~> 0.4.1'
   pod 'AlertMaker'
 end

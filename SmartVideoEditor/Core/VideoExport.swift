@@ -12,12 +12,14 @@ import AVFoundation
 class VideoExport: NSObject {
     private static let shared = VideoExport()
     private let exportQueue = DispatchQueue.init(label: "ijf_export_queue", qos: .default, attributes: .concurrent, autoreleaseFrequency: .never)
+    private let semaphore = DispatchSemaphore.init(value: 1)
     
     static func exportVideo(assetURL: URL?,
                             asset: AVAsset?,
                             outputURL: URL,
                             ouputFileType: AVFileType = .mp4,
                             presetName: String = AVAssetExportPresetMediumQuality,
+                            filter: VideoFilter? = nil,
                             complication: @escaping (Bool) -> Void) throws {
         guard FileHelper.fileExists(at: outputURL.absoluteString) == false else {
             throw VideoSessionError.Export.fileExists
@@ -41,12 +43,19 @@ class VideoExport: NSObject {
         }
         
         if let export = AVAssetExportSession(asset: _asset, presetName: preset) {
+            export.outputFileType = ouputFileType
+            export.outputURL = outputURL
+            export.shouldOptimizeForNetworkUse = true
+            if let filter = filter {
+                let videoComposition = AVVideoComposition(asset: _asset) { request in
+                    let outputImage = filter.apply(to: request.sourceImage)
+                    request.finish(with: outputImage, context: nil)
+                }
+                export.videoComposition = videoComposition
+            }
             VideoExport.shared.exportQueue.async {
-                export.outputFileType = ouputFileType
-                export.outputURL = outputURL
-                export.shouldOptimizeForNetworkUse = true
-                export.videoComposition = nil
                 export.exportAsynchronously {
+                    print("export asyn")
                     DispatchQueue.main.async {
                         print("export finished with status is: \(export.status)")
                         switch export.status {

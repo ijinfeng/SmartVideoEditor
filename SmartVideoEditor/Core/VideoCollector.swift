@@ -25,6 +25,7 @@ public class VideoCollector: NSObject {
     private var audioDevice: AVCaptureDevice?
     private var videoInput: AVCaptureDeviceInput?
     private var audioInput: AVCaptureDeviceInput?
+    private var videoOutput: AVCaptureVideoDataOutput?
     private lazy var context: CIContext = {
         if #available(iOS 12.0, *) {
             return CIContext()
@@ -35,6 +36,8 @@ public class VideoCollector: NSObject {
             return CIContext.init(options: nil)
         }
     }()
+    
+    private var mirror: MirrorType = .auto
     
     public var config: VideoCollectorConfig! {
         didSet {
@@ -47,8 +50,8 @@ public class VideoCollector: NSObject {
     }
     
     init(config: VideoCollectorConfig) {
-        self.config = config
         super.init()
+        self.config = config
         if session.canSetSessionPreset(config.videoQuality) {
             session.sessionPreset = config.videoQuality
         } else {
@@ -65,18 +68,8 @@ public class VideoCollector: NSObject {
                 }
             }
         }
-        let videoOutput = AVCaptureVideoDataOutput()
-        videoOutput.videoSettings = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
-        videoOutput.alwaysDiscardsLateVideoFrames = false
-        videoOutput.setSampleBufferDelegate(self, queue: sampleQueue)
-        if session.canAddOutput(videoOutput) {
-            session.addOutput(videoOutput)
-        }
-        let audioOutput = AVCaptureAudioDataOutput()
-        audioOutput.setSampleBufferDelegate(self, queue: sampleQueue)
-        if session.canAddOutput(audioOutput) {
-            session.addOutput(audioOutput)
-        }
+        setVideoDataOutput()
+        setAudioDataOutput()
     }
     
     deinit {
@@ -238,7 +231,8 @@ extension VideoCollector {
     }
     
     private func setVideoMirror(connection: AVCaptureConnection, _ mirror: MirrorType = .auto) {
-        if connection.isVideoMirroringSupported {
+        if connection.isVideoMirroringSupported && self.mirror != mirror {
+            self.mirror = mirror
             if mirror == .auto {
                 if camera == .front {
                     connection.isVideoMirrored = true
@@ -252,12 +246,38 @@ extension VideoCollector {
             }
         }
     }
+    
+    private func setVideoDataOutput() {
+        let videoOutput = AVCaptureVideoDataOutput()
+        self.videoOutput = videoOutput
+        videoOutput.videoSettings = [String(kCVPixelBufferPixelFormatTypeKey): kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+        videoOutput.alwaysDiscardsLateVideoFrames = false
+        videoOutput.setSampleBufferDelegate(self, queue: sampleQueue)
+        if session.canAddOutput(videoOutput) {
+            session.addOutput(videoOutput)
+        }
+    }
+    
+    private func setAudioDataOutput() {
+        let audioOutput = AVCaptureAudioDataOutput()
+        audioOutput.setSampleBufferDelegate(self, queue: sampleQueue)
+        if session.canAddOutput(audioOutput) {
+            session.addOutput(audioOutput)
+        }
+    }
 }
 
 
 extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     // 采集的原始数据
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer) {
+            let type = CMFormatDescriptionGetMediaType(formatDesc)
+            if type == kCMMediaType_Video {
+                setVideoOrientation(connection: connection, config.videoOrientation)
+                setVideoMirror(connection: connection, config.mirrorType)
+            }
+        }
         if let previewLayer = videoPreviewLayer {
             if let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
                 var oimage = CIImage.init(cvPixelBuffer: imageBuffer)
@@ -268,15 +288,6 @@ extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
                 }
             }
         }
-        
-        if let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer) {
-            let type = CMFormatDescriptionGetMediaType(formatDesc)
-            if type == kCMMediaType_Video {
-                setVideoOrientation(connection: connection, config.videoOrientation)
-                setVideoMirror(connection: connection, config.mirrorType)
-            }
-        }
-        
         delegate?.captureOutput(output, didOutput: sampleBuffer, from: connection)
     }
 }

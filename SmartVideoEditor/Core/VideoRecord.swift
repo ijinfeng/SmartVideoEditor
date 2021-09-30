@@ -31,8 +31,13 @@ public class VideoRecord: NSObject {
     public private(set) var isPause: Bool = false
     /// 是否正在录制
     public private(set) var isRecording: Bool = false
+    /// 是否静音
+    public private(set) var isMute: Bool = false
     
     public weak var delegate: VideoRecordDelegate?
+    
+    /// 上一次写入的时间
+    private var lastInputTime: CMTime = .zero
     
     public init(config: VideoRecordConfig) {
         self.config = config
@@ -85,10 +90,12 @@ public class VideoRecord: NSObject {
         
         super.init()
         collector.delegate = self
+        partsManager.filter = collector.filter
     }
     
     deinit {
         print("-record deinit-")
+        stopRecord()
     }
 }
 
@@ -128,6 +135,10 @@ extension VideoRecord {
         isRecording = true
         isPause = false
         
+        if config.alwaysSinglePart {
+            partsManager.resetPart()
+        }
+        
         try addOnePart()
     }
     
@@ -135,24 +146,29 @@ extension VideoRecord {
         print("resume record")
         isPause = false
         
-        try addOnePart()
+//        try addOnePart()
     }
     
     /// 每次暂停，都会生成一个视频片段
     public func pauseRecord() {
         print("pause record")
         isPause = true
-        if let writer = partsManager.currentPart?.writer {
-            writer.finishWriting {
-                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
-            }
-        }
+//        if let writer = partsManager.currentPart?.writer {
+//            writer.finishWriting {
+//                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
+//            }
+//        }
     }
     
     public func stopRecord() {
+        guard isPause || isRecording else {
+            print("aleady stop record")
+            return
+        }
         print("stop record")
         isRecording = false
         isPause = false
+        lastInputTime = CMTime.zero
         if let writer = partsManager.currentPart?.writer {
             writer.finishWriting {
                 self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
@@ -165,10 +181,23 @@ extension VideoRecord {
     }
     
     
-    /// 设置是否静音录制
+    /// 设置是否静音录制。若想设置全局静音，需要在开始录制前设置为 `true`
     /// - Parameter mute: 静音
     public func setMute(_ mute: Bool) {
-        
+        isMute = mute
+    }
+    
+    /// 导出视频
+    /// - Parameters:
+    ///   - outputPath: 导出的路径
+    ///   - complication: 导出结果回调
+    public func exportRecord(outputPath: String, complication: @escaping (Bool) -> Void) throws {
+        try partsManager.mixtureAllParts(outputPath: outputPath, complication: { [weak self] finished in
+            if finished {
+                self?.partsManager.deleteAllParts()
+            }
+            complication(finished)
+        })
     }
 }
 
@@ -199,10 +228,14 @@ extension VideoRecord: VideoCollectorDelegate {
         
         if let writer = partsManager.currentPart?.writer {
             
+            let startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            lastInputTime = startTime
+            
+            print(lastInputTime)
+            
             if writer.status == .unknown {
                 if writer.startWriting() {
                     print("start the first recording")
-                    let startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                     writer.startSession(atSourceTime: startTime)
                     delegate?.didStartPartRecord(outputURL: writer.outputURL)
                 }
@@ -210,6 +243,7 @@ extension VideoRecord: VideoCollectorDelegate {
             
             if writer.status == .failed {
                 print("write failed with error: \(String(describing: writer.error))")
+                writer.cancelWriting()
                 return
             }
             
@@ -218,7 +252,7 @@ extension VideoRecord: VideoCollectorDelegate {
                     writeVideoInput.append(sampleBuffer)
                 }
             } else if type == kCMMediaType_Audio {
-                if writeAudioInput.isReadyForMoreMediaData {
+                if !isMute && writeAudioInput.isReadyForMoreMediaData {
                     writeAudioInput.append(sampleBuffer)
                 }
             }

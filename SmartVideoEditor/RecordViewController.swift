@@ -26,15 +26,14 @@ class RecordViewController: UIViewController {
     let mirrorButton = UIButton()
     
     let flashButton = UIButton()
+    
+    let muteButton = UIButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
         
-        
-        let names = CIFilter.filterNames(inCategory: "CICategoryBuiltIn")
-        print(names)
         
         closeButton.setImage(UIImage.init(named: "YJFVideoClose"), for: .normal)
         closeButton.addTarget(self, action: #selector(onClickClose), for: .touchUpInside)
@@ -111,7 +110,20 @@ class RecordViewController: UIViewController {
         flashButton.addTarget(self, action: #selector(onClickFlash), for: .touchUpInside)
         flashButton.snp.makeConstraints { make in
             make.top.equalTo(40)
+            make.width.height.equalTo(30)
             make.centerX.equalTo(view)
+        }
+        
+        
+        muteButton.setImage(UIImage(named: "YJFRec_video_no_mute"), for: .normal)
+        muteButton.setImage(UIImage(named: "YJFRec_video_mute"), for: .selected)
+        view.addSubview(muteButton)
+        muteButton.addTarget(self, action: #selector(onClickMute), for: .touchUpInside)
+        muteButton.snp.makeConstraints { make in
+            make.right.equalTo(rotateButton)
+            make.size.equalTo(rotateButton)
+            make.centerX.equalTo(rotateButton)
+            make.top.equalTo(mirrorButton.snp_bottom).offset(10)
         }
     }
     
@@ -165,7 +177,7 @@ extension RecordViewController {
             let f = DateFormatter()
             f.dateFormat = "yyyy-MM-dd-HH:mm:ss"
             let videoName = f.string(from: Date())
-            try record.partsManager.mixtureAllParts(outputPath: VideoRecordConfig.defaultRecordOutputDirPath + "/\(videoName).mp4") { success in
+            try record.exportRecord(outputPath: VideoRecordConfig.defaultRecordOutputDirPath + "/\(videoName).mp4") { success in
                 print(success)
                 if success {
                     XCCustomAlertMaker.alert().setTitle("成功了").addDefaultAction("确定", action: nil).present(from: self)
@@ -190,16 +202,18 @@ extension RecordViewController {
                 self.record.collector.filter.setFilter(name: .single)
             }
             .addDefaultAction("复古") {
-                self.record.collector.filter.setFilter(name: .ancient)
+//                self.record.collector.filter.setFilter(name: .ancient)
+                self.record.collector.filter.appendFilter(name: .ancient).appendFilter(name: .custom("CICircularScreen"))
             }
             .addDefaultAction("岁月") {
                 self.record.collector.filter.setFilter(name: .years)
             }
             .addDefaultAction("灰白", action: {
-                self.record.collector.filter.setFilter(name: .noir)
+//                self.record.collector.filter.setFilter(name: .noir)
+                self.record.collector.filter.appendFilter(name: .noir)
             })
-            .addDefaultAction("遮罩", action: {
-                
+            .addDefaultAction("自定义", action: {
+                self.record.collector.filter.setFilter(name: .custom("CIBoxBlur"))
             })
             .addCancelAction("取消", action: nil)
             .present(from: self)
@@ -212,7 +226,7 @@ extension RecordViewController {
                 self.record.collector.config.mirrorType = .auto
             }
             .addDefaultAction("不镜像") {
-                self.record.collector.config.mirrorType = .none
+                self.record.collector.config.mirrorType = .no
             }
             .addDefaultAction("镜像") {
                 self.record.collector.config.mirrorType = .mirror
@@ -235,5 +249,10 @@ extension RecordViewController {
                 
             }
             .present(from: self)
+    }
+    
+    @objc func onClickMute() {
+        muteButton.isSelected = !muteButton.isSelected
+        record.setMute(muteButton.isSelected)
     }
 }

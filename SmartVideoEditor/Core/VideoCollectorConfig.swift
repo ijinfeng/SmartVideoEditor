@@ -15,7 +15,7 @@ public class VideoCollectorConfig: NSObject {
     public var autoFocus = true
     /// 是否允许双指手势放大预览画面，默认值：true
     public var enableZoom = true
- 
+    /// 画面镜像
     public var mirrorType: MirrorType = .auto
     
     /// 视频采样帧率，默认值：15FPS
@@ -46,7 +46,7 @@ public enum MirrorType {
     /// 即前置摄像头镜像，后置摄像头不镜像
     case auto
     /// 不镜像
-    case none
+    case no
     /// 镜像
     case mirror
 }

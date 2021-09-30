@@ -25,6 +25,7 @@
 		78CD6C6726FC812900F3D583 /* VideoRecordConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6626FC812900F3D583 /* VideoRecordConfig.swift */; };
 		78CD6C6926FC84D000F3D583 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6826FC84D000F3D583 /* RecordViewController.swift */; };
 		78D222932701A02E0008418A /* VideoCollectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D222922701A02E0008418A /* VideoCollectorDelegate.swift */; };
+		78DBBAC127058CFA007D3241 /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DBBAC027058CFA007D3241 /* VideoEditor.swift */; };
 		78F03F75270071970002DF11 /* YJFVideoAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */; };
 		78FAD1902701B781007B24FE /* VideoRecordDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FAD18F2701B781007B24FE /* VideoRecordDelegate.swift */; };
 		78FAD1922701C352007B24FE /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FAD1912701C352007B24FE /* FileHelper.swift */; };
@@ -54,6 +55,7 @@
 		78CD6C6626FC812900F3D583 /* VideoRecordConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordConfig.swift; sourceTree = "<group>"; };
 		78CD6C6826FC84D000F3D583 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		78D222922701A02E0008418A /* VideoCollectorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCollectorDelegate.swift; sourceTree = "<group>"; };
+		78DBBAC027058CFA007D3241 /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = YJFVideoAssets.xcassets; sourceTree = "<group>"; };
 		78FAD18F2701B781007B24FE /* VideoRecordDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordDelegate.swift; sourceTree = "<group>"; };
 		78FAD1912701C352007B24FE /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				7855ADD626FB38880056A39A /* VideoPartsManager.swift */,
 				7800A2682702C82B00974651 /* VideoExport.swift */,
 				7800A26A2702EBE000974651 /* VideoSessionError.swift */,
+				78DBBAC027058CFA007D3241 /* VideoEditor.swift */,
 				78FAD1912701C352007B24FE /* FileHelper.swift */,
 				7855ADD426FB28680056A39A /* VideoPermission.swift */,
 			);
@@ -271,6 +274,7 @@
 				78FAD1902701B781007B24FE /* VideoRecordDelegate.swift in Sources */,
 				37D4715B26F8D028000A4610 /* VideoCollectorConfig.swift in Sources */,
 				37D4714526F8BF63000A4610 /* SceneDelegate.swift in Sources */,
+				78DBBAC127058CFA007D3241 /* VideoEditor.swift in Sources */,
 				7855ADD326FB26060056A39A /* VideoRecord.swift in Sources */,
 				78D222932701A02E0008418A /* VideoCollectorDelegate.swift in Sources */,
 				7800A2692702C82B00974651 /* VideoExport.swift in Sources */,

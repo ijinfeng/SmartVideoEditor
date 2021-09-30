@@ -1,7 +1,7 @@
 PODS:
   - AlertMaker (0.1.27):
     - Masonry
-  - FileBox (0.3.1):
+  - FileBox (0.4.1):
     - SnapKit
   - Masonry (1.1.0)
   - SnapKit (4.2.0)
@@ -18,10 +18,22 @@ PODS:
     - SwifterSwift/StoreKit (= 5.2.0)
     - SwifterSwift/SwiftStdlib (= 5.2.0)
     - SwifterSwift/UIKit (= 5.2.0)
+  - SwifterSwift/AppKit (5.2.0)
+  - SwifterSwift/CoreAnimation (5.2.0)
+  - SwifterSwift/CoreGraphics (5.2.0)
+  - SwifterSwift/CoreLocation (5.2.0)
+  - SwifterSwift/Dispatch (5.2.0)
+  - SwifterSwift/Foundation (5.2.0)
+  - SwifterSwift/MapKit (5.2.0)
+  - SwifterSwift/SceneKit (5.2.0)
+  - SwifterSwift/SpriteKit (5.2.0)
+  - SwifterSwift/StoreKit (5.2.0)
+  - SwifterSwift/SwiftStdlib (5.2.0)
+  - SwifterSwift/UIKit (5.2.0)
 
 DEPENDENCIES:
   - AlertMaker
-  - FileBox (~> 0.3.1)
+  - FileBox (~> 0.4.1)
   - SnapKit
   - SwifterSwift
 
@@ -35,11 +47,11 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AlertMaker: 9a50b6247f938d712f93c07cfc18e05ca3066db7
-  FileBox: ceac3c12493a43a3c670dfd8d8947627b44dd586
+  FileBox: f6ad69f8dab98a9f90ddb84b563e7f0804dc8ea2
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
 
-PODFILE CHECKSUM: 948eefffa9b3553cacf85d1ffd5e76a3250c2010
+PODFILE CHECKSUM: e00cad487ade6985126ba7f0baceacfa7107e485
 
 COCOAPODS: 1.10.1
