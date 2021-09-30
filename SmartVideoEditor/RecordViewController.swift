@@ -16,6 +16,7 @@ class RecordViewController: UIViewController {
     let closeButton = UIButton()
     
     let recordButton = UIButton()
+    let pauseButton = UIButton()
     
     let rotateButton = UIButton()
     
@@ -39,7 +40,7 @@ class RecordViewController: UIViewController {
         closeButton.addTarget(self, action: #selector(onClickClose), for: .touchUpInside)
         view.addSubview(closeButton)
         closeButton.snp.makeConstraints { make in
-            make.top.equalTo(20)
+            make.top.equalTo(40)
             make.left.equalTo(20)
             make.size.equalTo(CGSize(width: 32, height: 32))
         }
@@ -52,6 +53,9 @@ class RecordViewController: UIViewController {
             make.top.equalTo(100)
             make.size.equalTo(CGSize(width: 40, height: 40))
         }
+        
+        
+        
         
         // Do any additional setup after loading the view.
         
@@ -67,6 +71,18 @@ class RecordViewController: UIViewController {
             make.width.equalTo(80)
             make.height.equalTo(80)
             make.centerX.equalTo(view)
+        }
+        
+        pauseButton.setTitle("暂停", for: .normal)
+        pauseButton.setTitle("取消暂停", for: .selected)
+        pauseButton.backgroundColor = .white
+        pauseButton.setTitleColor(.red, for: .normal)
+        view.addSubview(pauseButton)
+        pauseButton.addTarget(self, action: #selector(onClickPause), for: .touchUpInside)
+        pauseButton.snp.makeConstraints { make in
+            make.right.equalTo(recordButton.snp_left)
+            make.size.equalTo(recordButton)
+            make.centerY.equalTo(recordButton)
         }
         
         recordButton.addTarget(self, action: #selector(onClickRecord), for: .touchUpInside)
@@ -159,8 +175,10 @@ extension RecordViewController {
         recordButton.isSelected = !record.isRecording
         if record.isRecording {
             record.stopRecord()
+            pauseButton.isSelected = record.isPause
         } else {
             try? record.startRecord()
+            pauseButton.isSelected = record.isPause
         }
     }
 
@@ -254,5 +272,14 @@ extension RecordViewController {
     @objc func onClickMute() {
         muteButton.isSelected = !muteButton.isSelected
         record.setMute(muteButton.isSelected)
+    }
+    
+    @objc func onClickPause() {
+        if record.isPause {
+            try? record.resume()
+        } else {
+            record.pauseRecord()
+        }
+        pauseButton.isSelected = record.isPause
     }
 }

@@ -36,8 +36,10 @@ public class VideoRecord: NSObject {
     
     public weak var delegate: VideoRecordDelegate?
     
-    /// 上一次写入的时间
-    private var lastInputTime: CMTime = .zero
+    /// 记录最后一帧的结束时间，也就是下一帧的开始时间
+    private var lastInputVideoEndTime: CMTime = .zero
+    private var lastInputAudioEndTime: CMTime = .zero
+    
     
     public init(config: VideoRecordConfig) {
         self.config = config
@@ -151,6 +153,10 @@ extension VideoRecord {
     
     /// 每次暂停，都会生成一个视频片段
     public func pauseRecord() {
+        guard isRecording else {
+            print("record is not start")
+            return
+        }
         print("pause record")
         isPause = true
 //        if let writer = partsManager.currentPart?.writer {
@@ -168,14 +174,19 @@ extension VideoRecord {
         print("stop record")
         isRecording = false
         isPause = false
-        lastInputTime = CMTime.zero
+        lastInputVideoEndTime = .zero
+        lastInputAudioEndTime = .zero
         if let writer = partsManager.currentPart?.writer {
             writer.finishWriting {
                 self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
             }
+            writeVideoInput.markAsFinished()
+            writeAudioInput.markAsFinished()
         }
     }
     
+    /// 切换摄像头
+    /// - Parameter camera: 前置 `front`、后置 `back`
     public func switchCamera(to camera: Camera) {
         collector.switchCamera(to: camera)
     }
@@ -217,26 +228,32 @@ extension VideoRecord: VideoCollectorDelegate {
         guard isRecording else {
             return
         }
-        guard !isPause else {
-            return
-        }
         guard let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer)  else {
             return
         }
         
-        let type = CMFormatDescriptionGetMediaType(formatDesc)
-        
         if let writer = partsManager.currentPart?.writer {
             
-            let startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            lastInputTime = startTime
+            let type = CMFormatDescriptionGetMediaType(formatDesc)
+            let pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
             
-            print(lastInputTime)
+            let dur = CMSampleBufferGetDuration(sampleBuffer)
+            let endTime = CMTimeAdd(pts, dur)
+            
+            if type == kCMMediaType_Video {
+                lastInputVideoEndTime = endTime
+            } else if type == kCMMediaType_Audio {
+                lastInputAudioEndTime = endTime
+            }
+            
+            guard !isPause else {
+                return
+            }
             
             if writer.status == .unknown {
                 if writer.startWriting() {
                     print("start the first recording")
-                    writer.startSession(atSourceTime: startTime)
+                    writer.startSession(atSourceTime: pts)
                     delegate?.didStartPartRecord(outputURL: writer.outputURL)
                 }
             }
@@ -249,13 +266,17 @@ extension VideoRecord: VideoCollectorDelegate {
             
             if type == kCMMediaType_Video {
                 if writeVideoInput.isReadyForMoreMediaData {
+                    // 修正时间
+                    CMSampleBufferSetOutputPresentationTimeStamp(sampleBuffer, newValue: lastInputVideoEndTime)
                     writeVideoInput.append(sampleBuffer)
                 }
             } else if type == kCMMediaType_Audio {
                 if !isMute && writeAudioInput.isReadyForMoreMediaData {
+                    CMSampleBufferSetOutputPresentationTimeStamp(sampleBuffer, newValue: lastInputAudioEndTime)
                     writeAudioInput.append(sampleBuffer)
                 }
             }
+            
         }
     }
 }

@@ -232,6 +232,7 @@ extension VideoCollector {
     
     private func setVideoMirror(connection: AVCaptureConnection, _ mirror: MirrorType = .auto) {
         if connection.isVideoMirroringSupported && self.mirror != mirror {
+            print("self.mirrot=\(self.mirror), mirror=\(mirror)")
             self.mirror = mirror
             if mirror == .auto {
                 if camera == .front {
@@ -239,7 +240,7 @@ extension VideoCollector {
                 } else {
                     connection.isVideoMirrored = false
                 }
-            } else if mirror == .none {
+            } else if mirror == .no {
                 connection.isVideoMirrored = false
             } else {
                 connection.isVideoMirrored = true
