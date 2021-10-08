@@ -172,6 +172,7 @@ class RecordViewController: UIViewController {
 
 extension RecordViewController {
     @objc func onClickRecord() {
+        record.delegate = self
         recordButton.isSelected = !record.isRecording
         if record.isRecording {
             record.stopRecord()
@@ -191,6 +192,9 @@ extension RecordViewController {
     }
     
     @objc func onClickExportVideo() {
+        if record.isRecording {
+            record.stopRecord()
+        }
         do {
             let f = DateFormatter()
             f.dateFormat = "yyyy-MM-dd-HH:mm:ss"
@@ -281,5 +285,12 @@ extension RecordViewController {
             record.pauseRecord()
         }
         pauseButton.isSelected = record.isPause
+    }
+}
+
+
+extension RecordViewController: VideoRecordDelegate {
+    func didRecording(seconds: Float64) {
+        print("录制时长: \(seconds)")
     }
 }

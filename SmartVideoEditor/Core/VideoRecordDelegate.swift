@@ -12,9 +12,12 @@ public protocol VideoRecordDelegate: AnyObject {
     func didStartPartRecord(outputURL: URL)
     
     func didFinishPartRecord(outputURL: URL)
+    
+    func didRecording(seconds: Float64)
 }
 
 extension VideoRecordDelegate {
     func didStartPartRecord(outputURL: URL) {}
     func didFinishPartRecord(outputURL: URL) {}
+    func didRecording(seconds: Float64) {}
 }

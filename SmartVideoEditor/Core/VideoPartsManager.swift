@@ -58,8 +58,6 @@ public class VideoPartsManager: NSObject {
     public override init() {
         FileHelper.cleanDir(at: VideoRecordConfig.recordPartsDirPath)
     }
-    
-    public var filter: VideoFilter?
 }
 
 
@@ -113,7 +111,7 @@ extension VideoPartsManager {
         }
     }
     
-    public func mixtureAllParts(outputPath: String, complication: @escaping (Bool) -> Void) throws {
+    public func mixtureAllParts(outputPath: String, complication: (AVAsset) throws -> Void) throws {
         guard parts.count > 0 else {
             return
         }
@@ -147,11 +145,6 @@ extension VideoPartsManager {
             }
             totalDuration = CMTimeAdd(totalDuration, asset.duration)
         }
-        
-        if !FileManager.default.fileExists(atPath: outputPath) {
-            try VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL, filter: filter) { finished in
-                complication(finished)
-            }
-        }
+        try complication(composition)
     }
 }

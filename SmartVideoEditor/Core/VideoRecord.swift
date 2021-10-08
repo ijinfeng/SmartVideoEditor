@@ -29,6 +29,9 @@ public class VideoRecord: NSObject {
     
     /// 录制是否暂停
     public private(set) var isPause: Bool = false
+    /// 当从暂停恢复到开始录制时，这一瞬间`resumeRecording`为`true`
+    private var resumeVideoRecording = false
+    private var resumeAudioRecording = false
     /// 是否正在录制
     public private(set) var isRecording: Bool = false
     /// 是否静音
@@ -39,6 +42,11 @@ public class VideoRecord: NSObject {
     /// 记录最后一帧的结束时间，也就是下一帧的开始时间
     private var lastInputVideoEndTime: CMTime = .zero
     private var lastInputAudioEndTime: CMTime = .zero
+    /// 暂停的时间
+    private var pauseVideoOffsetTime: CMTime = .zero
+    private var pauseAudioOffsetTime: CMTime = .zero
+    /// 开始录制的时间
+    private var startRecordTime: CMTime = .zero
     
     
     public init(config: VideoRecordConfig) {
@@ -80,10 +88,10 @@ public class VideoRecord: NSObject {
         let audioSetting: [String: Any] = [
             // 编码格式
             AVFormatIDKey: kAudioFormatMPEG4AAC,
-            // 声道数
+            // 声道数，2为双通道，表示立体声。除非使用外部硬件录制，否则通常使用单通道即可
             AVNumberOfChannelsKey: 1,
             // 采样率
-            AVSampleRateKey: 44100,
+            AVSampleRateKey: config.audioSampleRate.rawValue,
             // 码率
             AVEncoderBitRateKey: 128000
         ]
@@ -92,7 +100,6 @@ public class VideoRecord: NSObject {
         
         super.init()
         collector.delegate = self
-        partsManager.filter = collector.filter
     }
     
     deinit {
@@ -145,7 +152,12 @@ extension VideoRecord {
     }
     
     public func resume() throws {
+        guard isPause else {
+            return
+        }
         print("resume record")
+        resumeVideoRecording = true
+        resumeAudioRecording = true
         isPause = false
         
 //        try addOnePart()
@@ -157,8 +169,14 @@ extension VideoRecord {
             print("record is not start")
             return
         }
+        guard !isPause else {
+            print("record is aleady pause")
+            return
+        }
         print("pause record")
         isPause = true
+        resumeVideoRecording = false
+        resumeAudioRecording = false
 //        if let writer = partsManager.currentPart?.writer {
 //            writer.finishWriting {
 //                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
@@ -176,12 +194,17 @@ extension VideoRecord {
         isPause = false
         lastInputVideoEndTime = .zero
         lastInputAudioEndTime = .zero
+        startRecordTime = .zero
+        pauseVideoOffsetTime = .zero
+        pauseAudioOffsetTime = .zero
         if let writer = partsManager.currentPart?.writer {
-            writer.finishWriting {
-                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
+            if writer.status == .writing {
+                writer.finishWriting {
+                    self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
+                }
+                writeVideoInput.markAsFinished()
+                writeAudioInput.markAsFinished()
             }
-            writeVideoInput.markAsFinished()
-            writeAudioInput.markAsFinished()
         }
     }
     
@@ -203,11 +226,17 @@ extension VideoRecord {
     ///   - outputPath: 导出的路径
     ///   - complication: 导出结果回调
     public func exportRecord(outputPath: String, complication: @escaping (Bool) -> Void) throws {
-        try partsManager.mixtureAllParts(outputPath: outputPath, complication: { [weak self] finished in
-            if finished {
-                self?.partsManager.deleteAllParts()
+        try partsManager.mixtureAllParts(outputPath: outputPath, complication: { [weak self] asset in
+            if !FileManager.default.fileExists(atPath: outputPath) {
+                try VideoExport.exportVideo(assetURL: nil, asset: asset, outputURL: outputPath.fileURL, filter: collector.filter) { finished in
+                    if finished {
+                        self?.partsManager.deleteAllParts()
+                    }
+                    complication(finished)
+                }
+            } else {
+                throw VideoSessionError.Export.fileExists
             }
-            complication(finished)
         })
     }
 }
@@ -220,6 +249,69 @@ extension VideoRecord {
         let part = try VideoPartsManager.RecordPart(url: url, videoInput: writeVideoInput, audioInput: writeAudioInput)
         partsManager.add(part: part)
     }
+    
+    private func adjustOffsetTimeIfNeeded(type: CMMediaType, sampleBuffer: CMSampleBuffer) -> CMSampleBuffer {
+        var useSampleBuffer = sampleBuffer
+        var pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+        if resumeVideoRecording && type == kCMMediaType_Video {
+            resumeVideoRecording = false
+            let last = lastInputVideoEndTime
+            if last.flags.contains(.valid) {
+                if pauseVideoOffsetTime.flags.contains(.valid) {
+                    pts = CMTimeSubtract(pts, pauseVideoOffsetTime)
+                }
+                let offset = CMTimeSubtract(pts, last)
+                if pauseVideoOffsetTime.value == 0 {
+                    pauseVideoOffsetTime = offset
+                } else {
+                    pauseVideoOffsetTime = CMTimeAdd(pauseVideoOffsetTime, offset)
+                }
+            }
+            lastInputVideoEndTime.flags = CMTimeFlags.init(rawValue: 0)
+        }
+        if resumeAudioRecording && type == kCMMediaType_Audio {
+            resumeAudioRecording = false
+            let last = lastInputAudioEndTime
+            if last.flags.contains(.valid) {
+                if pauseAudioOffsetTime.flags.contains(.valid) {
+                    pts = CMTimeSubtract(pts, pauseAudioOffsetTime)
+                }
+                let offset = CMTimeSubtract(pts, last)
+                if pauseAudioOffsetTime.value == 0 {
+                    pauseAudioOffsetTime = offset
+                } else {
+                    pauseAudioOffsetTime = CMTimeAdd(pauseAudioOffsetTime, offset)
+                }
+            }
+            lastInputAudioEndTime.flags = CMTimeFlags.init(rawValue: 0)
+        }
+        
+        var offsetTime: CMTime = .zero
+        if type == kCMMediaType_Video {
+            offsetTime = pauseVideoOffsetTime
+        } else if type == kCMMediaType_Audio {
+            offsetTime = pauseAudioOffsetTime
+        }
+        
+        if offsetTime.value > 0 {
+            var count: CMItemCount = 0
+            CMSampleBufferGetSampleTimingInfoArray(useSampleBuffer, entryCount: 0, arrayToFill: nil, entriesNeededOut: &count)
+            let timingInfo = UnsafeMutablePointer<CMSampleTimingInfo>.allocate(capacity: count)
+            for i in 0..<count {
+                CMSampleBufferGetSampleTimingInfo(useSampleBuffer, at: i, timingInfoOut: timingInfo)
+                timingInfo.pointee.presentationTimeStamp = CMTimeSubtract(timingInfo.pointee.presentationTimeStamp, offsetTime)
+                timingInfo.pointee.decodeTimeStamp = CMTimeSubtract(timingInfo.pointee.decodeTimeStamp, offsetTime)
+            }
+            let s = UnsafeMutablePointer<CMSampleBuffer?>.allocate(capacity: 1)
+            CMSampleBufferCreateCopyWithNewTiming(allocator: kCFAllocatorDefault, sampleBuffer: useSampleBuffer, sampleTimingEntryCount: count, sampleTimingArray: timingInfo, sampleBufferOut: s)
+            if let s = s.pointee {
+                useSampleBuffer = s
+            }
+            free(timingInfo)
+            free(s)
+        }
+        return useSampleBuffer
+    }
 }
 
 
@@ -228,28 +320,48 @@ extension VideoRecord: VideoCollectorDelegate {
         guard isRecording else {
             return
         }
+        guard !isPause else {
+            return
+        }
         guard let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer)  else {
             return
         }
         
+        let type = CMFormatDescriptionGetMediaType(formatDesc)
+        // 调整时间戳
+        let useSampleBuffer = adjustOffsetTimeIfNeeded(type: type, sampleBuffer: sampleBuffer)
+        
+        let pts = CMSampleBufferGetPresentationTimeStamp(useSampleBuffer)
+        let dur = CMSampleBufferGetDuration(useSampleBuffer)
+        // 记录最后一次录制的时间戳
+        var endPts = pts
+        if dur.value > 0 {
+            endPts = CMTimeAdd(pts, dur)
+        }
+        if type == kCMMediaType_Video {
+            lastInputVideoEndTime = endPts
+        } else if type == kCMMediaType_Audio {
+            lastInputAudioEndTime = endPts
+        }
+        
+        // 计算录制时长
+        if type == kCMMediaType_Video {
+            if startRecordTime.value == 0 {
+                startRecordTime = pts
+            }
+            let recordTime = CMTimeSubtract(pts, self.startRecordTime)
+            let recordSeconds = CMTimeGetSeconds(recordTime)
+            if config.maxRecordedDuration > 0 && recordSeconds > config.maxRecordedDuration {
+                print("The maximum time limit is reached")
+                stopRecord()
+                 return
+            }
+            DispatchQueue.main.async {
+                self.delegate?.didRecording(seconds: recordSeconds)
+            }
+        }
+        
         if let writer = partsManager.currentPart?.writer {
-            
-            let type = CMFormatDescriptionGetMediaType(formatDesc)
-            let pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            
-            let dur = CMSampleBufferGetDuration(sampleBuffer)
-            let endTime = CMTimeAdd(pts, dur)
-            
-            if type == kCMMediaType_Video {
-                lastInputVideoEndTime = endTime
-            } else if type == kCMMediaType_Audio {
-                lastInputAudioEndTime = endTime
-            }
-            
-            guard !isPause else {
-                return
-            }
-            
             if writer.status == .unknown {
                 if writer.startWriting() {
                     print("start the first recording")
@@ -263,20 +375,15 @@ extension VideoRecord: VideoCollectorDelegate {
                 writer.cancelWriting()
                 return
             }
-            
             if type == kCMMediaType_Video {
                 if writeVideoInput.isReadyForMoreMediaData {
-                    // 修正时间
-                    CMSampleBufferSetOutputPresentationTimeStamp(sampleBuffer, newValue: lastInputVideoEndTime)
-                    writeVideoInput.append(sampleBuffer)
+                    writeVideoInput.append(useSampleBuffer)
                 }
             } else if type == kCMMediaType_Audio {
                 if !isMute && writeAudioInput.isReadyForMoreMediaData {
-                    CMSampleBufferSetOutputPresentationTimeStamp(sampleBuffer, newValue: lastInputAudioEndTime)
-                    writeAudioInput.append(sampleBuffer)
+                    writeAudioInput.append(useSampleBuffer)
                 }
             }
-            
         }
     }
 }

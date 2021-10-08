@@ -8,6 +8,7 @@
 import UIKit
 
 public class VideoRecordConfig: NSObject {
+    // MARK: 视频设置
     /// 录制的最大时长
     public var maxRecordedDuration: TimeInterval = 15
     /// fps
@@ -20,6 +21,10 @@ public class VideoRecordConfig: NSObject {
     public var pixels: VideoPixels = .p720
     /// 是否总是以一个单一片段录制，默认为 `false`。当设置为 `true` 时，录制的全过程只有一个录制片段，当设置为 `false` 时，每次调用 `startRecord:` 将产生一个新片段
     public var alwaysSinglePart = false
+    
+    // MARK: 音频设置
+    /// 音频采样率
+    public var audioSampleRate: AudioSampleRate = .s44100
 }
 
 public enum VideoPixels {
@@ -28,6 +33,15 @@ public enum VideoPixels {
     case p720
     case p1080
 }
+
+/// 音频采样率，提供4种默认采样率
+public enum AudioSampleRate: Float {
+    case s8000 = 8000
+    case s16000 = 16000
+    case s22050 = 22050
+    case s44100 = 44100
+}
+
 
 
 extension VideoRecordConfig {
