@@ -250,6 +250,7 @@ extension VideoRecord {
         partsManager.add(part: part)
     }
     
+    // https://blog.csdn.net/wang631106979/article/details/51498009
     private func adjustOffsetTimeIfNeeded(type: CMMediaType, sampleBuffer: CMSampleBuffer) -> CMSampleBuffer {
         var useSampleBuffer = sampleBuffer
         var pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
