@@ -29,9 +29,9 @@ public class VideoRecord: NSObject {
     
     /// 录制是否暂停
     public private(set) var isPause: Bool = false
-    /// 当从暂停恢复到开始录制时，这一瞬间`resumeRecording`为`true`
-    private var resumeVideoRecording = false
-    private var resumeAudioRecording = false
+    /// 是否有中断过
+    private var videoInterrupt = false
+    private var audioInterrupt = false
     /// 是否正在录制
     public private(set) var isRecording: Bool = false
     /// 是否静音
@@ -143,6 +143,13 @@ extension VideoRecord {
         
         isRecording = true
         isPause = false
+        videoInterrupt = false
+        audioInterrupt = false
+        lastInputVideoEndTime = .zero
+        lastInputAudioEndTime = .zero
+        startRecordTime = .zero
+        pauseVideoOffsetTime = .zero
+        pauseAudioOffsetTime = .zero
         
         if config.alwaysSinglePart {
             partsManager.resetPart()
@@ -156,8 +163,6 @@ extension VideoRecord {
             return
         }
         print("resume record")
-        resumeVideoRecording = true
-        resumeAudioRecording = true
         isPause = false
         
 //        try addOnePart()
@@ -175,8 +180,8 @@ extension VideoRecord {
         }
         print("pause record")
         isPause = true
-        resumeVideoRecording = false
-        resumeAudioRecording = false
+        videoInterrupt = true
+        audioInterrupt = true
 //        if let writer = partsManager.currentPart?.writer {
 //            writer.finishWriting {
 //                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
@@ -192,11 +197,6 @@ extension VideoRecord {
         print("stop record")
         isRecording = false
         isPause = false
-        lastInputVideoEndTime = .zero
-        lastInputAudioEndTime = .zero
-        startRecordTime = .zero
-        pauseVideoOffsetTime = .zero
-        pauseAudioOffsetTime = .zero
         if let writer = partsManager.currentPart?.writer {
             if writer.status == .writing {
                 writer.finishWriting {
@@ -252,10 +252,12 @@ extension VideoRecord {
     
     // https://blog.csdn.net/wang631106979/article/details/51498009
     private func adjustOffsetTimeIfNeeded(type: CMMediaType, sampleBuffer: CMSampleBuffer) -> CMSampleBuffer {
+        // TODO: 修改sampleBuffer的pts后，会导致写入不成功
+        // write failed with error: Optional(Error Domain=AVFoundationErrorDomain Code=-11800 "The operation could not be completed" UserInfo={NSLocalizedFailureReason=An unknown error occurred (-16364), NSLocalizedDescription=The operation could not be completed, NSUnderlyingError=0x2800e33f0 {Error Domain=NSOSStatusErrorDomain Code=-16364 "(null)"}})
         var useSampleBuffer = sampleBuffer
-        var pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-        if resumeVideoRecording && type == kCMMediaType_Video {
-            resumeVideoRecording = false
+        var pts = CMSampleBufferGetPresentationTimeStamp(useSampleBuffer)
+        if videoInterrupt && type == kCMMediaType_Video {
+            videoInterrupt = false
             let last = lastInputVideoEndTime
             if last.flags.contains(.valid) {
                 if pauseVideoOffsetTime.flags.contains(.valid) {
@@ -270,8 +272,8 @@ extension VideoRecord {
             }
             lastInputVideoEndTime.flags = CMTimeFlags.init(rawValue: 0)
         }
-        if resumeAudioRecording && type == kCMMediaType_Audio {
-            resumeAudioRecording = false
+        if audioInterrupt && type == kCMMediaType_Audio {
+            audioInterrupt = false
             let last = lastInputAudioEndTime
             if last.flags.contains(.valid) {
                 if pauseAudioOffsetTime.flags.contains(.valid) {
@@ -293,6 +295,7 @@ extension VideoRecord {
         } else if type == kCMMediaType_Audio {
             offsetTime = pauseAudioOffsetTime
         }
+//        let offsetTime = pauseAudioOffsetTime
         
         if offsetTime.value > 0 {
             var count: CMItemCount = 0
@@ -327,7 +330,7 @@ extension VideoRecord: VideoCollectorDelegate {
         guard let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer)  else {
             return
         }
-        
+    
         let type = CMFormatDescriptionGetMediaType(formatDesc)
         // 调整时间戳
         let useSampleBuffer = adjustOffsetTimeIfNeeded(type: type, sampleBuffer: sampleBuffer)
@@ -350,7 +353,7 @@ extension VideoRecord: VideoCollectorDelegate {
             if startRecordTime.value == 0 {
                 startRecordTime = pts
             }
-            let recordTime = CMTimeSubtract(pts, self.startRecordTime)
+            let recordTime = CMTimeSubtract(pts, startRecordTime)
             let recordSeconds = CMTimeGetSeconds(recordTime)
             if config.maxRecordedDuration > 0 && recordSeconds > config.maxRecordedDuration {
                 print("The maximum time limit is reached")
@@ -363,7 +366,10 @@ extension VideoRecord: VideoCollectorDelegate {
         }
         
         if let writer = partsManager.currentPart?.writer {
-            if writer.status == .unknown {
+            guard CMSampleBufferDataIsReady(useSampleBuffer) else {
+                return
+            }
+            if writer.status == .unknown && type == kCMMediaType_Video {
                 if writer.startWriting() {
                     print("start the first recording")
                     writer.startSession(atSourceTime: pts)
@@ -374,6 +380,7 @@ extension VideoRecord: VideoCollectorDelegate {
             if writer.status == .failed {
                 print("write failed with error: \(String(describing: writer.error))")
                 writer.cancelWriting()
+                stopRecord()
                 return
             }
             if type == kCMMediaType_Video {
