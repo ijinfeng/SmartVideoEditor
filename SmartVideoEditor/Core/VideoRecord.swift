@@ -164,8 +164,6 @@ extension VideoRecord {
         }
         print("resume record")
         isPause = false
-        
-//        try addOnePart()
     }
     
     /// 每次暂停，都会生成一个视频片段
@@ -182,11 +180,6 @@ extension VideoRecord {
         isPause = true
         videoInterrupt = true
         audioInterrupt = true
-//        if let writer = partsManager.currentPart?.writer {
-//            writer.finishWriting {
-//                self.delegate?.didFinishPartRecord(outputURL: writer.outputURL)
-//            }
-//        }
     }
     
     public func stopRecord() {
@@ -254,14 +247,25 @@ extension VideoRecord {
     private func adjustOffsetTimeIfNeeded(type: CMMediaType, sampleBuffer: CMSampleBuffer) -> CMSampleBuffer {
         // TODO: 修改sampleBuffer的pts后，会导致写入不成功
         // write failed with error: Optional(Error Domain=AVFoundationErrorDomain Code=-11800 "The operation could not be completed" UserInfo={NSLocalizedFailureReason=An unknown error occurred (-16364), NSLocalizedDescription=The operation could not be completed, NSUnderlyingError=0x2800e33f0 {Error Domain=NSOSStatusErrorDomain Code=-16364 "(null)"}})
+        /*
+         注意：audio正常相差1024，但是暂停后和暂停前相差 `1024 + 1024 + 1`（多次测试都是如此）
+         pts: CMTime(value: 3022110935, timescale: 44100, flags: __C.CMTimeFlags(rawValue: 3), epoch: 0)
+         pts: CMTime(value: 3022111959, timescale: 44100, flags: __C.CMTimeFlags(rawValue: 3), epoch: 0)
+         pts: CMTime(value: 3022112983, timescale: 44100, flags: __C.CMTimeFlags(rawValue: 3), epoch: 0)
+         pause record
+         resume record
+         pts: CMTime(value: 3022115030, timescale: 44100, flags: __C.CMTimeFlags(rawValue: 3), epoch: 0)
+         */
         var useSampleBuffer = sampleBuffer
-        var pts = CMSampleBufferGetPresentationTimeStamp(useSampleBuffer)
+        var pts = CMSampleBufferGetPresentationTimeStamp(useSampleBuffer) + CMSampleBufferGetDuration(useSampleBuffer)
         if videoInterrupt && type == kCMMediaType_Video {
             videoInterrupt = false
             let last = lastInputVideoEndTime
             if last.flags.contains(.valid) {
                 if pauseVideoOffsetTime.flags.contains(.valid) {
                     pts = CMTimeSubtract(pts, pauseVideoOffsetTime)
+                } else {
+                    print("video invalid------2")
                 }
                 let offset = CMTimeSubtract(pts, last)
                 if pauseVideoOffsetTime.value == 0 {
@@ -269,8 +273,9 @@ extension VideoRecord {
                 } else {
                     pauseVideoOffsetTime = CMTimeAdd(pauseVideoOffsetTime, offset)
                 }
+            } else {
+                print("video invalid------1")
             }
-            lastInputVideoEndTime.flags = CMTimeFlags.init(rawValue: 0)
         }
         if audioInterrupt && type == kCMMediaType_Audio {
             audioInterrupt = false
@@ -278,6 +283,8 @@ extension VideoRecord {
             if last.flags.contains(.valid) {
                 if pauseAudioOffsetTime.flags.contains(.valid) {
                     pts = CMTimeSubtract(pts, pauseAudioOffsetTime)
+                } else {
+                    print("audio invalid------2")
                 }
                 let offset = CMTimeSubtract(pts, last)
                 if pauseAudioOffsetTime.value == 0 {
@@ -285,8 +292,9 @@ extension VideoRecord {
                 } else {
                     pauseAudioOffsetTime = CMTimeAdd(pauseAudioOffsetTime, offset)
                 }
+            } else {
+                print("audio invalid------1")
             }
-            lastInputAudioEndTime.flags = CMTimeFlags.init(rawValue: 0)
         }
         
         var offsetTime: CMTime = .zero
@@ -295,11 +303,9 @@ extension VideoRecord {
         } else if type == kCMMediaType_Audio {
             offsetTime = pauseAudioOffsetTime
         }
-//        let offsetTime = pauseAudioOffsetTime
         
         if offsetTime.value > 0 {
-            var count: CMItemCount = 0
-            CMSampleBufferGetSampleTimingInfoArray(useSampleBuffer, entryCount: 0, arrayToFill: nil, entriesNeededOut: &count)
+            let count: CMItemCount = CMSampleBufferGetNumSamples(useSampleBuffer)
             let timingInfo = UnsafeMutablePointer<CMSampleTimingInfo>.allocate(capacity: count)
             for i in 0..<count {
                 CMSampleBufferGetSampleTimingInfo(useSampleBuffer, at: i, timingInfoOut: timingInfo)
@@ -311,13 +317,13 @@ extension VideoRecord {
             if let s = s.pointee {
                 useSampleBuffer = s
             }
-            free(timingInfo)
-            free(s)
+            timingInfo.deallocate()
+            s.deallocate()
         }
         return useSampleBuffer
     }
 }
-
+// 33326097/1000000000
 
 extension VideoRecord: VideoCollectorDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -344,8 +350,10 @@ extension VideoRecord: VideoCollectorDelegate {
         }
         if type == kCMMediaType_Video {
             lastInputVideoEndTime = endPts
+            print("video pts: \(pts)")
         } else if type == kCMMediaType_Audio {
             lastInputAudioEndTime = endPts
+            print("audio pts: \(pts)")
         }
         
         // 计算录制时长
@@ -379,18 +387,22 @@ extension VideoRecord: VideoCollectorDelegate {
             
             if writer.status == .failed {
                 print("write failed with error: \(String(describing: writer.error))")
-                writer.cancelWriting()
+//                writer.cancelWriting()
                 stopRecord()
                 return
             }
-            if type == kCMMediaType_Video {
-                if writeVideoInput.isReadyForMoreMediaData {
-                    writeVideoInput.append(useSampleBuffer)
+            if CMSampleBufferDataIsReady(useSampleBuffer) {
+                if type == kCMMediaType_Video {
+                    if writeVideoInput.isReadyForMoreMediaData {
+                        writeVideoInput.append(useSampleBuffer)
+                    }
+                } else if type == kCMMediaType_Audio {
+                    if !isMute && writeAudioInput.isReadyForMoreMediaData {
+                        writeAudioInput.append(useSampleBuffer)
+                    }
                 }
-            } else if type == kCMMediaType_Audio {
-                if !isMute && writeAudioInput.isReadyForMoreMediaData {
-                    writeAudioInput.append(useSampleBuffer)
-                }
+            } else {
+                print("buffer is invalid")
             }
         }
     }

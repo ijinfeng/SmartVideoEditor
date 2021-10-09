@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import AlertMaker
+import AVFoundation
 
 class RecordViewController: UIViewController {
     
@@ -54,9 +55,13 @@ class RecordViewController: UIViewController {
             make.size.equalTo(CGSize(width: 40, height: 40))
         }
         
-        
-        
-        
+//        print(CMTimeFlags.positiveInfinity)
+//        print(CMTimeFlags.hasBeenRounded)
+//        print(CMTimeFlags.negativeInfinity)
+//        print(CMTimeFlags.indefinite)
+//        print(CMTimeFlags.valid)
+//        print(CMTimeFlags.impliedValueFlagsMask)
+//
         // Do any additional setup after loading the view.
         
         recordButton.setTitle("开始录制", for: .normal)
@@ -291,6 +296,6 @@ extension RecordViewController {
 
 extension RecordViewController: VideoRecordDelegate {
     func didRecording(seconds: Float64) {
-        print("录制时长: \(seconds)")
+//        print("录制时长: \(seconds)")
     }
 }
