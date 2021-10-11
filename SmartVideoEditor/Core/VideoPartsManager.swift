@@ -129,21 +129,18 @@ extension VideoPartsManager {
             return
         }
         
-        var totalDuration = CMTime.zero
-        
-        for part in parts {
+        for (_, part) in parts.enumerated().reversed() {
             let asset = AVURLAsset(url: part.outputURL)
             do {
                 if let assetVideoTrack = asset.tracks(withMediaType: .video).first {
-                    try videoTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetVideoTrack.timeRange.duration), of: assetVideoTrack, at: totalDuration)
+                    try videoTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetVideoTrack.timeRange.duration), of: assetVideoTrack, at: .zero)
                 }
                 if let assetAuditoTrack = asset.tracks(withMediaType: .audio).first {
-                    try audioTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetAuditoTrack.timeRange.duration), of: assetAuditoTrack, at: totalDuration)
+                    try audioTrack.insertTimeRange(CMTimeRange.init(start: CMTime.zero, end: assetAuditoTrack.timeRange.duration), of: assetAuditoTrack, at: .zero)
                 }
             } catch {
                 throw VideoSessionError.Export.mixtureTrack
             }
-            totalDuration = CMTimeAdd(totalDuration, asset.duration)
         }
         try complication(composition)
     }

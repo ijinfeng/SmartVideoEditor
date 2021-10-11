@@ -182,6 +182,7 @@ extension RecordViewController {
         if record.isRecording {
             record.stopRecord()
             pauseButton.isSelected = record.isPause
+            
         } else {
             try? record.startRecord()
             pauseButton.isSelected = record.isPause
@@ -286,8 +287,12 @@ extension RecordViewController {
     @objc func onClickPause() {
         if record.isPause {
             try? record.resume()
+            
+            print("=====================")
+            
         } else {
             record.pauseRecord()
+            print("=====================")
         }
         pauseButton.isSelected = record.isPause
     }
@@ -296,6 +301,15 @@ extension RecordViewController {
 
 extension RecordViewController: VideoRecordDelegate {
     func didRecording(seconds: Float64) {
-//        print("录制时长: \(seconds)")
+        print("录制时长: \(seconds)")
+    }
+    
+    func didStartPartRecord(outputURL: URL) {
+        
+    }
+    
+    func didFinishPartRecord(outputURL: URL) {
+        print("录制结束: \(record.isRecording)")
+        recordButton.isSelected = record.isRecording
     }
 }

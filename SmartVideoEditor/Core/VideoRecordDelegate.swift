@@ -11,6 +11,8 @@ import AVFoundation
 public protocol VideoRecordDelegate: AnyObject {
     func didStartPartRecord(outputURL: URL)
     
+    func didStopRecord()
+    
     func didFinishPartRecord(outputURL: URL)
     
     func didRecording(seconds: Float64)
@@ -18,6 +20,7 @@ public protocol VideoRecordDelegate: AnyObject {
 
 extension VideoRecordDelegate {
     func didStartPartRecord(outputURL: URL) {}
+    func didStopRecord() {}
     func didFinishPartRecord(outputURL: URL) {}
     func didRecording(seconds: Float64) {}
 }
