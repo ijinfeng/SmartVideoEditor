@@ -41,6 +41,10 @@ public class VideoRecord: NSObject {
     private var lastInputAudioEndTime: CMTime = .zero
     /// 开始录制的时间
     private var startRecordTime: CMTime = .zero
+    /// 暂停的时长
+    private var pauseOffsetTime: CMTime = .zero
+    /// 中间是否有暂停过
+    private var interrupt = false
     
     
     public init(config: VideoRecordConfig) {
@@ -137,11 +141,12 @@ extension VideoRecord {
         
         isRecording = true
         isPause = false
+        interrupt = false
         lastInputVideoEndTime = .zero
         lastInputAudioEndTime = .zero
         startRecordTime = .zero
         
-        if config.alwaysSinglePart {
+        if config.alwaysStartSinglePart {
             partsManager.resetPart()
         }
         
@@ -149,7 +154,12 @@ extension VideoRecord {
     }
     
     public func resume() throws {
+        guard isRecording else {
+            print("record is not start")
+            return
+        }
         guard isPause else {
+            print("record is not pause")
             return
         }
         print("resume record")
@@ -170,6 +180,7 @@ extension VideoRecord {
         }
         print("pause record")
         isPause = true
+        interrupt = true
         
         if let writer = partsManager.currentPart?.writer {
             stopOnePart(writer: writer)
@@ -183,7 +194,6 @@ extension VideoRecord {
         }
         print("stop record")
         isRecording = false
-        isPause = false
         if let writer = partsManager.currentPart?.writer {
             DispatchQueue.main.async {
                 self.delegate?.didStopRecord()
@@ -268,6 +278,14 @@ extension VideoRecord: VideoCollectorDelegate {
         let pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
         let dur = CMSampleBufferGetDuration(sampleBuffer)
         
+        
+        // 修正暂停的时长
+        if interrupt {
+            interrupt = false
+            pauseOffsetTime = pauseOffsetTime + (pts - lastInputVideoEndTime)
+            print("pause offset dur is: \(CMTimeGetSeconds(pauseOffsetTime))")
+        }
+        
         // 记录最后一次录制的时间戳
         var endPts = pts
         if dur.value > 0 && dur.isValid {
@@ -284,7 +302,7 @@ extension VideoRecord: VideoCollectorDelegate {
             if startRecordTime.value == 0 {
                 startRecordTime = pts
             }
-            let recordTime = CMTimeSubtract(pts, startRecordTime)
+            let recordTime = CMTimeSubtract(pts - pauseOffsetTime, startRecordTime)
             let recordSeconds = CMTimeGetSeconds(recordTime)
             if config.maxRecordedDuration > 0 && recordSeconds > config.maxRecordedDuration {
                 print("The maximum time limit is reached")

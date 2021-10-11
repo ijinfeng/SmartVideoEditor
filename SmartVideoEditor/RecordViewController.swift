@@ -17,7 +17,6 @@ class RecordViewController: UIViewController {
     let closeButton = UIButton()
     
     let recordButton = UIButton()
-    let pauseButton = UIButton()
     
     let rotateButton = UIButton()
     
@@ -30,6 +29,10 @@ class RecordViewController: UIViewController {
     let flashButton = UIButton()
     
     let muteButton = UIButton()
+    
+    let progress = UIProgressView()
+    
+    let timeLabel = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,11 +67,11 @@ class RecordViewController: UIViewController {
 //
         // Do any additional setup after loading the view.
         
-        recordButton.setTitle("开始录制", for: .normal)
-        recordButton.setTitle("停止录制", for: .selected)
+
+        recordButton.setImage(UIImage(named: "videoRecord"), for: .normal)
+        recordButton.setImage(UIImage(named: "videoPause"), for: .selected)
         recordButton.setTitleColor(.white, for: .normal)
         recordButton.setTitleColor(.white, for: .selected)
-        recordButton.backgroundColor = .red
         view.addSubview(recordButton)
         
         recordButton.snp.makeConstraints { make in
@@ -78,17 +81,17 @@ class RecordViewController: UIViewController {
             make.centerX.equalTo(view)
         }
         
-        pauseButton.setTitle("暂停", for: .normal)
-        pauseButton.setTitle("取消暂停", for: .selected)
-        pauseButton.backgroundColor = .white
-        pauseButton.setTitleColor(.red, for: .normal)
-        view.addSubview(pauseButton)
-        pauseButton.addTarget(self, action: #selector(onClickPause), for: .touchUpInside)
-        pauseButton.snp.makeConstraints { make in
-            make.right.equalTo(recordButton.snp_left)
-            make.size.equalTo(recordButton)
-            make.centerY.equalTo(recordButton)
-        }
+//        pauseButton.setTitle("暂停", for: .normal)
+//        pauseButton.setTitle("取消暂停", for: .selected)
+//        pauseButton.backgroundColor = .white
+//        pauseButton.setTitleColor(.red, for: .normal)
+//        view.addSubview(pauseButton)
+//        pauseButton.addTarget(self, action: #selector(onClickPause), for: .touchUpInside)
+//        pauseButton.snp.makeConstraints { make in
+//            make.right.equalTo(recordButton.snp_left)
+//            make.size.equalTo(recordButton)
+//            make.centerY.equalTo(recordButton)
+//        }
         
         recordButton.addTarget(self, action: #selector(onClickRecord), for: .touchUpInside)
         
@@ -101,6 +104,22 @@ class RecordViewController: UIViewController {
             make.left.equalTo(recordButton.snp_rightMargin).offset(20)
         }
         
+        progress.trackTintColor = .lightGray
+        progress.progressTintColor = .blue
+        view.addSubview(progress)
+        progress.snp.makeConstraints { make in
+            make.bottom.equalTo(recordButton.snp_top).offset(-15)
+            make.left.right.equalTo(view)
+        }
+        
+        timeLabel.text = "00:00"
+        timeLabel.textColor = .white
+        timeLabel.font = UIFont.systemFont(ofSize: 12)
+        view.addSubview(timeLabel)
+        timeLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.bottom.equalTo(progress.snp_top).offset(-8)
+        }
         
         filterButton1.setImage(UIImage.init(named: "YJFVideoFilter"), for: .normal)
         filterButton1.setTitleColor(.white, for: .normal)
@@ -179,13 +198,15 @@ extension RecordViewController {
     @objc func onClickRecord() {
         record.delegate = self
         recordButton.isSelected = !record.isRecording
-        if record.isRecording {
-            record.stopRecord()
-            pauseButton.isSelected = record.isPause
-            
-        } else {
+        
+        if !record.isRecording {
             try? record.startRecord()
-            pauseButton.isSelected = record.isPause
+        } else {
+            if record.isPause {
+                try? record.resume()
+            } else {
+                record.pauseRecord()
+            }
         }
     }
 
@@ -198,9 +219,7 @@ extension RecordViewController {
     }
     
     @objc func onClickExportVideo() {
-        if record.isRecording {
-            record.stopRecord()
-        }
+        record.stopRecord()
         do {
             let f = DateFormatter()
             f.dateFormat = "yyyy-MM-dd-HH:mm:ss"
@@ -284,24 +303,28 @@ extension RecordViewController {
         record.setMute(muteButton.isSelected)
     }
     
-    @objc func onClickPause() {
-        if record.isPause {
-            try? record.resume()
-            
-            print("=====================")
-            
-        } else {
-            record.pauseRecord()
-            print("=====================")
-        }
-        pauseButton.isSelected = record.isPause
-    }
+//    @objc func onClickPause() {
+//        if record.isPause {
+//            try? record.resume()
+//
+//            print("=====================")
+//
+//        } else {
+//            record.pauseRecord()
+//            print("=====================")
+//        }
+//        pauseButton.isSelected = record.isPause
+//    }
 }
 
 
 extension RecordViewController: VideoRecordDelegate {
     func didRecording(seconds: Float64) {
-        print("录制时长: \(seconds)")
+//        print("录制时长: \(seconds)")
+        
+        progress.progress = Float(seconds) / Float(record.config.maxRecordedDuration)
+        
+        timeLabel.text = "00:"+String(format: "%02.0f", seconds)
     }
     
     func didStartPartRecord(outputURL: URL) {

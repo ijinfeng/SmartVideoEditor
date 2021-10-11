@@ -18,7 +18,7 @@ class VideoExport: NSObject {
                             asset: AVAsset?,
                             outputURL: URL,
                             ouputFileType: AVFileType = .mp4,
-                            presetName: String = AVAssetExportPresetMediumQuality,
+                            presetName: String = AVAssetExportPreset1280x720,
                             filter: VideoFilter? = nil,
                             complication: @escaping (Bool) -> Void) throws {
         guard FileHelper.fileExists(at: outputURL.absoluteString) == false else {

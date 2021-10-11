@@ -19,8 +19,8 @@ public class VideoRecordConfig: NSObject {
     public var customBitRate: Int?
     /// 分辨率
     public var pixels: VideoPixels = .p720
-    /// 是否总是以一个单一片段录制，默认为 `false`。当设置为 `true` 时，录制的全过程只有一个录制片段，当设置为 `false` 时，每次调用 `startRecord:` 将产生一个新片段
-    public var alwaysSinglePart = false
+    /// 是否总是以一个单一片段录制，默认为 `true`。当设置为 `true` 时，录制的全过程只有一个录制片段，当设置为 `false` 时，每次调用 `startRecord:` 将产生一个新片段
+    public var alwaysStartSinglePart = true
     
     // MARK: 音频设置
     /// 音频采样率
