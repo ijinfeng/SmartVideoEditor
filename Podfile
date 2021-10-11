@@ -7,6 +7,9 @@ target 'SmartVideoEditor' do
 
   # Pods for SmartVideoEditor
   
+  
+  pod 'VideoEditor', :path => './Core/SmartVideoEditor'
+  
   #pod 'Moya'
   pod 'SnapKit'
   #pod 'Kingfisher'
@@ -14,4 +17,8 @@ target 'SmartVideoEditor' do
 #  pod 'FileBox', :path => './modules/FileBox'
   pod 'FileBox', '~> 0.4.1'
   pod 'AlertMaker'
+  
+  
+  
+  
 end

@@ -30,12 +30,14 @@ PODS:
   - SwifterSwift/StoreKit (5.2.0)
   - SwifterSwift/SwiftStdlib (5.2.0)
   - SwifterSwift/UIKit (5.2.0)
+  - VideoEditor (0.1.0)
 
 DEPENDENCIES:
   - AlertMaker
   - FileBox (~> 0.4.1)
   - SnapKit
   - SwifterSwift
+  - VideoEditor (from `./Core/SmartVideoEditor`)
 
 SPEC REPOS:
   trunk:
@@ -45,13 +47,18 @@ SPEC REPOS:
     - SnapKit
     - SwifterSwift
 
+EXTERNAL SOURCES:
+  VideoEditor:
+    :path: "./Core/SmartVideoEditor"
+
 SPEC CHECKSUMS:
   AlertMaker: 9a50b6247f938d712f93c07cfc18e05ca3066db7
   FileBox: f6ad69f8dab98a9f90ddb84b563e7f0804dc8ea2
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
+  VideoEditor: 8f0b556a9a9ab170600838a7dc7712333b3c13ab
 
-PODFILE CHECKSUM: e00cad487ade6985126ba7f0baceacfa7107e485
+PODFILE CHECKSUM: 192eca6d159eb694f29c9d184bbad2ad65177389
 
 COCOAPODS: 1.10.1

@@ -11,7 +11,7 @@ import AVFoundation
 /// 视频录制
 public class VideoRecord: NSObject {
     
-    static let shared = VideoRecord(config: VideoRecordConfig())
+    public static let shared = VideoRecord(config: VideoRecordConfig())
     
     public let config: VideoRecordConfig!
     

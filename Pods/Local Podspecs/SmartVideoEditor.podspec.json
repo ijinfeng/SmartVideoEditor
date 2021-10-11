@@ -1,0 +1,22 @@
+{
+  "name": "SmartVideoEditor",
+  "version": "0.1.0",
+  "summary": "A short description of SmartVideoEditor.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/ijinfeng/SmartVideoEditor",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "ijinfeng": "851406283@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/ijinfeng/SmartVideoEditor.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "SmartVideoEditor/Classes/**/*"
+}

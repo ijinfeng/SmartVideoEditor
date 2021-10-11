@@ -14,7 +14,7 @@ public class VideoCollector: NSObject {
     public let session = AVCaptureSession()
     public private(set) var camera = Camera.back
     
-    private let sampleQueue = DispatchQueue.init(label: "ijf_sample_queue", qos: .default, attributes: [], autoreleaseFrequency: .never)
+    private let sampleQueue = DispatchQueue.init(label: "ijf_sample_queue", qos: .default, attributes: [])
     
     public weak var delegate: VideoCollectorDelegate?
     

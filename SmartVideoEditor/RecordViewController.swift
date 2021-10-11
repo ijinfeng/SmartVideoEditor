@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import AlertMaker
 import AVFoundation
+import VideoEditor
 
 class RecordViewController: UIViewController {
     
@@ -319,6 +320,10 @@ extension RecordViewController {
 
 
 extension RecordViewController: VideoRecordDelegate {
+    func didStopRecord() {
+        
+    }
+    
     func didRecording(seconds: Float64) {
 //        print("录制时长: \(seconds)")
         
