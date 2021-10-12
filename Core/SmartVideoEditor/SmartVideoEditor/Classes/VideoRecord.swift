@@ -45,6 +45,8 @@ public class VideoRecord: NSObject {
     private var pauseOffsetTime: CMTime = .zero
     /// 中间是否有暂停过
     private var interrupt = false
+    /// 录制总时长
+    private var duration: CMTime = .zero
     
     
     public init(config: VideoRecordConfig) {
@@ -145,10 +147,9 @@ extension VideoRecord {
         lastInputVideoEndTime = .zero
         lastInputAudioEndTime = .zero
         startRecordTime = .zero
-        
-        if config.alwaysStartSinglePart {
-            partsManager.resetPart()
-        }
+        duration = .zero
+        // 每次开始录制前删除旧的录制片段
+        partsManager.resetPart()
         
         try addOnePart()
     }
@@ -215,6 +216,12 @@ extension VideoRecord {
     /// - Parameter mute: 静音
     public func setMute(_ mute: Bool) {
         isMute = mute
+    }
+    
+    /// 获取录制总时长
+    /// - Returns: 时长
+    public func recordDuration() -> TimeInterval {
+         CMTimeGetSeconds(duration)
     }
     
     /// 导出视频
@@ -304,6 +311,7 @@ extension VideoRecord: VideoCollectorDelegate {
             }
             let recordTime = CMTimeSubtract(pts - pauseOffsetTime, startRecordTime)
             let recordSeconds = CMTimeGetSeconds(recordTime)
+            duration = CMTimeAdd(duration, recordTime)
             if config.maxRecordedDuration > 0 && recordSeconds > config.maxRecordedDuration {
                 print("The maximum time limit is reached")
                 stopRecord()

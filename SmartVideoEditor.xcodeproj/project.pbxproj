@@ -14,6 +14,8 @@
 		37D4714C26F8BF65000A4610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37D4714B26F8BF65000A4610 /* Assets.xcassets */; };
 		37D4714F26F8BF65000A4610 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37D4714D26F8BF65000A4610 /* LaunchScreen.storyboard */; };
 		78CD6C6926FC84D000F3D583 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6826FC84D000F3D583 /* RecordViewController.swift */; };
+		78E026B02715607E00C0E03B /* vap.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 78E026AF2715607D00C0E03B /* vap.mp4 */; };
+		78E026B22715621E00C0E03B /* VideoEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E026B12715621E00C0E03B /* VideoEditorViewController.swift */; };
 		78F03F75270071970002DF11 /* YJFVideoAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */; };
 		968F261642B0ADF7C6DC6622 /* Pods_SmartVideoEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EB54F102C271E9BDCE3ED83 /* Pods_SmartVideoEditor.framework */; };
 /* End PBXBuildFile section */
@@ -30,6 +32,8 @@
 		37D4715026F8BF65000A4610 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		595CBB1CCBD342A4192D02BA /* Pods-SmartVideoEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.release.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.release.xcconfig"; sourceTree = "<group>"; };
 		78CD6C6826FC84D000F3D583 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		78E026AF2715607D00C0E03B /* vap.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = vap.mp4; sourceTree = "<group>"; };
+		78E026B12715621E00C0E03B /* VideoEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditorViewController.swift; sourceTree = "<group>"; };
 		78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = YJFVideoAssets.xcassets; sourceTree = "<group>"; };
 		EF00FC7541DAF9C16EE1CFEA /* Pods-SmartVideoEditor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.debug.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,6 +75,8 @@
 				37D4714426F8BF63000A4610 /* SceneDelegate.swift */,
 				37D4714626F8BF63000A4610 /* ViewController.swift */,
 				78CD6C6826FC84D000F3D583 /* RecordViewController.swift */,
+				78E026B12715621E00C0E03B /* VideoEditorViewController.swift */,
+				78E026AE2715606F00C0E03B /* Resources */,
 				37D4714826F8BF63000A4610 /* Main.storyboard */,
 				37D4714B26F8BF65000A4610 /* Assets.xcassets */,
 				78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */,
@@ -87,6 +93,14 @@
 				595CBB1CCBD342A4192D02BA /* Pods-SmartVideoEditor.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		78E026AE2715606F00C0E03B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				78E026AF2715607D00C0E03B /* vap.mp4 */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		EF4D6AAF1DBC0B22A29DCACD /* Frameworks */ = {
@@ -158,6 +172,7 @@
 			files = (
 				37D4714F26F8BF65000A4610 /* LaunchScreen.storyboard in Resources */,
 				37D4714C26F8BF65000A4610 /* Assets.xcassets in Resources */,
+				78E026B02715607E00C0E03B /* vap.mp4 in Resources */,
 				78F03F75270071970002DF11 /* YJFVideoAssets.xcassets in Resources */,
 				37D4714A26F8BF63000A4610 /* Main.storyboard in Resources */,
 			);
@@ -212,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78E026B22715621E00C0E03B /* VideoEditorViewController.swift in Sources */,
 				37D4714726F8BF63000A4610 /* ViewController.swift in Sources */,
 				37D4714326F8BF63000A4610 /* AppDelegate.swift in Sources */,
 				78CD6C6926FC84D000F3D583 /* RecordViewController.swift in Sources */,

@@ -42,3 +42,11 @@ class FileHelper {
         return fileManager.fileExists(atPath: path)
     }
 }
+
+
+extension String {
+    public var fileURL: URL {
+        URL(fileURLWithPath: self)
+    }
+}
+

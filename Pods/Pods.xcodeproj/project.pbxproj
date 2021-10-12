@@ -116,6 +116,7 @@
 		717BCB907230678FD0409800F687DA26 /* ConstraintMakerPriortizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2507836F33939FEFA3B292FC77CD2D53 /* ConstraintMakerPriortizable.swift */; };
 		7292D54041E292651CEC1EC594013B28 /* XCCustomAlertMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0679D43540032FF0B9AFCEA9EB713C08 /* XCCustomAlertMaker.m */; };
 		77C653E868F9CBE30126832BEAC9BF17 /* RangeReplaceableCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C6D5DE33E839D5A5C1472E570F54D /* RangeReplaceableCollectionExtensions.swift */; };
+		78E026B427157D8B00C0E03B /* VideoInfoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E026B327157D8B00C0E03B /* VideoInfoReader.swift */; };
 		7BAAA0C90C8358DFF4CE0F10CDA5BB83 /* StringProtocolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242D54F8E09E492A76AE5D9089DBC8A0 /* StringProtocolExtensions.swift */; };
 		7C46D9CDEEF7DFE512EA9B57C945D69C /* BidirectionalCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FAEF95ED8D59A808DD99FC086E20F8 /* BidirectionalCollectionExtensions.swift */; };
 		7C4941D12263B9664177E70CE7627D46 /* ConstraintInsetTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B802BB6781BBCAE05218FDED52973E0 /* ConstraintInsetTarget.swift */; };
@@ -313,7 +314,7 @@
 		0681E999C0395C3C7D2455F091D4E213 /* VideoPreviewLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoPreviewLayer.swift; path = SmartVideoEditor/Classes/VideoPreviewLayer.swift; sourceTree = "<group>"; };
 		06AEA138A766AD42374784D26C33BB2F /* VideoRecord.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoRecord.swift; path = SmartVideoEditor/Classes/VideoRecord.swift; sourceTree = "<group>"; };
 		06B5C68362974D0FFFF82B33CD51BBA0 /* UIGestureRecognizerExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIGestureRecognizerExtensions.swift; path = Sources/SwifterSwift/UIKit/UIGestureRecognizerExtensions.swift; sourceTree = "<group>"; };
-		0821EAD4F62D8D453AADE4CE0B492950 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		0821EAD4F62D8D453AADE4CE0B492950 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		08FE74CE8944EAF7C20A5CFBE6282597 /* MASLayoutConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASLayoutConstraint.h; path = Masonry/MASLayoutConstraint.h; sourceTree = "<group>"; };
 		0A3D9C25C80A250A1CD6002D32ECA991 /* ConstraintMakerExtendable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerExtendable.swift; path = Source/ConstraintMakerExtendable.swift; sourceTree = "<group>"; };
 		0B7396DE710B76F8A75396E6FDBCB33F /* DictionaryExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DictionaryExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/DictionaryExtensions.swift; sourceTree = "<group>"; };
@@ -331,10 +332,10 @@
 		1671DBC4D10D5CB1F4C3AA9C371A7E32 /* MASViewConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewConstraint.h; path = Masonry/MASViewConstraint.h; sourceTree = "<group>"; };
 		18708BAAE37B3E734484C0B2D691BA80 /* ConstraintAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintAttributes.swift; path = Source/ConstraintAttributes.swift; sourceTree = "<group>"; };
 		1A2CA3269733E86E560C9B0769A3C9FD /* SCNPlaneExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SCNPlaneExtensions.swift; path = Sources/SwifterSwift/SceneKit/SCNPlaneExtensions.swift; sourceTree = "<group>"; };
-		1B6AB070ECFA240E9E6A01FD053D2AD0 /* FileBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FileBox.framework; path = FileBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B6AB070ECFA240E9E6A01FD053D2AD0 /* FileBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FileBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B77CF7CDD76E32E12F6245569167291 /* ColorExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ColorExtensions.swift; path = Sources/SwifterSwift/Shared/ColorExtensions.swift; sourceTree = "<group>"; };
 		1E0AC69FCB7AE4360C851C68AD84CF2A /* SCNSphereExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SCNSphereExtensions.swift; path = Sources/SwifterSwift/SceneKit/SCNSphereExtensions.swift; sourceTree = "<group>"; };
-		1FFED36A657123030ABB700256D73F15 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Masonry.framework; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FFED36A657123030ABB700256D73F15 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2168CD6E5B3C5A117D749EA16D5D18B9 /* SequenceExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SequenceExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/SequenceExtensions.swift; sourceTree = "<group>"; };
 		23C2540534D0F0DC7C7CDB93B7572FAA /* Pods-SmartVideoEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SmartVideoEditor.release.xcconfig"; sourceTree = "<group>"; };
 		242D54F8E09E492A76AE5D9089DBC8A0 /* StringProtocolExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StringProtocolExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/StringProtocolExtensions.swift; sourceTree = "<group>"; };
@@ -375,7 +376,7 @@
 		48EBC2ADDEB661650767FDA8623828FC /* FileBoxTableViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileBoxTableViewController.swift; path = FileBox/FileBox/Classes/FileBoxTableViewController.swift; sourceTree = "<group>"; };
 		49C49A1F8F8D23C93B2963919C7975F4 /* SKNodeExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SKNodeExtensions.swift; path = Sources/SwifterSwift/SpriteKit/SKNodeExtensions.swift; sourceTree = "<group>"; };
 		4A12B282532AEC5EED194F514960E632 /* Pods-SmartVideoEditor.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-SmartVideoEditor.modulemap"; sourceTree = "<group>"; };
-		4A14820EF74F209F26F4E6C0D3F94C47 /* VideoEditor.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = VideoEditor.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		4A14820EF74F209F26F4E6C0D3F94C47 /* VideoEditor.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = VideoEditor.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4A3925FEF185E486A9F53ABB83FE374F /* FileBox.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = FileBox.modulemap; sourceTree = "<group>"; };
 		4B5E43713B44BED371AFD289E2A41F71 /* ConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintItem.swift; path = Source/ConstraintItem.swift; sourceTree = "<group>"; };
 		4BD0C13EB643284F8A9AD05FF89C9ECC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -403,7 +404,7 @@
 		5F3ABF8056BF420BF964D9A9A38BD7D3 /* CLLocationExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CLLocationExtensions.swift; path = Sources/SwifterSwift/CoreLocation/CLLocationExtensions.swift; sourceTree = "<group>"; };
 		617132158FB5A5879619BD861D2FCCD7 /* SCNBoxExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SCNBoxExtensions.swift; path = Sources/SwifterSwift/SceneKit/SCNBoxExtensions.swift; sourceTree = "<group>"; };
 		61B12842056F94C3497905F4CDA23541 /* Masonry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Masonry.release.xcconfig; sourceTree = "<group>"; };
-		63778A5EEFA3B7B84417F0EAEE931573 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		63778A5EEFA3B7B84417F0EAEE931573 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		65631ED531247E8404DFB446EDE2974A /* SKProductExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SKProductExtensions.swift; path = Sources/SwifterSwift/StoreKit/SKProductExtensions.swift; sourceTree = "<group>"; };
 		659D73B8C8D4E4A21A98E4B66E57CC20 /* CLVisitExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CLVisitExtensions.swift; path = Sources/SwifterSwift/CoreLocation/CLVisitExtensions.swift; sourceTree = "<group>"; };
 		65AD79F72D09F967232A8D77B9D217DA /* UIButtonExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIButtonExtensions.swift; path = Sources/SwifterSwift/UIKit/UIButtonExtensions.swift; sourceTree = "<group>"; };
@@ -438,15 +439,16 @@
 		7582CBDA47B9D196D53F062F19254FBB /* VideoEditor.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = VideoEditor.modulemap; sourceTree = "<group>"; };
 		75CD4560643044066ACBB9DFA72AD847 /* DataExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataExtensions.swift; path = Sources/SwifterSwift/Foundation/DataExtensions.swift; sourceTree = "<group>"; };
 		767D97B297AFC6E0886DA26DB1F37FDD /* MKPolylineExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MKPolylineExtensions.swift; path = Sources/SwifterSwift/MapKit/MKPolylineExtensions.swift; sourceTree = "<group>"; };
-		774BBBF8D0FB499A3248CBD083F11B52 /* VideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VideoEditor.framework; path = VideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		774BBBF8D0FB499A3248CBD083F11B52 /* VideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77ACF49D2F44F7F22F0EC4BC5ED059C3 /* NSArray+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASShorthandAdditions.h"; path = "Masonry/NSArray+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		77D56CFA8165D2B5D75A793AF9BB36EA /* UILayoutPriorityExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UILayoutPriorityExtensions.swift; path = Sources/SwifterSwift/UIKit/UILayoutPriorityExtensions.swift; sourceTree = "<group>"; };
+		78E026B327157D8B00C0E03B /* VideoInfoReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VideoInfoReader.swift; path = SmartVideoEditor/Classes/VideoInfoReader.swift; sourceTree = "<group>"; };
 		79BECB7295D19530B3F743F6DBFB24C0 /* Debugging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Debugging.swift; path = Source/Debugging.swift; sourceTree = "<group>"; };
 		7A583294006408C25E7EFE038228C219 /* ConstraintMaker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMaker.swift; path = Source/ConstraintMaker.swift; sourceTree = "<group>"; };
 		7C93F574927DDF4866225AACDF68E10D /* CGPointExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGPointExtensions.swift; path = Sources/SwifterSwift/CoreGraphics/CGPointExtensions.swift; sourceTree = "<group>"; };
 		7DCFFE0B93B3EBF76E38A18E52335CA6 /* FileBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FileBox.release.xcconfig; sourceTree = "<group>"; };
 		7E1C0CD2BEE227DB882D78F2412C6738 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMultiplierTarget.swift; path = Source/ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
-		7E382E2681201B39FB646E610235592C /* AlertMaker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AlertMaker.framework; path = AlertMaker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E382E2681201B39FB646E610235592C /* AlertMaker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlertMaker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EB2C3A86ED5C7D68AEFE71D72CE2F7F /* NSArray+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+MASAdditions.m"; path = "Masonry/NSArray+MASAdditions.m"; sourceTree = "<group>"; };
 		806F317965FC3CD73D8F9F0440BB2ED7 /* VideoPermission.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoPermission.swift; path = SmartVideoEditor/Classes/VideoPermission.swift; sourceTree = "<group>"; };
 		80F9B3863CD36BF2AB7C3E4F5BD250E9 /* XCCustomSheetView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCCustomSheetView.h; path = AlertMaker/AlertMaker/Classes/XCCustomSheetView.h; sourceTree = "<group>"; };
@@ -456,18 +458,18 @@
 		85F8D30CAC775ADF0075500A4910C940 /* AlertMaker-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AlertMaker-Info.plist"; sourceTree = "<group>"; };
 		863B925F98C14B6267A9319393F555CD /* UITableViewExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UITableViewExtensions.swift; path = Sources/SwifterSwift/UIKit/UITableViewExtensions.swift; sourceTree = "<group>"; };
 		87A7ABBEF304C63DD30D3414F4FC4B95 /* SnapKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SnapKit.release.xcconfig; sourceTree = "<group>"; };
-		8C81A3F6D6E88BB13C101D6462262715 /* SwifterSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwifterSwift.framework; path = SwifterSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C81A3F6D6E88BB13C101D6462262715 /* SwifterSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwifterSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F9B6AD97E52B7A94839BC2C555A6980 /* FloatExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FloatExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/FloatExtensions.swift; sourceTree = "<group>"; };
 		916BC51FCBFB9949EF44FE5AD9E97EB0 /* NSRegularExpressionExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NSRegularExpressionExtensions.swift; path = Sources/SwifterSwift/Foundation/NSRegularExpressionExtensions.swift; sourceTree = "<group>"; };
 		9289BD18120E8940B50580B3AA4BA9E7 /* XCButtonAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = XCButtonAttribute.m; path = AlertMaker/AlertMaker/Classes/Button/XCButtonAttribute.m; sourceTree = "<group>"; };
 		92DAF7E27EFF4637F3AD04DF23D52028 /* FileBox-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "FileBox-Info.plist"; sourceTree = "<group>"; };
 		94A1D0E2028FB880E9705D65D9F61D1F /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASShorthandAdditions.h"; path = "Masonry/View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		955BEA751A4B0743A711ED515E80FE58 /* UIAlertControllerExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIAlertControllerExtensions.swift; path = Sources/SwifterSwift/UIKit/UIAlertControllerExtensions.swift; sourceTree = "<group>"; };
-		956F627E3AC607EDD35BEFBF71C76990 /* FileBox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = FileBox.bundle; path = "FileBox-FileBox.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		956F627E3AC607EDD35BEFBF71C76990 /* FileBox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FileBox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		95F7392170473C2D9D3E1E07415CE3E2 /* UITextFieldExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UITextFieldExtensions.swift; path = Sources/SwifterSwift/UIKit/UITextFieldExtensions.swift; sourceTree = "<group>"; };
 		96A9D5AE46F8C3CD7D9247BA820F6C9A /* XCNormalButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = XCNormalButton.m; path = AlertMaker/AlertMaker/Classes/Button/XCNormalButton.m; sourceTree = "<group>"; };
 		96C38491A363DEAA6466940038089FF3 /* SignedNumericExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SignedNumericExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/SignedNumericExtensions.swift; sourceTree = "<group>"; };
-		979486118B3E90C08386079D57962701 /* SnapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SnapKit.framework; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		979486118B3E90C08386079D57962701 /* SnapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		986CB9827131205ABE111F8F69F294CE /* XCButton.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCButton.h; path = AlertMaker/AlertMaker/Classes/Button/XCButton.h; sourceTree = "<group>"; };
 		99F176485CF2F79A6972C02330E549CF /* ConstraintRelation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintRelation.swift; path = Source/ConstraintRelation.swift; sourceTree = "<group>"; };
 		9B802BB6781BBCAE05218FDED52973E0 /* ConstraintInsetTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintInsetTarget.swift; path = Source/ConstraintInsetTarget.swift; sourceTree = "<group>"; };
@@ -475,7 +477,7 @@
 		9C432DB7E64E1684C07A2B5820D4DA1A /* VideoPartsManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoPartsManager.swift; path = SmartVideoEditor/Classes/VideoPartsManager.swift; sourceTree = "<group>"; };
 		9CEC466CB996CB69322FAD29880D3089 /* AlertMaker.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AlertMaker.modulemap; sourceTree = "<group>"; };
 		9D70C90DA511491219EFA7EE7D9656B7 /* SnapKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SnapKit.debug.xcconfig; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E655A1F0C1DF7516AC9EFFB1DF57DD8 /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
 		9E85609D4F26CE85CA3AB2F899DB3F1F /* VideoEditor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoEditor.swift; path = SmartVideoEditor/Classes/VideoEditor.swift; sourceTree = "<group>"; };
 		9F14FC23AB77D788454CF46B33FD4D1A /* MASUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASUtilities.h; path = Masonry/MASUtilities.h; sourceTree = "<group>"; };
@@ -540,7 +542,7 @@
 		D21BF954A9318A379A4FBCF016E93016 /* XCButtonAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCButtonAttribute.h; path = AlertMaker/AlertMaker/Classes/Button/XCButtonAttribute.h; sourceTree = "<group>"; };
 		D2875A95240E64412130E7C18AF08725 /* Pods-SmartVideoEditor-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SmartVideoEditor-acknowledgements.markdown"; sourceTree = "<group>"; };
 		D3009DE1FF2E35187E025D1E79D69873 /* VideoRecordConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoRecordConfig.swift; path = SmartVideoEditor/Classes/VideoRecordConfig.swift; sourceTree = "<group>"; };
-		D3203D165D23FDBCA472F6BD9832DBAA /* Pods_SmartVideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SmartVideoEditor.framework; path = "Pods-SmartVideoEditor.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3203D165D23FDBCA472F6BD9832DBAA /* Pods_SmartVideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SmartVideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40FE9AA868E18A485D6D4C173C5B221 /* URLRequestExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = URLRequestExtensions.swift; path = Sources/SwifterSwift/Foundation/URLRequestExtensions.swift; sourceTree = "<group>"; };
 		D4F298D9B470DB92BBB8DE1C09800565 /* ConstraintDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDSL.swift; path = Source/ConstraintDSL.swift; sourceTree = "<group>"; };
 		DB1062E4E3FCD599D87B5FC20A1B60E9 /* CGVectorExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGVectorExtensions.swift; path = Sources/SwifterSwift/CoreGraphics/CGVectorExtensions.swift; sourceTree = "<group>"; };
@@ -741,7 +743,6 @@
 				5E13A835B30DE5CCC299B1CAAB4E1D25 /* ViewController+MASAdditions.m */,
 				968C4FD3D80410BC92B793172955BE01 /* Support Files */,
 			);
-			name = Masonry;
 			path = Masonry;
 			sourceTree = "<group>";
 		};
@@ -854,7 +855,6 @@
 				71F924E837551F6CBE45D5BAD18ADDD1 /* XCNormalButtonAttribute.m */,
 				7CA9DDAE3BC4576008B0F7EBDC2C0785 /* Support Files */,
 			);
-			name = AlertMaker;
 			path = AlertMaker;
 			sourceTree = "<group>";
 		};
@@ -898,7 +898,6 @@
 				572532F228895951D75EF90C6E1C3172 /* Resources */,
 				0455C6DBE23DD5C457EA99981138334C /* Support Files */,
 			);
-			name = FileBox;
 			path = FileBox;
 			sourceTree = "<group>";
 		};
@@ -1057,7 +1056,6 @@
 				122710B525B83BA24D6C7DFCD84E2006 /* SwiftStdlib */,
 				748EF28BA423FD96F4144A244E657968 /* UIKit */,
 			);
-			name = SwifterSwift;
 			path = SwifterSwift;
 			sourceTree = "<group>";
 		};
@@ -1151,7 +1149,6 @@
 				6C87C4E99BE110AE52BA33CFF0F1BEDB /* UILayoutSupport+Extensions.swift */,
 				F8AE638AE3B82F3681BE75676D7D24BA /* Support Files */,
 			);
-			name = SnapKit;
 			path = SnapKit;
 			sourceTree = "<group>";
 		};
@@ -1179,6 +1176,7 @@
 				D3009DE1FF2E35187E025D1E79D69873 /* VideoRecordConfig.swift */,
 				B59BD5F0F52478CDDE132BA5C6AF829D /* VideoRecordDelegate.swift */,
 				EF18E8306C3B88456DBF7DAAD6DCDC98 /* VideoSessionError.swift */,
+				78E026B327157D8B00C0E03B /* VideoInfoReader.swift */,
 				239EBCD0BDCC8933C048AA1BFAC361F3 /* Pod */,
 				AA024B9E0FCB09E7AA98BAC91B011B05 /* Support Files */,
 			);
@@ -1694,6 +1692,7 @@
 				E6C2855AE57D70973E4D6C92C0188038 /* VideoCollectorDelegate.swift in Sources */,
 				B05FE2A927F33431924C03BE877754EC /* VideoEditor.swift in Sources */,
 				A01BB292608B92237B88F006242D0A17 /* VideoEditor-dummy.m in Sources */,
+				78E026B427157D8B00C0E03B /* VideoInfoReader.swift in Sources */,
 				5F6D7661071B1500CDF9B78B9A8F35B0 /* VideoExport.swift in Sources */,
 				13CD5E2AFC027F689F4083C352965386 /* VideoFilter.swift in Sources */,
 				A20D53DF540A7ECD0C71044C4856F015 /* VideoPartsManager.swift in Sources */,

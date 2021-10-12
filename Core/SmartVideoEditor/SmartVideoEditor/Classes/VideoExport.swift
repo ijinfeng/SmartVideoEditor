@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 
 /// 视频导出
-class VideoExport: NSObject {
+public class VideoExport: NSObject {
     private static let shared = VideoExport()
     private let exportQueue = DispatchQueue.init(label: "ijf_export_queue", qos: .default, attributes: .concurrent)
     private let semaphore = DispatchSemaphore.init(value: 1)
@@ -68,12 +68,5 @@ class VideoExport: NSObject {
                 }
             }
         }
-    }
-}
-
-
-extension String {
-    public var fileURL: URL {
-        URL(fileURLWithPath: self)
     }
 }
