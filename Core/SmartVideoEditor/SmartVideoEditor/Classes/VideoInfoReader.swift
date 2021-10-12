@@ -9,10 +9,7 @@ import UIKit
 import AVFoundation
 
 public class VideoInfo: NSObject {
-    
-    /// 封面图
-    public var coverImage: UIImage?
-    
+    /// 文件路径
     public var filePath: String = ""
     
     /// 时长
@@ -41,30 +38,34 @@ public class VideoInfo: NSObject {
 extension VideoInfo {
     public override var description: String {
         func fileSize(size: UInt64) -> String {
+            let tunit: Float = 1024.0
             var _size = Float(size)
-            if _size < 1024 {
-                return "\(_size)B"
+            if _size < tunit {
+                return String(format: "%.2fB", _size)
             }
-            _size /= 1024
-            if _size < 1024 {
-                return "\(_size)KB"
+            _size /= tunit
+            if _size < tunit {
+                return String(format: "%.2fKB", _size)
             }
-            _size /= 1024
-            if _size < 1024 {
-                return "\(_size)M"
+            _size /= tunit
+            if _size < tunit {
+                return String(format: "%.2fM", _size)
             } else {
-                return "\(_size/1024.0)G"
+                return String(format: "%.2fG", _size/tunit)
             }
         }
-        let str = "<VideoInfo> \n\tfilePath: \(filePath), \n\tduration: \(duration), \n\tfps: \(fps), \n\tfileSize: \(fileSize(size: self.fileSize)), \n\tbps: \(bps), \n\taudioSampleRate: \(audioSampleRate), \n\tsize: {\(width), \(height)}"
+        let str = "-VideoInfo description: \n\t-filePath: \(filePath), \n\t-duration: \(duration), \n\t-fps: \(fps), \n\t-fileSize: \(fileSize(size: self.fileSize)), \n\t-bps: \(bps), \n\t-audioSampleRate: \(audioSampleRate), \n\t-width: \(width), \n\t-height: \(height)"
         return str
     }
 }
 
+/// 视频信息读取类
 public class VideoInfoReader: NSObject {
     
     private let videoPath: String!
     private let asset: AVURLAsset!
+    
+    private lazy var imageGenerator: AVAssetImageGenerator = AVAssetImageGenerator.init(asset: asset)
     
     public init(videoPath: String) {
         self.videoPath = videoPath
@@ -79,9 +80,9 @@ extension VideoInfoReader {
     /// - Parameter handler: 结果回调
     public func asyncRead(completionHandler handler: @escaping (VideoInfo) -> Void) {
         let info = VideoInfo()
-        info.filePath = asset.url.absoluteString
+        info.filePath = videoPath
         
-        let attribute = try? FileManager.default.attributesOfItem(atPath: info.filePath)
+        let attribute = try? FileManager.default.attributesOfItem(atPath: videoPath)
         if let attribute = attribute {
             if let size = attribute[FileAttributeKey.size] as? UInt64 {
                 info.fileSize = size
@@ -100,7 +101,7 @@ extension VideoInfoReader {
                 info.duration = 0
             }
         }
-        let videoKeys = AssetKeyPath.stringKeys(from: [.nominalFrameRate, .estimatedDataRate])
+        let videoKeys = AssetKeyPath.stringKeys(from: [.nominalFrameRate, .estimatedDataRate, .naturalSize])
         group.enter()
         if let videoTrack = asset.tracks(withMediaType: .video).first {
             videoTrack.loadValuesAsynchronously(forKeys: videoKeys) {
@@ -140,6 +141,38 @@ extension VideoInfoReader {
             handler(info)
         }
     }
+    
+    /// 同步获取视频文件信息
+    /// - Returns: 文件信息
+    public func syncRead() -> VideoInfo {
+        let info = VideoInfo()
+        info.filePath = videoPath
+        
+        let attribute = try? FileManager.default.attributesOfItem(atPath: videoPath)
+        if let attribute = attribute {
+            if let size = attribute[FileAttributeKey.size] as? UInt64 {
+                info.fileSize = size
+            }
+        }
+        
+        info.duration = CMTimeGetSeconds(self.asset.duration)
+        
+        if let videoTrack = asset.tracks(withMediaType: .video).first {
+            info.fps = videoTrack.nominalFrameRate
+            info.bps = videoTrack.estimatedDataRate
+            info.width = Float(videoTrack.naturalSize.width)
+            info.height = Float(videoTrack.naturalSize.height)
+        }
+       
+        if let audioTrack = asset.tracks(withMediaType: .audio).first {
+            info.audioSampleRate = audioTrack.naturalTimeScale
+        }
+        
+        return info
+    }
+    
+    
+    
 }
 
 

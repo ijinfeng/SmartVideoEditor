@@ -19,39 +19,19 @@ class VideoEditorViewController: UIViewController {
             let asset = AVAsset(url: URL(fileURLWithPath: path))
             print("dur: \(asset.duration)")
             
-
+//            let attribute = try? FileManager.default.attributesOfItem(atPath: path)
+//            if let attribute = attribute {
+//                if let size = attribute[FileAttributeKey.size] as? UInt64 {
+//                    print("size=\(size)")
+//                }
+//            }
+//
+          //  /Users/Cranz/Library/Developer/Xcode/DerivedData/SmartVideoEditor-bexvfvmaspimtuamcfowcddiipps/Build/Products/Debug-iphonesimulator/SmartVideoEditor.app/vap.mp4
             
-            
-            let reader = VideoInfoReader.init(videoPath: path)
+        // file:///Users/Cranz/Library/Developer/CoreSimulator/Devices/29DE5B13-7EAB-4DD9-B830-C5FDF944111F/data/Containers/Bundle/Application/66706578-BF76-4170-A6E0-A103D0CED827/SmartVideoEditor.app/vap.mp4
+            let reader = VideoInfoReader.init(videoPath: "/Users/Cranz/Library/Developer/Xcode/DerivedData/SmartVideoEditor-bexvfvmaspimtuamcfowcddiipps/Build/Products/Debug-iphonesimulator/SmartVideoEditor.app/vap.mp4")
             reader.asyncRead { info in
                 print(info)
-            }
-        
-            
-//            CMVideoFormatDescription
-            if let track = asset.tracks(withMediaType: .video).first {
-                print("video============")
-                print(track.formatDescriptions)
-                print(track.timeRange)
-                print(track.naturalTimeScale)
-                print(track.estimatedDataRate)
-                print(track.naturalSize)
-                print(track.preferredVolume)
-                print(track.nominalFrameRate)
-                print(track.totalSampleDataLength)
-                print(track.metadata)
-            }
-            if let track = asset.tracks(withMediaType: .audio).first {
-                print("audio============")
-                print(track.formatDescriptions)
-                print(track.timeRange)
-                print(track.naturalTimeScale)
-                print(track.estimatedDataRate)
-                print(track.naturalSize)
-                print(track.preferredVolume)
-                print(track.nominalFrameRate)
-                print(track.totalSampleDataLength)
-                print(track.metadata)
             }
             
         }
