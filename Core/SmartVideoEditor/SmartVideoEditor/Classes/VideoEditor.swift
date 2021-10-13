@@ -8,27 +8,30 @@
 import UIKit
 import AVFoundation
 
+/// 视频编辑器
 public class VideoEditor: NSObject {
     
     public private(set) var url: URL!
-    public private(set) var asset: AVAsset!
+    public private(set) var asset: AVURLAsset!
     public private(set) var preview: UIView!
     
     public convenience init(url: URL, preview: UIView) {
-        self.init(url: url, asset: nil, preview: preview)
+        self.init(asset: AVAsset(url: url), preview: preview)
     }
     
-    public convenience init(asset: AVAsset, preview: UIView) {
-        self.init(url: nil, asset: asset, preview: preview)
-    }
-    
-    public init(url: URL?, asset: AVAsset?, preview: UIView) {
-        self.url = url
-        self.asset = asset
+    public init(asset: AVAsset?, preview: UIView) {
         self.preview = preview
-        guard url != nil || asset != nil else {
+        guard asset != nil else {
             return
         }
-        
+        if asset is AVURLAsset {
+            self.asset = (asset as! AVURLAsset)
+        }
     }
+    
+    
+}
+
+extension VideoEditor {
+    
 }

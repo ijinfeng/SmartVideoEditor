@@ -9,10 +9,8 @@ import UIKit
 import AVFoundation
 
 public class VideoCollectorConfig: NSObject {
-    /// 是否允许点击曝光聚焦，默认值：true
-    public var focusPoint: CGPoint?
-    /// 是否自动对焦
-    public var autoFocus = true
+    /// 是否允许手动曝光聚焦
+    public var touchFocus = true
     /// 是否允许双指手势放大预览画面，默认值：true
     public var enableZoom = true
     /// 画面镜像

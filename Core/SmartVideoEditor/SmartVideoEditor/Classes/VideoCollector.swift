@@ -20,13 +20,15 @@ public class VideoCollector: NSObject {
     
     public lazy var filter = VideoFilter()
     
+    private var focusImage: UIImage?
+    private var videoPreview: VideoPreviewView?
     private var videoPreviewLayer: VideoPreviewLayer?
     private var videoDevice: AVCaptureDevice?
     private var audioDevice: AVCaptureDevice?
     private var videoInput: AVCaptureDeviceInput?
     private var audioInput: AVCaptureDeviceInput?
     private var videoOutput: AVCaptureVideoDataOutput?
-    private lazy var context: CIContext = {
+    internal lazy var context: CIContext = {
         if #available(iOS 12.0, *) {
             return CIContext()
         } else {
@@ -88,10 +90,15 @@ extension VideoCollector {
         if let onView = preview {
             onView.layer.backgroundColor = UIColor.black.cgColor
 //            videoPreviewLayer?.videoGravity = .resizeAspectFill
-            videoPreviewLayer = VideoPreviewLayer()
-            videoPreviewLayer?.frame = onView.bounds
-            onView.layer.insertSublayer(videoPreviewLayer!, at: 0)
+            videoPreview = VideoPreviewView()
+            videoPreview?.delegate = self
+            videoPreview?.frame = onView.bounds
+            videoPreview?.setCustomFocusImage(focusImage)
+            onView.insertSubview(videoPreview!, at: 0)
+            videoPreviewLayer = videoPreview?.layer as? VideoPreviewLayer
         } else {
+            videoPreview?.removeFromSuperview()
+            videoPreview = nil
             videoPreviewLayer?.removeFromSuperlayer()
             videoPreviewLayer = nil
         }
@@ -162,6 +169,46 @@ extension VideoCollector {
             }, device: currentDevice)
         }
     }
+    
+    /// 设置聚焦曝光的图片
+    /// - Parameter image: 当设置为 `nil` 时，将使用默认的样式
+    public func setFocusImage(_ image: UIImage?) {
+        focusImage = image
+        videoPreview?.setCustomFocusImage(image)
+    }
+}
+
+
+/// 你传递一个CGPoint，其中{0,0}表示图像区域的左上角，而{1,1}表示右下方在横向模式下，右侧的主屏幕按钮 - 即使设备处于纵向模式，也适用
+/// 它是指比例。例如，如果您想要着眼于{0.5,0.2}点的边界大小{20,100}，请点击{10,20}。
+/// https://blog.csdn.net/qq_30513483/article/details/51198464
+extension VideoCollector {
+
+    /// 将`UIView`上的点转换成摄像头点的位置
+    /// - Parameter point: uiview上的点
+    /// - Returns: 摄像头上的点
+    public func captureDevicePointConverted(fromView point: CGPoint) -> CGPoint {
+        if let videoPreview = videoPreview {
+            var _window: UIWindow?
+            if #available(iOS 13.0, *) {
+                if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                    _window = scene.windows.first
+                }
+            } else {
+                _window = UIApplication.shared.windows.first
+            }
+            if let window = _window {
+                let convert = videoPreview.convert(videoPreview.frame, to: window)
+                let x = point.y / convert.size.height
+                let y = 1 - point.x / convert.size.width
+                return CGPoint(x: x, y: y)
+            } else {
+                return .zero
+            }
+        } else {
+            return .zero
+        }
+    }
 }
 
 extension VideoCollector {
@@ -212,6 +259,12 @@ extension VideoCollector {
                 }
                 videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
                 videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
+                if videoDevice.isFocusModeSupported(.autoFocus) {
+                    videoDevice.focusMode = .autoFocus
+                }
+                if videoDevice.isExposureModeSupported(.autoExpose) {
+                    videoDevice.exposureMode = .autoExpose
+                }
             }, device: videoDevice)
         } catch {
              throw VideoSessionError.Collector.updateDevice
@@ -266,6 +319,35 @@ extension VideoCollector {
             session.addOutput(audioOutput)
         }
     }
+    
+    private func setTouchFocus(at point: CGPoint) {
+        guard config.touchFocus else {
+            return
+        }
+        if let currentDevice = self.videoDevice {
+            try? updateDevice(lock: {
+                if currentDevice.isFocusPointOfInterestSupported {
+                    currentDevice.focusPointOfInterest = point
+                }
+                if currentDevice.isExposurePointOfInterestSupported {
+                    currentDevice.exposurePointOfInterest = point
+                }
+                if currentDevice.isFocusModeSupported(.autoFocus) {
+                    currentDevice.focusMode = .autoFocus
+                }
+                if currentDevice.isExposureModeSupported(.autoExpose) {
+                    currentDevice.exposureMode = .autoExpose
+                }
+            }, device: currentDevice)
+        }
+    }
+}
+
+extension VideoCollector: VideoPreviewViewDelegate {
+    func didTouch(at point: CGPoint) {
+        let devicePoint = captureDevicePointConverted(fromView: point)
+        setTouchFocus(at: devicePoint)
+    }
 }
 
 
@@ -284,6 +366,7 @@ extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
                 var oimage = CIImage.init(cvPixelBuffer: imageBuffer)
                 oimage = filter.apply(to: oimage)
                 let outputImage = context.createCGImage(oimage, from: oimage.extent)
+                delegate?.captureOutput(outputImage, didOutput: sampleBuffer)
                 DispatchQueue.main.async {
                     previewLayer.contents = outputImage
                 }

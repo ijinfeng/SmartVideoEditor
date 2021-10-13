@@ -46,6 +46,8 @@ public class VideoRecord: NSObject {
     /// 录制总时长
     private var duration: CMTime = .zero
     
+    /// 拍照的回调
+    private var photoCallback: ((UIImage) -> Void)?
     
     public init(config: VideoRecordConfig = VideoRecordConfig()) {
         self.config = config
@@ -108,22 +110,22 @@ public class VideoRecord: NSObject {
 
 
 extension VideoRecord {
+    
+    /// 开始采集音视频，并显示预览效果
+    /// - Parameter preview: 预览效果展示的`view`
     public func startCollect(preview : UIView?) {
         collector.startCollect(preview: preview)
     }
     
+    /// 停止音视频采集
     public func stopCollect() {
         collector.stopCollcet()
     }
-    
-    public func startRecord() throws {
-        try startRecord(in: nil)
-    }
-    
+
     /// 开始录制
     /// - Parameter videoPath: 录制输出路径
     /// - Returns: 录制状态
-    public func startRecord(in outputVideoPath: String?) throws {
+    public func startRecord(in outputVideoPath: String? = nil) throws {
         guard !isRecording else {
             print("the recording has begun")
             return
@@ -152,6 +154,7 @@ extension VideoRecord {
         try addOnePart()
     }
     
+    /// 继续录制
     public func resume() throws {
         guard isRecording else {
             print("record is not start")
@@ -167,7 +170,7 @@ extension VideoRecord {
         try addOnePart()
     }
     
-    /// 每次暂停，都会生成一个视频片段
+    /// 暂停录制。每次暂停，都会生成一个视频片段
     public func pauseRecord() {
         guard isRecording else {
             print("record is not start")
@@ -186,6 +189,7 @@ extension VideoRecord {
         }
     }
     
+    /// 停止录制
     public func stopRecord() {
         guard isPause || isRecording else {
             print("aleady stop record")
@@ -240,6 +244,13 @@ extension VideoRecord {
             }
         })
     }
+    
+    
+    /// 拍照。拍照可在录制的任何阶段进行
+    /// - Parameter callback: 回调生成的照片
+    public func takePhoto(callback: @escaping (_ photo: UIImage) -> Void) {
+        photoCallback = callback
+    }
 }
 
 extension VideoRecord {
@@ -267,6 +278,18 @@ extension VideoRecord {
 }
 
 extension VideoRecord: VideoCollectorDelegate {
+    public func captureOutput(_ outputImage: CGImage?, didOutput sampleBuffer: CMSampleBuffer) {
+        guard let callback = photoCallback else {
+            return
+        }
+        if let outputImage = outputImage {
+            photoCallback = nil
+            DispatchQueue.main.async {
+                callback(UIImage(cgImage: outputImage))
+            }
+        }
+    }
+    
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard isRecording else {
             return

@@ -71,11 +71,13 @@ class VideoEditorViewController: UIViewController {
         
         if let path = Bundle.main.path(forResource: "vap", ofType: "mp4") {
             let asset = AVAsset(url: URL(fileURLWithPath: path))
+            print(asset)
+            // AVURLAsset
             print("dur: \(asset.duration)")
             
         // file:///Users/Cranz/Library/Developer/CoreSimulator/Devices/29DE5B13-7EAB-4DD9-B830-C5FDF944111F/data/Containers/Bundle/Application/66706578-BF76-4170-A6E0-A103D0CED827/SmartVideoEditor.app/vap.mp4
             let reader = VideoInfoReader.init(videoPath: path)
-            reader.generateImages(by: 0.1, maximumSize: .zero) { requestTime, outputImage, index, total in
+            reader.generateImages(by: 0.5, maximumSize: .zero) { requestTime, outputImage, index, total in
                 self.total = total
                 self.images.append(outputImage)
                 print("- req: \(requestTime), \n index: \(index), \n total: \(total), \n outImage: \(outputImage == nil ? "nil":"image")")

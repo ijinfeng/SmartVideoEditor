@@ -35,10 +35,15 @@ class RecordViewController: UIViewController {
     
     let timeLabel = UILabel()
 
+    let photoView = UIImageView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
+        
+        
+        record.collector.setFocusImage(UIImage.init(named: "YJFVideoAlbum"))
         
         
         closeButton.setImage(UIImage.init(named: "YJFVideoClose"), for: .normal)
@@ -165,6 +170,14 @@ class RecordViewController: UIViewController {
             make.size.equalTo(rotateButton)
             make.centerX.equalTo(rotateButton)
             make.top.equalTo(mirrorButton.snp_bottom).offset(10)
+        }
+        
+        
+        view.addSubview(photoView)
+        photoView.snp.makeConstraints { make in
+            make.left.equalTo(12)
+            make.top.equalTo(100)
+            make.size.equalTo(CGSize(width: 80, height: 120))
         }
     }
     
@@ -300,8 +313,14 @@ extension RecordViewController {
     }
     
     @objc func onClickMute() {
-        muteButton.isSelected = !muteButton.isSelected
-        record.setMute(muteButton.isSelected)
+//        muteButton.isSelected = !muteButton.isSelected
+//        record.setMute(muteButton.isSelected)
+        
+        
+        record.takePhoto { [weak self] photo in
+            self?.photoView.image = photo
+        }
+        
     }
     
 //    @objc func onClickPause() {
