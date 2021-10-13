@@ -179,7 +179,7 @@ extension VideoCollector {
     }
 }
 
-// MARK: <#summary#>
+// MARK: 坐标转换
 /// 你传递一个CGPoint，其中{0,0}表示图像区域的左上角，而{1,1}表示右下方在横向模式下，右侧的主屏幕按钮 - 即使设备处于纵向模式，也适用
 /// 它是指比例。例如，如果您想要着眼于{0.5,0.2}点的边界大小{20,100}，请点击{10,20}。
 /// https://blog.csdn.net/qq_30513483/article/details/51198464
@@ -212,6 +212,7 @@ extension VideoCollector {
     }
 }
 
+// MARK: Private API
 extension VideoCollector {
     private func getVideoDevice(camera: Camera) -> AVCaptureDevice? {
         var device: AVCaptureDevice?
@@ -344,6 +345,7 @@ extension VideoCollector {
     }
 }
 
+// MARK: VideoPreviewViewDelegate
 extension VideoCollector: VideoPreviewViewDelegate {
     func didTouch(at point: CGPoint) {
         let devicePoint = captureDevicePointConverted(fromView: point)
@@ -351,7 +353,7 @@ extension VideoCollector: VideoPreviewViewDelegate {
     }
 }
 
-
+// MARK: AVCaptureDataOutputSampleBufferDelegate
 extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     // 采集的原始数据
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
