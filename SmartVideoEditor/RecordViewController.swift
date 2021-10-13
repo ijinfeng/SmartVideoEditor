@@ -13,7 +13,7 @@ import VideoEditor
 
 class RecordViewController: UIViewController {
     
-    let record = VideoRecord.shared
+    let record = VideoRecord()
     
     let closeButton = UIButton()
     

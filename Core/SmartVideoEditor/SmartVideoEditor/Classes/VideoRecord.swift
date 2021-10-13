@@ -11,8 +11,6 @@ import AVFoundation
 /// 视频录制
 public class VideoRecord: NSObject {
     
-    public static let shared = VideoRecord(config: VideoRecordConfig())
-    
     public let config: VideoRecordConfig!
     
     /// 视频信息采集
@@ -49,7 +47,7 @@ public class VideoRecord: NSObject {
     private var duration: CMTime = .zero
     
     
-    public init(config: VideoRecordConfig) {
+    public init(config: VideoRecordConfig = VideoRecordConfig()) {
         self.config = config
         
         var bitRate = config.pixelsSize().height * config.pixelsSize().width * 32 /*没像素比特*/
