@@ -9,7 +9,7 @@ target 'SmartVideoEditor' do
   
   
   pod 'VideoEditor', :path => './Core/VideoEditor'
-  pod 'VideoVisualEffects', :path => './Core/VideoVisualEffects'  
+  pod 'VideoVisualEffects', :path => './Core/VideoVisualEffects'
 
   #pod 'Moya'
   pod 'SnapKit'
