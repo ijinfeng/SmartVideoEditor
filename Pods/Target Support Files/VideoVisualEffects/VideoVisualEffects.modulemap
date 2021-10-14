@@ -1,0 +1,6 @@
+framework module VideoVisualEffects {
+  umbrella header "VideoVisualEffects-umbrella.h"
+
+  export *
+  module * { export * }
+}

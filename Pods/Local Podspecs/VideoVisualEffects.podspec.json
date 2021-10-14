@@ -1,9 +1,9 @@
 {
-  "name": "VideoEditor",
+  "name": "VideoVisualEffects",
   "version": "0.1.0",
-  "summary": "A short description of SmartVideoEditor.",
+  "summary": "A short description of VideoVisualEffects.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/ijinfeng/SmartVideoEditor",
+  "homepage": "https://github.com/ijinfeng/VideoVisualEffects",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,11 +12,11 @@
     "ijinfeng": "851406283@qq.com"
   },
   "source": {
-    "git": "https://github.com/ijinfeng/SmartVideoEditor.git",
+    "git": "https://github.com/ijinfeng/VideoVisualEffects.git",
     "tag": "0.1.0"
   },
   "platforms": {
     "ios": "9.0"
   },
-  "source_files": "VideoEditor/Classes/**/*"
+  "source_files": "VideoVisualEffects/Classes/**/*"
 }
