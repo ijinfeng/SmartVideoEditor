@@ -43,7 +43,7 @@ class VideoEditorViewController: UIViewController {
     
     let collection: UICollectionView = UICollectionView.init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    var images: [UIImage?] = []
+    var images: [CGImage?] = []
     var total: Int = 0
     
     let itemSize = CGSize(width: 160, height: 400)
@@ -105,7 +105,7 @@ extension VideoEditorViewController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MyCell
-        cell.image = self.images[indexPath.row]
+        cell.image = UIImage(cgImage: self.images[indexPath.row]!)
         return cell
     }
     
@@ -134,7 +134,7 @@ extension VideoEditorViewController: UICollectionViewDelegate, UICollectionViewD
                     print("nil+++++++++++++++")
                 }
                 if let image = outputImage {
-                    self.showImageView.image = image
+                    self.showImageView.image = UIImage(cgImage: image)
                 }
             })
         })

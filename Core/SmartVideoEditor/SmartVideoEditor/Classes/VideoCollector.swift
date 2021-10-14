@@ -95,6 +95,7 @@ extension VideoCollector {
             videoPreview?.delegate = self
             videoPreview?.frame = onView.bounds
             videoPreview?.setCustomFocusImage(focusImage)
+            videoPreview?.enablePinch = config.enableZoom
             onView.insertSubview(videoPreview!, at: 0)
             videoPreviewLayer = videoPreview?.layer as? VideoPreviewLayer
         } else {
@@ -176,6 +177,21 @@ extension VideoCollector {
     public func setFocusImage(_ image: UIImage?) {
         focusImage = image
         videoPreview?.setCustomFocusImage(image)
+    }
+    
+    /// 设置缩放比例
+    /// - Parameter scale: 1.0 ~ 3.0
+    /// - Parameter velocity: 缩放速度
+    public func setZoom(_ scale: CGFloat, _ velocity: CGFloat = 100.0) {
+        var _scale = scale
+        if _scale < 1.0 {
+            _scale = 1.0
+        }
+        if let currentDevice = self.videoDevice {
+            try? updateDevice(lock: {
+                currentDevice.ramp(toVideoZoomFactor: _scale, withRate: Float(velocity))
+            }, device: currentDevice)
+        }
     }
 }
 
@@ -277,6 +293,8 @@ extension VideoCollector {
         }
         
         switchCamera(to: config.camera)
+        
+        videoPreview?.enablePinch = config.enableZoom
     }
     
     private func setVideoOrientation(connection: AVCaptureConnection, _ o: AVCaptureVideoOrientation = .portrait) {
@@ -350,6 +368,10 @@ extension VideoCollector: VideoPreviewViewDelegate {
     func didTouch(at point: CGPoint) {
         let devicePoint = captureDevicePointConverted(fromView: point)
         setTouchFocus(at: devicePoint)
+    }
+    
+    func didPinching(scale: CGFloat, velocity: CGFloat) {
+        setZoom(scale)
     }
 }
 

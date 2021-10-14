@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func onClickWclRecord(_ sender: Any) {
-        let vc = VideoEditorViewController()
+        let vc = VideoPlayerViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 }

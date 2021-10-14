@@ -11,11 +11,20 @@ import QuartzCore
 
 protocol VideoPreviewViewDelegate: AnyObject {
     func didTouch(at point: CGPoint)
+    func didPinching(scale: CGFloat, velocity: CGFloat)
 }
 
 class VideoPreviewView: UIView {
     
+    internal var enablePinch: Bool = true {
+        didSet {
+            pinch.isEnabled = enablePinch
+        }
+    }
+    
     internal weak var delegate: VideoPreviewViewDelegate?
+    
+    private lazy var pinch = UIPinchGestureRecognizer.init(target: self, action: #selector(onPinchProgress(_:)))
     
     private let focusImageView: UIImageView = {
        let imageView = UIImageView()
@@ -28,6 +37,7 @@ class VideoPreviewView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(focusImageView)
+        addGestureRecognizer(pinch)
     }
     
     required init?(coder: NSCoder) {
@@ -73,6 +83,13 @@ extension VideoPreviewView {
                 self.focusImageView.alpha = 0
             }
         }
+    }
+}
+
+// MARK: Actions
+extension VideoPreviewView {
+    @objc func onPinchProgress(_ gr: UIPinchGestureRecognizer) {
+        delegate?.didPinching(scale: gr.scale, velocity: gr.velocity)
     }
 }
 

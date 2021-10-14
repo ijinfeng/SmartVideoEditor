@@ -31,10 +31,10 @@ public class VideoInfo: NSObject {
     public var audioSampleRate: Int32 = 0
     
     /// 宽
-    public var width: Float = 0
+    public var width: CGFloat = 0
     
     /// 高
-    public var height: Float = 0
+    public var height: CGFloat = 0
 }
 
 
@@ -141,8 +141,9 @@ extension VideoInfoReader {
                     info.bps = 0
                 }
                 if videoTrack.statusOfValue(forKey: AssetKeyPath.naturalSize.rawValue, error: nil) == .loaded {
-                    info.width = Float(videoTrack.naturalSize.width)
-                    info.height = Float(videoTrack.naturalSize.height)
+                    let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
+                    info.width = size.width
+                    info.height = size.height
                 } else {
                     info.width = 0
                     info.height = 0
@@ -202,8 +203,9 @@ extension VideoInfoReader {
         if let videoTrack = asset.tracks(withMediaType: .video).first {
             info.fps = videoTrack.nominalFrameRate
             info.bps = videoTrack.estimatedDataRate
-            info.width = Float(videoTrack.naturalSize.width)
-            info.height = Float(videoTrack.naturalSize.height)
+            let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
+            info.width = size.width
+            info.height = size.height
         }
        
         if let audioTrack = asset.tracks(withMediaType: .audio).first {
@@ -223,8 +225,8 @@ extension VideoInfoReader {
 // MARK: 获取视频流的缩略图
 extension VideoInfoReader {
     
-    public typealias GenerateImagesHandler = (_ requestTime: TimeInterval, _ outputImage: UIImage?, _ index: Int, _ total: Int) -> Bool
-    public typealias GenerateImageHandler = (_ outputImage: UIImage?) -> Void
+    public typealias GenerateImagesHandler = (_ requestTime: TimeInterval, _ outputImage: CGImage?, _ index: Int, _ total: Int) -> Bool
+    public typealias GenerateImageHandler = (_ outputImage: CGImage?) -> Void
     
     /// 通过给定时间轴上的时间节点来获取缩略图
     /// - Parameters:
@@ -258,11 +260,11 @@ extension VideoInfoReader {
             }
             self.imageGenerator.generateCGImagesAsynchronously(forTimes: vtimes) { requestTime, image, acturalTime, result, error in
                 DispatchQueue.main.async {
-                    var uiImage: UIImage? = nil
+                    var outputImage: CGImage? = nil
                     if result == .succeeded && image != nil {
-                        uiImage = UIImage(cgImage: image!)
+                        outputImage = image!
                     }
-                    let `continue` = handler(CMTimeGetSeconds(requestTime), uiImage, index, total)
+                    let `continue` = handler(CMTimeGetSeconds(requestTime), outputImage, index, total)
                     if `continue` == false {
                         self.imageGenerator.cancelAllCGImageGeneration()
                     }
