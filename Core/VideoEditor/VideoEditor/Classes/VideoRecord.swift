@@ -108,7 +108,7 @@ public class VideoRecord: NSObject {
     }
 }
 
-
+// MARK: Public API
 extension VideoRecord {
     
     /// 开始采集音视频，并显示预览效果
@@ -202,8 +202,10 @@ extension VideoRecord {
                 self.delegate?.didStopRecord()
             }
             stopOnePart(writer: writer)
-            writeVideoInput.markAsFinished()
-            writeAudioInput.markAsFinished()
+            if writer.status != .unknown {
+                writeVideoInput.markAsFinished()
+                writeAudioInput.markAsFinished()
+            }
         }
     }
     
@@ -253,6 +255,7 @@ extension VideoRecord {
     }
 }
 
+// MARK: Private API
 extension VideoRecord {
     private func addOnePart() throws {
         let url = URL(fileURLWithPath: partsManager.autoincrementPath)
@@ -277,6 +280,7 @@ extension VideoRecord {
     }
 }
 
+// MARK: VideoCollectorDelegate
 extension VideoRecord: VideoCollectorDelegate {
     public func captureOutput(_ outputImage: CGImage?, didOutput sampleBuffer: CMSampleBuffer) {
         guard let callback = photoCallback else {
