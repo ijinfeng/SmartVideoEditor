@@ -12,7 +12,6 @@ import AVFoundation
 public class VideoExport: NSObject {
     private static let shared = VideoExport()
     private let exportQueue = DispatchQueue.init(label: "ijf_export_queue", qos: .default, attributes: .concurrent)
-    private let semaphore = DispatchSemaphore.init(value: 1)
     
     static func exportVideo(assetURL: URL?,
                             asset: AVAsset?,

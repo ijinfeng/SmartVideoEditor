@@ -78,7 +78,7 @@ public class VideoInfoReader: NSObject {
     
     public init(videoPath: String) {
         self.videoPath = videoPath
-        self.asset = AVURLAsset(url: videoPath.fileURL)
+        self.asset = AVURLAsset(url: videoPath.fileURL, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
     }
     
     deinit {

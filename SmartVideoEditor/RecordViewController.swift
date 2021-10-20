@@ -316,7 +316,6 @@ extension RecordViewController {
 //        muteButton.isSelected = !muteButton.isSelected
 //        record.setMute(muteButton.isSelected)
         
-        
         record.takePhoto { [weak self] photo in
             self?.photoView.image = photo
         }

@@ -9,6 +9,10 @@ import UIKit
 import AVFoundation
 import VideoEditor
 import SnapKit
+import QuickLook
+import SwifterSwift
+import AVKit
+
 
 class MyCell: UICollectionViewCell {
     
@@ -21,7 +25,6 @@ class MyCell: UICollectionViewCell {
     }
     
     private var imageView: UIImageView = UIImageView()
-    
     
     
     override init(frame: CGRect) {
@@ -46,9 +49,31 @@ class VideoEditorViewController: UIViewController {
     var images: [CGImage?] = []
     var total: Int = 0
     
-    let itemSize = CGSize(width: 160, height: 400)
+    let itemSize = CGSize(width: 60, height: 60)
     
     var reader: VideoInfoReader?
+    
+    var avReader: AVAssetReader!
+    
+    var curTime: CMTime = .zero
+    
+    var needReadNextBuffer = false
+    
+    let queue = DispatchQueue.init(label: "read buffer")
+    var player: AVPlayer!
+    
+    internal lazy var context: CIContext = {
+        if #available(iOS 12.0, *) {
+            return CIContext()
+        } else {
+            if let eaglContext = EAGLContext.init(api: EAGLRenderingAPI.openGLES2) {
+                return CIContext.init(eaglContext: eaglContext)
+            }
+            return CIContext.init(options: nil)
+        }
+    }()
+    
+    let editor = SimpleEditor()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,10 +81,10 @@ class VideoEditorViewController: UIViewController {
         view.addSubview(showImageView)
         showImageView.snp.makeConstraints { make in
             make.top.equalTo(88)
-            make.size.equalTo(CGSize(width: 65, height: 100))
+            make.size.equalTo(CGSize(width: 300, height: 300))
             make.centerX.equalTo(view)
         }
-        
+
         collection.delegate = self
         collection.dataSource = self
         collection.register(MyCell.self, forCellWithReuseIdentifier: "cell")
@@ -72,30 +97,61 @@ class VideoEditorViewController: UIViewController {
         collection.backgroundColor = .white
         collection.snp.makeConstraints { make in
             make.left.right.equalTo(view)
-            make.bottom.equalTo(0)
-            make.height.equalTo(100)
+            make.bottom.equalTo(-80)
+            make.height.equalTo(itemSize.height)
         }
         
         view.backgroundColor = .white
         
-        if let path = Bundle.main.path(forResource: "vap", ofType: "mp4") {
-            let asset = AVAsset(url: URL(fileURLWithPath: path))
-            print(asset)
-            // AVURLAsset
-            print("dur: \(asset.duration)")
-            
-        // file:///Users/Cranz/Library/Developer/CoreSimulator/Devices/29DE5B13-7EAB-4DD9-B830-C5FDF944111F/data/Containers/Bundle/Application/66706578-BF76-4170-A6E0-A103D0CED827/SmartVideoEditor.app/vap.mp4
-            reader = VideoInfoReader.init(videoPath: path)
-            reader?.generateImages(by: 0.5, maximumSize: .zero) { requestTime, outputImage, index, total in
-                self.total = total
-                self.images.append(outputImage)
-                print("- req: \(requestTime), \n index: \(index), \n total: \(total), \n outImage: \(outputImage == nil ? "nil":"image")")
-                self.collection.reloadData()
-                return true
-            }
-        }
+        
+        
+//        self.player = AVPlayer.init()
+//        let playerView = AVPlayerLayer.init(player: player)
+//        playerView.frame = CGRect(x: 0, y: 200, width: view.frame.size.width, height: 400)
+//        view.layer.addSublayer(playerView)
+//        self.player.play()
+        
+        
+        
+        
+//        if let path = Bundle.main.path(forResource: "vap", ofType: "mp4") {
+//            let asset = AVAsset(url: URL(fileURLWithPath: path))
+//            print(asset)
+//            // AVURLAsset
+//            print("dur: \(asset.duration)")
+//
+//        // file:///Users/Cranz/Library/Developer/CoreSimulator/Devices/29DE5B13-7EAB-4DD9-B830-C5FDF944111F/data/Containers/Bundle/Application/66706578-BF76-4170-A6E0-A103D0CED827/SmartVideoEditor.app/vap.mp4
+//            let scale = UIScreen.main.scale
+//            reader = VideoInfoReader.init(videoPath: path)
+//            reader?.generateImages(by: 0.5, maximumSize: CGSize(width: itemSize.width * scale, height: itemSize.height * scale)) { requestTime, outputImage, index, total in
+//                self.total = total
+//                self.images.append(outputImage)
+//                print("- req: \(requestTime), \n index: \(index), \n total: \(total), \n outImage: \(outputImage == nil ? "nil":"image")")
+//                self.collection.reloadData()
+//                return true
+//            }
+//        }
+        
+        let asset1 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip1", ofType: "m4v") ?? ""))
+        let asset2 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip2", ofType: "mov") ?? ""))
+        
+        self.editor.clips.append(asset1)
+        self.editor.clips.append(asset2)
+        
+        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset1.duration))
+        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset2.duration))
+        
+        self.editor.buildCompositionObjectsForPlayback()
     }
-   
+ 
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let vc = AVPlayerViewController()
+        vc.player = AVPlayer.init(playerItem: editor.getPlayerItem())
+        self.player = vc.player
+        navigationController?.pushViewController(vc, completion: nil)
+    }
+    
 }
 
 extension VideoEditorViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -110,7 +166,7 @@ extension VideoEditorViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 65, height: 100)
+        itemSize
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -122,22 +178,50 @@ extension VideoEditorViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetX = scrollView.contentOffset.x
-        let boundsWidth = scrollView.contentSize.width
+//        let offsetX = scrollView.contentOffset.x
+//        let boundsWidth = scrollView.contentSize.width
+//
+//        let info = reader!.trySyncRead()
+//        let scale = offsetX / boundsWidth
+//        let time = info.duration * scale
+//        let cmt = CMTime.init(seconds: time, preferredTimescale: info.videoTimeScale)
+//        objc_sync_enter(self)
+//        curTime = cmt
+//        needReadNextBuffer = true
+//        objc_sync_exit(self)
         
-        let scale = offsetX / boundsWidth
+//        self.player.seek(to: cmt) { finished in
+//            if  finished {
+//                self.player.pause()
+//            }
+//        }
+//        self.player.seek(to: cmt, toleranceBefore: CMTime.init(seconds: 0, preferredTimescale: info.videoTimeScale), toleranceAfter: CMTime.init(seconds: 0, preferredTimescale: info.videoTimeScale)) { finished in
+//            if  finished {
+//                self.player.pause()
+//            }
+//        }
         
-        reader?.tryAsyncRead(completionHandler: { info in
-            let time = info.duration * scale
-            self.reader?.generateImage(at: time, maximumSize: CGSize(width: 65, height: 100), async: { outputImage in
-                if outputImage == nil {
-                    print("nil+++++++++++++++")
-                }
-                if let image = outputImage {
-                    self.showImageView.image = UIImage(cgImage: image)
-                }
-            })
-        })
+        
+//        if (player.currentItem != nil) && !needReadNextBuffer {
+//            needReadNextBuffer = true
+//            player.pause()
+//            player.currentItem!.reversePlaybackEndTime = CMTime.init(seconds: 3, preferredTimescale: info.videoTimeScale)
+//            player.play()
+//        }
+        
+        
+//        reader?.tryAsyncRead(completionHandler: { info in
+//            let time = info.duration * scale
+//            self.reader?.generateImage(at: time, maximumSize: CGSize(width: 65, height: 100), async: { outputImage in
+//                if outputImage == nil {
+//                    print("nil+++++++++++++++")
+//                }
+//                if let image = outputImage {
+//                    self.showImageView.image = UIImage(cgImage: image)
+//                }
+//            })
+//        })
     }
 }
  
+

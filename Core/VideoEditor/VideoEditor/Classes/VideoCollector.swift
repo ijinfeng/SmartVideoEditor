@@ -15,6 +15,7 @@ public class VideoCollector: NSObject {
     public private(set) var camera = Camera.back
     
     private let sampleQueue = DispatchQueue.init(label: "ijf_sample_queue", qos: .default, attributes: [])
+    private let collectQueue = DispatchQueue.init(label: "ijf_collect_queue")
     
     public weak var delegate: VideoCollectorDelegate?
     
@@ -104,13 +105,17 @@ extension VideoCollector {
             videoPreviewLayer?.removeFromSuperlayer()
             videoPreviewLayer = nil
         }
-        session.startRunning()
+        collectQueue.async {
+            self.session.startRunning()
+        }
     }
     
     /// 停止采集
     public func stopCollcet() {
         if session.isRunning {
-            session.stopRunning()
+            collectQueue.async {
+                self.session.stopRunning()
+            }
         }
     }
  
@@ -122,6 +127,9 @@ extension VideoCollector {
             guard self.camera != camera else {
                 return
             }
+        }
+        guard canSwitchCamera() else {
+            return
         }
         if let device = getVideoDevice(camera: camera) {
             self.camera = camera
@@ -188,6 +196,8 @@ extension VideoCollector {
             _scale = 1.0
         }
         if let currentDevice = self.videoDevice {
+            let maxScale = currentDevice.activeFormat.videoMaxZoomFactor
+            _scale = min(_scale, maxScale)
             try? updateDevice(lock: {
                 currentDevice.ramp(toVideoZoomFactor: _scale, withRate: Float(velocity))
             }, device: currentDevice)
@@ -199,6 +209,8 @@ extension VideoCollector {
 /// 你传递一个CGPoint，其中{0,0}表示图像区域的左上角，而{1,1}表示右下方在横向模式下，右侧的主屏幕按钮 - 即使设备处于纵向模式，也适用
 /// 它是指比例。例如，如果您想要着眼于{0.5,0.2}点的边界大小{20,100}，请点击{10,20}。
 /// https://blog.csdn.net/qq_30513483/article/details/51198464
+/// 需要考虑视频重力、镜像、矩阵变换和屏幕方向
+/// 屏幕坐标左上角(0,0)。摄像头坐标：home键在右边，此时左上角为(0,0)，右下角(1,1)
 extension VideoCollector {
 
     /// 将`UIView`上的点转换成摄像头点的位置
@@ -250,6 +262,10 @@ extension VideoCollector {
         return device
     }
     
+    private func canSwitchCamera() -> Bool {
+        AVCaptureDevice.devices(for: .video).count > 1
+    }
+    
     private func updateDevice(lock configure: (() -> Void), device: AVCaptureDevice) throws {
         do {
             try device.lockForConfiguration()
@@ -275,13 +291,17 @@ extension VideoCollector {
                 guard let self = self  else {
                     return
                 }
-                videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
-                videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: self.config.videoFPS)
+                let setFrameRate = min(self.config.videoFPS, videoDevice.maxSupportFrameRate())
+                videoDevice.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(setFrameRate))
+                videoDevice.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(setFrameRate))
                 if videoDevice.isFocusModeSupported(.autoFocus) {
                     videoDevice.focusMode = .autoFocus
                 }
                 if videoDevice.isExposureModeSupported(.autoExpose) {
                     videoDevice.exposureMode = .autoExpose
+                }
+                if videoDevice.isSmoothAutoFocusSupported {
+                    videoDevice.isSmoothAutoFocusEnabled = true
                 }
             }, device: videoDevice)
         } catch {
@@ -382,7 +402,11 @@ extension VideoCollector: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
         if let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer) {
             let type = CMFormatDescriptionGetMediaType(formatDesc)
             if type == kCMMediaType_Video {
-                setVideoOrientation(connection: connection, config.videoOrientation)
+                if config.orientationType == .auto {
+                    setVideoOrientation(connection: connection, UIDevice.currentOrientation())
+                } else {
+                    setVideoOrientation(connection: connection, config.videoOrientation)
+                }
                 setVideoMirror(connection: connection, config.mirrorType)
             }
         }

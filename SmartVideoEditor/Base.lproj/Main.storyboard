@@ -61,7 +61,7 @@
                                 <rect key="frame" x="153" y="537" width="108" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="wcl record"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Video editor"/>
                                 <connections>
                                     <action selector="onClickWclRecord:" destination="BYZ-38-t0r" eventType="touchUpInside" id="82S-Ht-1Kz"/>
                                 </connections>

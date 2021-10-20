@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class FileHelper {
     static func removeFile(at path: String) {
@@ -49,4 +50,3 @@ extension String {
         URL(fileURLWithPath: self)
     }
 }
-
