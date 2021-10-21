@@ -11,7 +11,7 @@ import AVFoundation
 class SimpleEditor: NSObject {
     var clips: [AVURLAsset] = []
     var clipTimeRanges: [CMTimeRange] = []
-    var transitionDuration: CMTime = CMTimeMakeWithSeconds(2, preferredTimescale: 600)
+    var transitionDuration: CMTime = CMTimeMakeWithSeconds(0, preferredTimescale: 600)
     var composition: AVMutableComposition!
     var videoComposition: AVMutableVideoComposition!
     var audioMix: AVMutableAudioMix!
@@ -59,20 +59,29 @@ extension SimpleEditor {
         var passThroughTimeRanges: [CMTimeRange] = []
         // 过度的时间范围
         var transitionTimeRanges: [CMTimeRange] = []
-        
+            
         for i in 0..<clipsCount {
             let index = i % 2
             let asset = clips[i]
             let clipTimeRange = clipTimeRanges[i]
-            
+
             let timeRangeInAsset = clipTimeRange
-            
+
+            print("===========timeRangeInAsset")
+            print("assetRange=    \(CMTimeRangeShow(timeRangeInAsset))")
+
             let videoTrack = asset.tracks(withMediaType: .video)[0]
             try? compositionVideoTracks[index]?.insertTimeRange(timeRangeInAsset, of: videoTrack, at: nextClipStartTime)
-            
+
             let audioTrack = asset.tracks(withMediaType: .audio)[0]
             try? compositionAudioTracks[index]?.insertTimeRange(timeRangeInAsset, of: audioTrack, at: nextClipStartTime)
-            
+
+
+            print("===========transitionDuration")
+            print("transition=    \(CMTimeShow(transitionDuration))")
+
+            // 注意叠加区域别算错了，否则将会出现黑屏无法播放
+
             // 除去头和尾部的片段，中间的视频片段都是有两个重叠部分，因此要减两次 `transitionDur`
             var range = CMTimeRangeMake(start: nextClipStartTime, duration: timeRangeInAsset.duration)
             if i > 0 {
@@ -82,19 +91,42 @@ extension SimpleEditor {
             if i + 1 < clipsCount {
                 range.duration = CMTimeSubtract(range.duration, transitionDuration)
             }
-            
+
             passThroughTimeRanges.append(range)
-            
-            nextClipStartTime = CMTimeAdd(nextClipStartTime, range.duration)
+
+            nextClipStartTime = CMTimeAdd(nextClipStartTime, timeRangeInAsset.duration)
             nextClipStartTime = CMTimeSubtract(nextClipStartTime, transitionDuration)
-            
+
+            print("============nextClipStartTime")
+            print("next=    \(CMTimeShow(nextClipStartTime))")
+
+            print("=========passThroughTimeRanges")
+            print("pass=     \(CMTimeRangeShow(range))")
+
             if i + 1 < clipsCount {
                 let range = CMTimeRangeMake(start: nextClipStartTime, duration: transitionDuration)
                 transitionTimeRanges.append(range)
+
+                print("=========transitionTimeRanges")
+                print("tran=     \(CMTimeRangeShow(range))")
             }
+
         }
+
         
+        print("\n\n\n")
         
+        /*
+         =========passThroughTimeRanges
+         {{0/1 = 0.000}, {4765/600 = 7.942}}
+         pass=     ()
+         {{4765/600 = 7.942}, {4798/600 = 7.997}}
+         pass=     ()
+         =========transitionTimeRanges
+         {{3565/600 = 5.942}, {1200/600 = 2.000}}
+         tran=     ()
+
+         */
         
         // MARK: Instruction
         

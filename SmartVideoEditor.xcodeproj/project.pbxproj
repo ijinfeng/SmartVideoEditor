@@ -37,6 +37,7 @@
 		37D4714E26F8BF65000A4610 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		37D4715026F8BF65000A4610 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		595CBB1CCBD342A4192D02BA /* Pods-SmartVideoEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.release.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.release.xcconfig"; sourceTree = "<group>"; };
+		7831FFE22721419500FCF92E /* SmartVideoEditor-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SmartVideoEditor-Bridging-Header.h"; sourceTree = "<group>"; };
 		78CD6C6826FC84D000F3D583 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		78E026AF2715607D00C0E03B /* vap.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = vap.mp4; sourceTree = "<group>"; };
 		78E026B12715621E00C0E03B /* VideoEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditorViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +97,7 @@
 				78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */,
 				37D4714D26F8BF65000A4610 /* LaunchScreen.storyboard */,
 				37D4715026F8BF65000A4610 /* Info.plist */,
+				7831FFE22721419500FCF92E /* SmartVideoEditor-Bridging-Header.h */,
 			);
 			path = SmartVideoEditor;
 			sourceTree = "<group>";
@@ -162,6 +164,7 @@
 				TargetAttributes = {
 					37D4713E26F8BF63000A4610 = {
 						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1300;
 					};
 				};
 			};
@@ -403,6 +406,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C73846B37C;
 				INFOPLIST_FILE = SmartVideoEditor/Info.plist;
@@ -413,6 +417,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinfeng.SmartVideoEditor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SmartVideoEditor/SmartVideoEditor-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -424,6 +430,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C73846B37C;
 				INFOPLIST_FILE = SmartVideoEditor/Info.plist;
@@ -434,6 +441,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinfeng.SmartVideoEditor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SmartVideoEditor/SmartVideoEditor-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

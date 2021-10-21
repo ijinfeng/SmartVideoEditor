@@ -77,7 +77,7 @@ class VideoEditorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.addSubview(showImageView)
         showImageView.snp.makeConstraints { make in
             make.top.equalTo(88)
@@ -105,11 +105,7 @@ class VideoEditorViewController: UIViewController {
         
         
         
-//        self.player = AVPlayer.init()
-//        let playerView = AVPlayerLayer.init(player: player)
-//        playerView.frame = CGRect(x: 0, y: 200, width: view.frame.size.width, height: 400)
-//        view.layer.addSublayer(playerView)
-//        self.player.play()
+       
         
         
         
@@ -138,18 +134,32 @@ class VideoEditorViewController: UIViewController {
         self.editor.clips.append(asset1)
         self.editor.clips.append(asset2)
         
-        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset1.duration))
-        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset2.duration))
+        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: CMTimeMakeWithSeconds(0, preferredTimescale: 1), duration: asset1.duration))
+        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: CMTimeMakeWithSeconds(0, preferredTimescale: 1), duration: asset2.duration))
         
         self.editor.buildCompositionObjectsForPlayback()
+        
+//        self.player = AVPlayer(playerItem: editor.getPlayerItem())
+//        let playerView = AVPlayerLayer.init(player: player)
+//        playerView.frame = CGRect(x: 0, y: 200, width: view.frame.size.width, height: 400)
+//        view.layer.addSublayer(playerView)
+//        self.player.play()
+        
     }
  
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let vc = AVPlayerViewController()
-        vc.player = AVPlayer.init(playerItem: editor.getPlayerItem())
+        vc.player = AVPlayer.init()
         self.player = vc.player
         navigationController?.pushViewController(vc, completion: nil)
+        
+        
+        let item = editor.getPlayerItem()
+        vc.player?.replaceCurrentItem(with: item)
+        
+//        debugView.player = self.player
+//        debugView.synchronize(to: editor.composition, videoComposition: editor.videoComposition, audioMix: editor.audioMix)
     }
     
 }
