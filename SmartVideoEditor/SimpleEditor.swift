@@ -11,7 +11,7 @@ import AVFoundation
 class SimpleEditor: NSObject {
     var clips: [AVURLAsset] = []
     var clipTimeRanges: [CMTimeRange] = []
-    var transitionDuration: CMTime = CMTimeMakeWithSeconds(0, preferredTimescale: 600)
+    var transitionDuration: CMTime = CMTimeMakeWithSeconds(2, preferredTimescale: 600)
     var composition: AVMutableComposition!
     var videoComposition: AVMutableVideoComposition!
     var audioMix: AVMutableAudioMix!
@@ -41,7 +41,7 @@ extension SimpleEditor {
             halfClipDuration.timescale *= 2
             transitionDuration = CMTimeMinimum(transitionDuration, halfClipDuration)
         }
-        
+        // 创建多轨视频
         let mutVideoTrack1 = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
         let mutVideoTrack2 = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
         let mutAudioTrack1 = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -49,7 +49,6 @@ extension SimpleEditor {
         
         let compositionVideoTracks = [mutVideoTrack1, mutVideoTrack2]
         let compositionAudioTracks = [mutAudioTrack1, mutAudioTrack2]
-        
         
         /// AVMutableComposition { videoTrack1, videoTrack2 }
         /// videoTrack1:  ｜ video1 ｜ empty ｜ video3 ｜
@@ -59,6 +58,8 @@ extension SimpleEditor {
         var passThroughTimeRanges: [CMTimeRange] = []
         // 过度的时间范围
         var transitionTimeRanges: [CMTimeRange] = []
+        
+        var totalTime: CMTime = .zero
             
         for i in 0..<clipsCount {
             let index = i % 2
@@ -76,10 +77,15 @@ extension SimpleEditor {
             let audioTrack = asset.tracks(withMediaType: .audio)[0]
             try? compositionAudioTracks[index]?.insertTimeRange(timeRangeInAsset, of: audioTrack, at: nextClipStartTime)
 
+            print("==========TrackTimeRange")
+            print("track=      \(CMTimeRangeShow(compositionVideoTracks[index]!.timeRange))")
+            
 
             print("===========transitionDuration")
             print("transition=    \(CMTimeShow(transitionDuration))")
 
+            
+            totalTime = CMTimeAdd(totalTime, timeRangeInAsset.duration)
             // 注意叠加区域别算错了，否则将会出现黑屏无法播放
 
             // 除去头和尾部的片段，中间的视频片段都是有两个重叠部分，因此要减两次 `transitionDur`
@@ -133,33 +139,38 @@ extension SimpleEditor {
         var instructions: [AVVideoCompositionInstruction] = []
         var trackMixArray: [AVMutableAudioMixInputParameters] = []
         
+        
         for i in 0..<clipsCount {
             let index = i % 2
-            
+
             let passThroughInstruction = AVMutableVideoCompositionInstruction()
             passThroughInstruction.timeRange = passThroughTimeRanges[i]
-            
+
             let passThroughLayer = AVMutableVideoCompositionLayerInstruction.init(assetTrack: compositionVideoTracks[index]!)
+            passThroughLayer.setTransform(compositionVideoTracks[index]!.preferredTransform, at: .zero)
             passThroughInstruction.layerInstructions = [passThroughLayer]
-            
+
             instructions.append(passThroughInstruction)
-            
+
             if i + 1 < clipsCount {
                 let transitionInstruction = AVMutableVideoCompositionInstruction()
                 transitionInstruction.timeRange = transitionTimeRanges[i]
-                
+
                 let fromLayer = AVMutableVideoCompositionLayerInstruction.init(assetTrack: compositionVideoTracks[index]!)
+                fromLayer.setTransform(compositionVideoTracks[index]!.preferredTransform, at: .zero)
                 let toLayer = AVMutableVideoCompositionLayerInstruction.init(assetTrack: compositionVideoTracks[1 - index]!)
+                toLayer.setTransform(compositionVideoTracks[1 - index]!.preferredTransform, at: .zero)
                 toLayer.setOpacityRamp(fromStartOpacity: 0, toEndOpacity: 1, timeRange: transitionTimeRanges[i])
+                // 这个顺序不能搞反，否则会无效
                 transitionInstruction.layerInstructions = [toLayer, fromLayer]
-                
+
                 instructions.append(transitionInstruction)
-                
-                
+
+
                 let trackMix1 = AVMutableAudioMixInputParameters.init(track: compositionAudioTracks[0])
                 trackMix1.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: transitionTimeRanges[0])
                 trackMixArray.append(trackMix1)
-                
+
                 let trackMix2 = AVMutableAudioMixInputParameters.init(track: compositionAudioTracks[1])
                 trackMix2.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: transitionTimeRanges[0])
                 trackMix2.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: passThroughTimeRanges[1])
@@ -171,6 +182,7 @@ extension SimpleEditor {
         videoComposition.instructions = instructions
         videoComposition.frameDuration = CMTime.init(value: 1, timescale: 30)
         videoComposition.renderSize = videoSize
+        videoComposition.renderScale = 1.0
         
         self.videoComposition = videoComposition
         self.composition = composition

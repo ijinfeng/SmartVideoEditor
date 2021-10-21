@@ -13,12 +13,16 @@ public class VideoExport: NSObject {
     private static let shared = VideoExport()
     private let exportQueue = DispatchQueue.init(label: "ijf_export_queue", qos: .default, attributes: .concurrent)
     
-    static func exportVideo(assetURL: URL?,
+    public static func hehe() {}
+    
+    public static func exportVideo(assetURL: URL?,
                             asset: AVAsset?,
                             outputURL: URL,
                             ouputFileType: AVFileType = .mp4,
                             presetName: String = AVAssetExportPreset1280x720,
                             filter: VideoFilter? = nil,
+                            videoComposition: AVVideoComposition? = nil,
+                            audioMix: AVAudioMix? = nil,
                             complication: @escaping (Bool) -> Void) throws {
         guard FileHelper.fileExists(at: outputURL.absoluteString) == false else {
             throw VideoSessionError.Export.fileExists
@@ -52,11 +56,18 @@ public class VideoExport: NSObject {
                 }
                 export.videoComposition = videoComposition
             }
+            // 这里如何处理filter 和 videoComposition的关系
+            if let videoComposition = videoComposition {
+                export.videoComposition = videoComposition
+            }
+            if let audioMix = audioMix {
+                export.audioMix = audioMix
+            }
             VideoExport.shared.exportQueue.async {
                 export.exportAsynchronously {
                     print("export asyn")
                     DispatchQueue.main.async {
-                        print("export finished with status is: \(export.status)")
+                        print("export finished with status is: \(export.status.rawValue), error: \(export.error?.localizedDescription ?? "noError")")
                         switch export.status {
                         case .completed:
                             complication(true)

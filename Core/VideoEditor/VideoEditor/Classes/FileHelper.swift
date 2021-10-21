@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-class FileHelper {
-    static func removeFile(at path: String) {
+public class FileHelper {
+    public static func removeFile(at path: String) {
         let fileManager = FileManager.default
         try? fileManager.removeItem(atPath: path)
     }
     
-    static func createDir(at path: String) {
+    public static func createDir(at path: String) {
        let fileManager = FileManager.default
         if !fileManager.fileExists(atPath: path) {
             do {
@@ -27,7 +27,7 @@ class FileHelper {
     
     /// 清空指定目录，但不删除目录
     /// - Parameter path: 目录所在路径
-    static func cleanDir(at path: String) {
+    public static func cleanDir(at path: String) {
         let fileManager = FileManager.default
         if let dirEnumerator = fileManager.enumerator(atPath: path) {
             for name in dirEnumerator {
@@ -38,7 +38,7 @@ class FileHelper {
         }
     }
     
-    static func fileExists(at path: String) -> Bool {
+    public static func fileExists(at path: String) -> Bool {
         let fileManager = FileManager.default
         return fileManager.fileExists(atPath: path)
     }

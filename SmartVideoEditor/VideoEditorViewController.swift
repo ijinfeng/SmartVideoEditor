@@ -13,7 +13,6 @@ import QuickLook
 import SwifterSwift
 import AVKit
 
-
 class MyCell: UICollectionViewCell {
     
     var image: UIImage? {
@@ -128,14 +127,14 @@ class VideoEditorViewController: UIViewController {
 //            }
 //        }
         
-        let asset1 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip1", ofType: "m4v") ?? ""))
-        let asset2 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip2", ofType: "mov") ?? ""))
+        let asset1 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip1", ofType: "m4v") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+        let asset2 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip2", ofType: "mov") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         
         self.editor.clips.append(asset1)
         self.editor.clips.append(asset2)
         
-        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: CMTimeMakeWithSeconds(0, preferredTimescale: 1), duration: asset1.duration))
-        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: CMTimeMakeWithSeconds(0, preferredTimescale: 1), duration: asset2.duration))
+        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset1.duration))
+        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset2.duration))
         
         self.editor.buildCompositionObjectsForPlayback()
         
@@ -149,14 +148,31 @@ class VideoEditorViewController: UIViewController {
  
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let vc = AVPlayerViewController()
-        vc.player = AVPlayer.init()
-        self.player = vc.player
-        navigationController?.pushViewController(vc, completion: nil)
+//        let vc = AVPlayerViewController()
+//        vc.player = AVPlayer.init()
+//        self.player = vc.player
+//        navigationController?.pushViewController(vc, completion: nil)
+//
+//
+//        let item = editor.getPlayerItem()
+//        vc.player?.replaceCurrentItem(with: item)
         
         
-        let item = editor.getPlayerItem()
-        vc.player?.replaceCurrentItem(with: item)
+        let composition = editor.composition
+        let outputPath = VideoRecordConfig.defaultRecordOutputDirPath + "/myvideo.mp4"
+        if !FileHelper.fileExists(at: VideoRecordConfig.defaultRecordOutputDirPath) {
+            FileHelper.createDir(at: VideoRecordConfig.defaultRecordOutputDirPath)
+        }
+        
+        
+        if FileHelper.fileExists(at: outputPath) {
+            FileHelper.removeFile(at: outputPath)
+        }
+        try? VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL, filter: nil, videoComposition: editor.videoComposition, audioMix: editor.audioMix) { finished in
+            if finished {
+                
+            }
+        }
         
 //        debugView.player = self.player
 //        debugView.synchronize(to: editor.composition, videoComposition: editor.videoComposition, audioMix: editor.audioMix)
