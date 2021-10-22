@@ -37,7 +37,6 @@ class MyCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
 
 class VideoEditorViewController: UIViewController {
@@ -129,12 +128,15 @@ class VideoEditorViewController: UIViewController {
         
         let asset1 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip1", ofType: "m4v") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         let asset2 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip2", ofType: "mov") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+//        let asset3 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "vap", ofType: "mp4") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         
         self.editor.clips.append(asset1)
         self.editor.clips.append(asset2)
+//        self.editor.clips.append(asset3)
         
-        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset1.duration))
-        self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: asset2.duration))
+        for clip in self.editor.clips {
+            self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 5, timescale: 1)))
+        }
         
         self.editor.buildCompositionObjectsForPlayback()
         
@@ -144,38 +146,54 @@ class VideoEditorViewController: UIViewController {
 //        view.layer.addSublayer(playerView)
 //        self.player.play()
         
+        
+        let outputPath = VideoRecordConfig.defaultRecordOutputDirPath + "/myvideo.mp4"
+        
+        
+//        if FileHelper.fileExists(at: outputPath) {
+//            let reader = VideoInfoReader.init(videoPath: outputPath)
+//            reader.asyncReadTrack { info in
+//                print(info)
+//            }
+//        }
+        
+        
+        print("composition")
+        // 测试发现导出的视频，最终只有一个音轨，一个视频轨
+        let reader = VideoInfoReader.init(asset: editor.composition)
+        reader.asyncReadTrack { info in
+            print(info)
+        }
     }
  
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        let vc = AVPlayerViewController()
-//        vc.player = AVPlayer.init()
-//        self.player = vc.player
-//        navigationController?.pushViewController(vc, completion: nil)
+        let vc = AVPlayerViewController()
+        vc.player = AVPlayer.init()
+        self.player = vc.player
+        navigationController?.pushViewController(vc, completion: nil)
+
+
+        let item = editor.getPlayerItem()
+        vc.player?.replaceCurrentItem(with: item)
+        
+        
+//        let composition = editor.composition
+//        let outputPath = VideoRecordConfig.defaultRecordOutputDirPath + "/myvideo.mp4"
+//        if !FileHelper.fileExists(at: VideoRecordConfig.defaultRecordOutputDirPath) {
+//            FileHelper.createDir(at: VideoRecordConfig.defaultRecordOutputDirPath)
+//        }
 //
 //
-//        let item = editor.getPlayerItem()
-//        vc.player?.replaceCurrentItem(with: item)
+//        if FileHelper.fileExists(at: outputPath) {
+//            FileHelper.removeFile(at: outputPath)
+//        }
+//        try? VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL, filter: nil, videoComposition: editor.videoComposition, audioMix: editor.audioMix) { finished in
+//            if finished {
+//
+//            }
+//        }
         
-        
-        let composition = editor.composition
-        let outputPath = VideoRecordConfig.defaultRecordOutputDirPath + "/myvideo.mp4"
-        if !FileHelper.fileExists(at: VideoRecordConfig.defaultRecordOutputDirPath) {
-            FileHelper.createDir(at: VideoRecordConfig.defaultRecordOutputDirPath)
-        }
-        
-        
-        if FileHelper.fileExists(at: outputPath) {
-            FileHelper.removeFile(at: outputPath)
-        }
-        try? VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputPath.fileURL, filter: nil, videoComposition: editor.videoComposition, audioMix: editor.audioMix) { finished in
-            if finished {
-                
-            }
-        }
-        
-//        debugView.player = self.player
-//        debugView.synchronize(to: editor.composition, videoComposition: editor.videoComposition, audioMix: editor.audioMix)
     }
     
 }

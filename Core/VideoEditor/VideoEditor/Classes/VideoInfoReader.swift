@@ -35,8 +35,10 @@ public class VideoInfo: NSObject {
     
     /// 高
     public var height: CGFloat = 0
+    
+    /// 旋转角度
+    public var rotationAngle: CGFloat = 0
 }
-
 
 extension VideoInfo {
     public override var description: String {
@@ -57,7 +59,7 @@ extension VideoInfo {
                 return String(format: "%.2fG", _size/tunit)
             }
         }
-        let str = "-VideoInfo description: \n\t-filePath: \(filePath), \n\t-duration: \(duration), \n\t-fps: \(fps), \n\t-fileSize: \(fileSize(size: self.fileSize)), \n\t-bps: \(bps), \n\t-audioSampleRate: \(audioSampleRate), \n\t-width: \(width), \n\t-height: \(height)"
+        let str = "- VideoInfo description: \n\t-filePath: \(filePath), \n\t-duration: \(duration), \n\t-fps: \(fps), \n\t-fileSize: \(fileSize(size: self.fileSize)), \n\t-bps: \(bps), \n\t-audioSampleRate: \(audioSampleRate), \n\t-width: \(width), \n\t-height: \(height), \n\t-rotationAngle: \(rotationAngle)"
         return str
     }
 }
@@ -66,7 +68,7 @@ extension VideoInfo {
 public class VideoInfoReader: NSObject {
     
     private let videoPath: String!
-    private let asset: AVURLAsset!
+    private let asset: AVAsset!
     private var info: VideoInfo?
     /// 如果是`true`，总是读取最新的，缓存中不保存
     public var alwaysReadNewestInfo = false
@@ -81,6 +83,11 @@ public class VideoInfoReader: NSObject {
         self.asset = AVURLAsset(url: videoPath.fileURL, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
     }
     
+    public init(asset: AVAsset) {
+        self.videoPath = ""
+        self.asset = asset
+    }
+    
     deinit {
         print("- VideoInfoReader deinit -")
     }
@@ -92,6 +99,10 @@ extension VideoInfoReader {
     /// 如果已经缓存有文件信息，那么直接返回，否则异步去获取
     /// - Parameter handler: 结果回调
     public func tryAsyncRead(completionHandler handler: @escaping (VideoInfo) -> Void) {
+        guard !alwaysReadNewestInfo else {
+            asyncRead(completionHandler: handler)
+            return
+        }
         if let info = self.info {
             handler(info)
         } else {
@@ -105,10 +116,12 @@ extension VideoInfoReader {
         let info = VideoInfo()
         info.filePath = videoPath
         
-        let attribute = try? FileManager.default.attributesOfItem(atPath: videoPath)
-        if let attribute = attribute {
-            if let size = attribute[FileAttributeKey.size] as? UInt64 {
-                info.fileSize = size
+        if !info.filePath.isEmpty {
+            let attribute = try? FileManager.default.attributesOfItem(atPath: videoPath)
+            if let attribute = attribute {
+                if let size = attribute[FileAttributeKey.size] as? UInt64 {
+                    info.fileSize = size
+                }
             }
         }
         
@@ -125,7 +138,7 @@ extension VideoInfoReader {
                 info.duration = 0
             }
         }
-        let videoKeys = AssetKeyPath.stringKeys(from: [.nominalFrameRate, .estimatedDataRate, .naturalSize])
+        let videoKeys = AssetKeyPath.stringKeys(from: [.nominalFrameRate, .estimatedDataRate, .naturalSize, .preferredTransform])
         group.enter()
         if let videoTrack = asset.tracks(withMediaType: .video).first {
             videoTrack.loadValuesAsynchronously(forKeys: videoKeys) {
@@ -148,6 +161,10 @@ extension VideoInfoReader {
                     info.width = 0
                     info.height = 0
                 }
+                if videoTrack.statusOfValue(forKey: AssetKeyPath.preferredTransform.rawValue, error: nil) == .loaded {
+                    let transform = videoTrack.preferredTransform
+                    info.rotationAngle = transform.getTransformAngle()
+                }
             }
         }
         let audioKeys = AssetKeyPath.stringKeys(from: [.naturalTimeScale])
@@ -162,8 +179,37 @@ extension VideoInfoReader {
                 }
             }
         }
+        
+        var fileSize: Int64 = 0
+        if info.filePath.isEmpty {
+            let videoTracks = asset.tracks(withMediaType: .video)
+            let audioTracks = asset.tracks(withMediaType: .audio)
+            for videoTrack in videoTracks {
+                group.enter()
+                let videoKeys = AssetKeyPath.stringKeys(from: [.totalSampleDataLength])
+                videoTrack.loadValuesAsynchronously(forKeys: videoKeys) {
+                    group.leave()
+                    if videoTrack.statusOfValue(forKey: AssetKeyPath.totalSampleDataLength.rawValue, error: nil) == .loaded {
+                        fileSize += videoTrack.totalSampleDataLength
+                    }
+                }
+            }
+            for audioTrack in audioTracks {
+                group.enter()
+                let audioKeys = AssetKeyPath.stringKeys(from: [.totalSampleDataLength])
+                audioTrack.loadValuesAsynchronously(forKeys: audioKeys) {
+                    group.leave()
+                    if audioTrack.statusOfValue(forKey: AssetKeyPath.totalSampleDataLength.rawValue, error: nil) == .loaded {
+                        fileSize += audioTrack.totalSampleDataLength
+                    }
+                }
+            }
+        }
         group.notify(queue: DispatchQueue.main) {
             if self.alwaysReadNewestInfo == false {
+                if info.filePath.isEmpty {
+                    info.fileSize = UInt64(fileSize)
+                }
                 self.info = info
             } else {
                 self.info = nil
@@ -177,6 +223,9 @@ extension VideoInfoReader {
     /// 如果已经缓存有文件信息，那么直接返回，否则同步去获取
     /// - Returns: 文件信息
     public func trySyncRead() -> VideoInfo {
+        guard !alwaysReadNewestInfo else {
+            return syncRead()
+        }
         if let info = self.info {
             return info
         } else {
@@ -190,10 +239,12 @@ extension VideoInfoReader {
         let info = VideoInfo()
         info.filePath = videoPath
         
-        let attribute = try? FileManager.default.attributesOfItem(atPath: videoPath)
-        if let attribute = attribute {
-            if let size = attribute[FileAttributeKey.size] as? UInt64 {
-                info.fileSize = size
+        if !info.filePath.isEmpty {
+            let attribute = try? FileManager.default.attributesOfItem(atPath: videoPath)
+            if let attribute = attribute {
+                if let size = attribute[FileAttributeKey.size] as? UInt64 {
+                    info.fileSize = size
+                }
             }
         }
         
@@ -206,10 +257,25 @@ extension VideoInfoReader {
             let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
             info.width = size.width
             info.height = size.height
+            let transform = videoTrack.preferredTransform
+            info.rotationAngle = transform.getTransformAngle()
         }
        
         if let audioTrack = asset.tracks(withMediaType: .audio).first {
             info.audioSampleRate = audioTrack.naturalTimeScale
+        }
+        
+        if info.filePath.isEmpty {
+            let videoTracks = asset.tracks(withMediaType: .video)
+            let audioTracks = asset.tracks(withMediaType: .audio)
+            var fileSize: Int64 = 0
+            for videoTrack in videoTracks {
+                fileSize += videoTrack.totalSampleDataLength
+            }
+            for audioTrack in audioTracks {
+                fileSize += audioTrack.totalSampleDataLength
+            }
+            info.fileSize = UInt64(fileSize)
         }
         
         if self.alwaysReadNewestInfo == false {
@@ -219,6 +285,74 @@ extension VideoInfoReader {
         }
         
         return info
+    }
+}
+
+public class VideoTrackInfo: VideoInfo {
+    public fileprivate(set) var hasVideoTrack: Bool!
+    public fileprivate(set) var videoTrackCount: UInt!
+    public fileprivate(set) var videoTracks: [AVAssetTrack]!
+    
+    public fileprivate(set) var hasAudioTrack: Bool!
+    public fileprivate(set) var audioTrackCount: UInt!
+    public fileprivate(set) var audioTracks: [AVAssetTrack]!
+    
+    public init(videoInfo: VideoInfo) {
+        super.init()
+        filePath = videoInfo.filePath
+        duration = videoInfo.duration
+        fps = videoInfo.fps
+        fileSize = videoInfo.fileSize
+        bps = videoInfo.bps
+        videoTimeScale = videoInfo.videoTimeScale
+        audioSampleRate = videoInfo.audioSampleRate
+        width = videoInfo.width
+        height = videoInfo.height
+    }
+}
+
+extension VideoTrackInfo {
+    public override var description: String {
+        var str = super.description
+        str += ", \n\t-hasVideoTrack: \(hasVideoTrack!), \n\t-videoTrackCount: \(videoTrackCount!), \n\t-videoTracks: \(videoTracks!), \n\t-hasAudioTrack: \(hasAudioTrack!), \n\t-audioTrackCount: \(audioTrackCount!), \n\t-audioTracks: \(audioTracks!)"
+        return str
+    }
+}
+
+// MARK: 读取视频的音轨和视轨信息
+extension VideoInfoReader {
+    public func asyncReadTrack(completionHandler handler: @escaping (VideoTrackInfo) -> Void) {
+        tryAsyncRead { info in
+            let trackInfo = VideoTrackInfo.init(videoInfo: info)
+            
+            let videoTracks = self.asset.tracks(withMediaType: .video)
+            trackInfo.hasVideoTrack = !videoTracks.isEmpty
+            trackInfo.videoTrackCount = UInt(videoTracks.count)
+            trackInfo.videoTracks = videoTracks
+            
+            let audioTracks = self.asset.tracks(withMediaType: .audio)
+            trackInfo.hasAudioTrack = !audioTracks.isEmpty
+            trackInfo.audioTrackCount = UInt(audioTracks.count)
+            trackInfo.audioTracks = audioTracks
+            handler(trackInfo)
+        }
+    }
+    
+    public func syncReadTrack() -> VideoTrackInfo {
+        let info = trySyncRead()
+        let trackInfo = VideoTrackInfo.init(videoInfo: info)
+        
+        let videoTracks = self.asset.tracks(withMediaType: .video)
+        trackInfo.hasVideoTrack = !videoTracks.isEmpty
+        trackInfo.videoTrackCount = UInt(videoTracks.count)
+        trackInfo.videoTracks = videoTracks
+        
+        let audioTracks = self.asset.tracks(withMediaType: .audio)
+        trackInfo.hasAudioTrack = !audioTracks.isEmpty
+        trackInfo.audioTrackCount = UInt(audioTracks.count)
+        trackInfo.audioTracks = audioTracks
+        
+        return trackInfo
     }
 }
 
@@ -369,5 +503,41 @@ extension VideoInfoReader {
             }
             return keys
         }
+    }
+}
+
+/// https://www.jianshu.com/p/ca7f9bc62429/
+/// CGAffineTransform
+/// | a  b  0 |
+/// | c  d  0 |
+/// | tx ty 1 |
+///
+/// CGAffineTransformIdentity： (1, 0, 0, 1, 0, 0)
+///
+/// 点集转换
+/// x' = ax + cy + tx
+/// y' = bx + dy + ty
+/// tx控制x轴方向上的平移，ty控制y轴方向上的平移
+///
+/// 旋转 'M_PI * 0.5'
+/// CGAffineTransformMake(cos(M_PI * 0.5), sin(M_PI * 0.5), -sin(M_PI * 0.5), cos(M_PI * 0.5), 0, 0)
+extension CGAffineTransform {
+    
+    /// 获取旋转的角度
+    /// - Returns: 角度: 0, 90, 180, 270
+    public func getTransformAngle() -> CGFloat {
+        var angle: CGFloat = 0
+        if a == 0 && b == 1 && c == -1 && d == 0 {
+            angle = 90
+        } else if a == 0 && b == -1 && c == 1 && d == 0 {
+            angle = 270
+        } else if a == 1 && b == 0 && c == 0 && d == 1 {
+            angle = 0
+        } else if a == -1 && b == 0 && c == 0 && d == -1 {
+            angle = 180
+        } else {
+            // other angle
+        }
+        return angle
     }
 }

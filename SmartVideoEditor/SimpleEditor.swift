@@ -7,11 +7,12 @@
 
 import UIKit
 import AVFoundation
+import VideoEditor
 
 class SimpleEditor: NSObject {
     var clips: [AVURLAsset] = []
     var clipTimeRanges: [CMTimeRange] = []
-    var transitionDuration: CMTime = CMTimeMakeWithSeconds(2, preferredTimescale: 600)
+    var transitionDuration: CMTime = CMTimeMakeWithSeconds(1, preferredTimescale: 1)
     var composition: AVMutableComposition!
     var videoComposition: AVMutableVideoComposition!
     var audioMix: AVMutableAudioMix!
@@ -23,7 +24,19 @@ extension SimpleEditor {
         guard clips.count > 0 else {
             return
         }
-        let videoSize = clips[0].tracks(withMediaType: .video)[0].naturalSize
+        var videoSize = CGSize.zero
+        
+        for clip in clips {
+            print("angle= \(clip.preferredTransform.getTransformAngle())")
+            for track in clip.tracks(withMediaType: .video) {
+                print("track size= \(track.naturalSize)")
+            }
+        }
+        
+        
+//        videoSize = CGSize.init(width: 1080, height: 1920)
+        // 注意这个值，有些不能显示画面
+        videoSize = CGSize(width: 640 , height: 370 )
         
         let composition = AVMutableComposition()
         let videoComposition = AVMutableVideoComposition()
@@ -120,6 +133,15 @@ extension SimpleEditor {
         }
 
         
+        print("=========passThroughTimeRanges")
+        for range in passThroughTimeRanges {
+            print("pass=     \(CMTimeRangeShow(range))")
+        }
+        print("=========transitionTimeRanges")
+        for range in transitionTimeRanges {
+            print("pass=     \(CMTimeRangeShow(range))")
+        }
+        
         print("\n\n\n")
         
         /*
@@ -157,12 +179,10 @@ extension SimpleEditor {
                 transitionInstruction.timeRange = transitionTimeRanges[i]
 
                 let fromLayer = AVMutableVideoCompositionLayerInstruction.init(assetTrack: compositionVideoTracks[index]!)
-                fromLayer.setTransform(compositionVideoTracks[index]!.preferredTransform, at: .zero)
+                fromLayer.setOpacityRamp(fromStartOpacity: 1, toEndOpacity: 0, timeRange: transitionTimeRanges[i])
                 let toLayer = AVMutableVideoCompositionLayerInstruction.init(assetTrack: compositionVideoTracks[1 - index]!)
-                toLayer.setTransform(compositionVideoTracks[1 - index]!.preferredTransform, at: .zero)
                 toLayer.setOpacityRamp(fromStartOpacity: 0, toEndOpacity: 1, timeRange: transitionTimeRanges[i])
-                // 这个顺序不能搞反，否则会无效
-                transitionInstruction.layerInstructions = [toLayer, fromLayer]
+                transitionInstruction.layerInstructions = [fromLayer, toLayer]
 
                 instructions.append(transitionInstruction)
 
@@ -196,4 +216,5 @@ extension SimpleEditor {
         return item
     }
 }
+
 
