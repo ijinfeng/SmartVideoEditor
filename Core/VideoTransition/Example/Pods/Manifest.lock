@@ -1,0 +1,16 @@
+PODS:
+  - VideoTransition (0.1.0)
+
+DEPENDENCIES:
+  - VideoTransition (from `../`)
+
+EXTERNAL SOURCES:
+  VideoTransition:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  VideoTransition: fddff5046be0221fd600f2e21066f75b0498cf26
+
+PODFILE CHECKSUM: c26b5681f588358f934b33acf34a02ec17cf117f
+
+COCOAPODS: 1.10.1

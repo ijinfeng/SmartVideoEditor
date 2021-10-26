@@ -12,6 +12,7 @@ import SnapKit
 import QuickLook
 import SwifterSwift
 import AVKit
+import VideoTransition
 
 class MyCell: UICollectionViewCell {
     
@@ -71,7 +72,7 @@ class VideoEditorViewController: UIViewController {
         }
     }()
     
-    let editor = SimpleEditor()
+    let editor = TransitionComposition()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,44 +127,27 @@ class VideoEditorViewController: UIViewController {
 //            }
 //        }
         
+        editor.renderSize = CGSize(width: 320, height: 400)
+        
         let asset1 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip1", ofType: "m4v") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         let asset2 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip2", ofType: "mov") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
-//        let asset3 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "vap", ofType: "mp4") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+        let asset3 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "vap", ofType: "mp4") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+        let asset4 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "bamboo", ofType: "mp4") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         
-        self.editor.clips.append(asset1)
-        self.editor.clips.append(asset2)
-//        self.editor.clips.append(asset3)
-        
-        for clip in self.editor.clips {
-            self.editor.clipTimeRanges.append(CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 5, timescale: 1)))
+        editor.add(asset: asset1, timeRange: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 5, timescale: 1)))
+        editor.add(asset: asset4, timeRange: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 5, timescale: 1))) { item in
+            item.intersectionTime = CMTime.init(value: 2, timescale: 1)
+            item.type = .push
         }
-        
-        self.editor.buildCompositionObjectsForPlayback()
-        
-//        self.player = AVPlayer(playerItem: editor.getPlayerItem())
-//        let playerView = AVPlayerLayer.init(player: player)
-//        playerView.frame = CGRect(x: 0, y: 200, width: view.frame.size.width, height: 400)
-//        view.layer.addSublayer(playerView)
-//        self.player.play()
-        
-        
-        let outputPath = VideoRecordConfig.defaultRecordOutputDirPath + "/myvideo.mp4"
-        
-        
-//        if FileHelper.fileExists(at: outputPath) {
-//            let reader = VideoInfoReader.init(videoPath: outputPath)
-//            reader.asyncReadTrack { info in
-//                print(info)
-//            }
-//        }
-        
-        
-        print("composition")
-        // 测试发现导出的视频，最终只有一个音轨，一个视频轨
-        let reader = VideoInfoReader.init(asset: editor.composition)
-        reader.asyncReadTrack { info in
-            print(info)
+        editor.add(asset: asset1, timeRange: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 5, timescale: 1))) { item in
+            item.intersectionTime = CMTime.init(value: 2, timescale: 1)
+            item.type = .push
         }
+        editor.add(asset: asset3, timeRange: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 5, timescale: 1))) { item in
+            item.intersectionTime = CMTime.init(value: 2, timescale: 1)
+            item.type = .push
+        }
+        editor.contentMode = .fitToScale
     }
  
     
@@ -173,7 +157,7 @@ class VideoEditorViewController: UIViewController {
         self.player = vc.player
         navigationController?.pushViewController(vc, completion: nil)
 
-
+        editor.buildTransitionComposition()
         let item = editor.getPlayerItem()
         vc.player?.replaceCurrentItem(with: item)
         

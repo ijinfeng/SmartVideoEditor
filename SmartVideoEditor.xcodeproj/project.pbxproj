@@ -20,7 +20,6 @@
 		78EB81CA271FF740006A1D3C /* bamboo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 78EB81C9271FF740006A1D3C /* bamboo.mp4 */; };
 		78EB81CD27201D78006A1D3C /* sample_clip2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 78EB81CB27201D78006A1D3C /* sample_clip2.mov */; };
 		78EB81CE27201D78006A1D3C /* sample_clip1.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 78EB81CC27201D78006A1D3C /* sample_clip1.m4v */; };
-		78EB81D027201DF6006A1D3C /* SimpleEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EB81CF27201DF6006A1D3C /* SimpleEditor.swift */; };
 		78F03F75270071970002DF11 /* YJFVideoAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */; };
 		78FCEAEC2717CD190011C07B /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FCEAEB2717CD190011C07B /* VideoPlayerViewController.swift */; };
 		968F261642B0ADF7C6DC6622 /* Pods_SmartVideoEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EB54F102C271E9BDCE3ED83 /* Pods_SmartVideoEditor.framework */; };
@@ -45,7 +44,6 @@
 		78EB81C9271FF740006A1D3C /* bamboo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bamboo.mp4; sourceTree = "<group>"; };
 		78EB81CB27201D78006A1D3C /* sample_clip2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = sample_clip2.mov; sourceTree = "<group>"; };
 		78EB81CC27201D78006A1D3C /* sample_clip1.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_clip1.m4v; sourceTree = "<group>"; };
-		78EB81CF27201DF6006A1D3C /* SimpleEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleEditor.swift; sourceTree = "<group>"; };
 		78F03F74270071970002DF11 /* YJFVideoAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = YJFVideoAssets.xcassets; sourceTree = "<group>"; };
 		78FCEAEB2717CD190011C07B /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		EF00FC7541DAF9C16EE1CFEA /* Pods-SmartVideoEditor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.debug.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.debug.xcconfig"; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 				37D4714626F8BF63000A4610 /* ViewController.swift */,
 				78CD6C6826FC84D000F3D583 /* RecordViewController.swift */,
 				78E026B12715621E00C0E03B /* VideoEditorViewController.swift */,
-				78EB81CF27201DF6006A1D3C /* SimpleEditor.swift */,
 				78FCEAEB2717CD190011C07B /* VideoPlayerViewController.swift */,
 				78E026AE2715606F00C0E03B /* Resources */,
 				37D4714826F8BF63000A4610 /* Main.storyboard */,
@@ -255,7 +252,6 @@
 				78E026B22715621E00C0E03B /* VideoEditorViewController.swift in Sources */,
 				37D4714726F8BF63000A4610 /* ViewController.swift in Sources */,
 				37D4714326F8BF63000A4610 /* AppDelegate.swift in Sources */,
-				78EB81D027201DF6006A1D3C /* SimpleEditor.swift in Sources */,
 				78FCEAEC2717CD190011C07B /* VideoPlayerViewController.swift in Sources */,
 				78CD6C6926FC84D000F3D583 /* RecordViewController.swift in Sources */,
 				37D4714526F8BF63000A4610 /* SceneDelegate.swift in Sources */,

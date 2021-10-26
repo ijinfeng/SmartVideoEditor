@@ -1,0 +1,6 @@
+framework module VideoTransition {
+  umbrella header "VideoTransition-umbrella.h"
+
+  export *
+  module * { export * }
+}
