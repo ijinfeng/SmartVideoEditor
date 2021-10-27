@@ -37,6 +37,7 @@ public class TransitionComposition: NSObject {
         /// 以最长宽或最长高适配屏幕，不拉伸
         case fitToScale = 2
     }
+    /// 视频渲染模式
     public var contentMode: VideoContentMode = .fitToScale
 }
 
@@ -169,9 +170,9 @@ extension TransitionComposition {
                     fromLayer.setTransformRamp(fromStart: fromt, toEnd: from, timeRange: transitionTimeRanges[i])
                     toLayer.setTransformRamp(fromStart: to, toEnd: tot, timeRange: transitionTimeRanges[i])
                 case .wipe:
-                    let size = renderSize
-                    let start = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-                    let end = CGRect(x: 0, y: size.height, width: size.width, height: 0)
+                    let froms = getTransformScale(resources[i].asset)
+                    let start = CGRect(x: 0, y: 0, width: renderSize.width / froms.ws, height: renderSize.height / froms.hs)
+                    let end = CGRect(x: 0, y: renderSize.height / froms.hs, width: renderSize.width / froms.ws, height: 0)
                     fromLayer.setCropRectangleRamp(fromStartCropRectangle: start, toEndCropRectangle: end, timeRange: transitionTimeRanges[i])
                 }
                 

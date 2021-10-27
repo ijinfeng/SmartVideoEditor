@@ -15,6 +15,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
 //        try? FileManager.default.removeItem(atPath: VideoRecordConfig.defaultRecordOutputDirPath)
+        
     }
 
     @IBAction func onClickRecord(_ sender: Any) {
@@ -30,8 +31,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func onClickWclRecord(_ sender: Any) {
-//        let vc = VideoPlayerViewController()
-        let vc = VideoEditorViewController()
+        let vc = VideoPlayerViewController()
+//        let vc = VideoEditorViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
