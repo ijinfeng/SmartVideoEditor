@@ -129,15 +129,15 @@ private extension VideoVisualEffectsBuilder {
         guard timeRange.duration != .zero else {
             return
         }
-        // TODO: jinfeng ，`hidden` 动画添加后没有立即作用，layer没有立即显示。会不会和`calayer`的隐式动画有关系？
+        // TODO: jinfeng ，`hidden` 动画添加后没有立即作用，layer没有立即显示。但是不修改当前时间，继续添加就可以了。会不会和`calayer`的隐式动画有关系？
         print("显示----- \(CMTimeRangeShow(timeRange))")
         let an = CABasicAnimation.init(keyPath: "hidden")
         an.fromValue = false
         an.toValue = false
         an.beginTime = CMTimeGetSeconds(timeRange.start)
         an.duration = CMTimeGetSeconds(timeRange.duration)
-        an.timingFunction = CAMediaTimingFunction(name: .default)
         an.isRemovedOnCompletion = false
+
         if let overlap = overlapMap[overlapId] {
             overlap.add(an, forKey: "hidden_\(overlapId)")
         }
