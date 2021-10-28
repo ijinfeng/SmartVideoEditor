@@ -29,6 +29,7 @@ class VideoPlayerViewController: UIViewController {
         print("=============deinit==========")
         player.removeObserver(self, forKeyPath: "status")
         player.currentItem?.removeObserver(self, forKeyPath: "duration")
+        player.pause()
     }
     
     override func viewDidLoad() {
@@ -79,7 +80,7 @@ class VideoPlayerViewController: UIViewController {
         
         
         player.addPeriodicTimeObserver(forInterval: CMTime.init(value: CMTimeValue(1), timescale: 10), queue: DispatchQueue.main) { [weak self] t in
-            print("tttt= \(CMTimeShow(t))")
+//            print("tttt= \(CMTimeShow(t))")
             
             self?.slider.value = Float(CMTimeGetSeconds(t))
             
@@ -201,20 +202,23 @@ class VideoPlayerViewController: UIViewController {
         let text = NSMutableAttributedString.init(string: "你好好---")
         text.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20), NSAttributedString.Key.foregroundColor: UIColor.green], range: NSMakeRange(0, text.length))
         
-        let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 3, timescale: 1))
+        let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 20, timescale: 10))
         
-        if arc4random() % 2 == 0 {
-            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
-        } else {
+//        if arc4random() % 2 == 0 {
+//            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
+//        } else {
             builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 60, height: 60), timeRange: range) { begin, duration in
                 let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
                         rotate.toValue = Double.pi * 2
                         rotate.beginTime = CMTimeGetSeconds(begin)
                         rotate.duration = CMTimeGetSeconds(duration)
                         rotate.isRemovedOnCompletion = false
-                        return rotate
+                        return [rotate]
             }
-        }
+//            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
+            
+//            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
+//        }
         
         
     }

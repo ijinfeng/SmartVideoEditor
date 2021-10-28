@@ -32,17 +32,52 @@ public class VideoVisualEffectsBuilder: NSObject {
 public extension VideoVisualEffectsBuilder {
     typealias OverlapAnimatable = (_ begin: CMTime, _ duration: CMTime) -> [CAAnimation]
     
-    @discardableResult func insert(text: NSAttributedString, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable?) -> OverlapId {
+    /// 添加文字贴图
+    /// - Parameters:
+    ///   - text: 文字
+    ///   - rect: 布局
+    ///   - timeRange: 需要展示的时间范围
+    ///   - handler: 插入动画
+    /// - Returns: 贴图id
+    @discardableResult func insert(text: NSAttributedString, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
         let overlap = TextOverlap(text: text, rect: rect)
         return insert(overlap: overlap, timeRange: timeRange, animation: handler)
     }
     
-    @discardableResult func insert(image: UIImage, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable?) -> OverlapId {
+    /// 添加图片贴图
+    /// - Parameters:
+    ///   - image: 图片
+    ///   - rect: 布局
+    ///   - timeRange: 需要展示的时间范围
+    ///   - handler: 插入动画
+    /// - Returns: 贴图id
+    @discardableResult func insert(image: UIImage, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
         let overlap = ImageOverlap(image: image, rect: rect)
         return insert(overlap: overlap, timeRange: timeRange, animation: handler)
     }
     
-    @discardableResult func insert(overlap: VideoOverlap, timeRange: CMTimeRange, animation handler: OverlapAnimatable?) -> OverlapId {
+    /// 插入gif图
+    /// - Parameters:
+    ///   - filePath: 本地gif图资源路径
+    ///   - rect: 布局
+    ///   - timeRange: 需要展示的时间范围
+    ///   - handler: 插入动画
+    /// - Returns: 贴图id
+    @discardableResult func insert(gif filePath: String, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
+        guard filePath.count > 0 else {
+            return .invalidId
+        }
+        let overlap = GifOverlap(filePath: filePath, rect: rect)
+        return insert(overlap: overlap, timeRange: timeRange, animation: handler)
+    }
+    
+    /// 插入贴图
+    /// - Parameters:
+    ///   - overlap: 贴图对象
+    ///   - timeRange: 需要展示的时间范围
+    ///   - handler: 插入动画
+    /// - Returns: 贴图id
+    @discardableResult func insert(overlap: VideoOverlap, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
         overlap.overlapId = autoIncreaseOverlapId()
         overlap.timeRange = timeRange
         
@@ -68,7 +103,7 @@ public extension VideoVisualEffectsBuilder {
         return overlap.overlapId
     }
     
-    /// 溢出某一贴图
+    /// 移除某一贴图
     /// - Parameter overlapId: 贴图id
     func removeOverlap(_ overlapId: OverlapId) {
         if let overlapLayer = overlapMap[overlapId] {
@@ -81,25 +116,27 @@ public extension VideoVisualEffectsBuilder {
 // MARK: Private API
 private extension VideoVisualEffectsBuilder {
     func autoIncreaseOverlapId() -> OverlapId {
-        guard let overlapId = innerOverlapId else {
-            return resetOverlapId()
-        }
         innerOverlapId += 1
-        return overlapId
+        return innerOverlapId
     }
     
     func resetOverlapId() -> OverlapId {
-        innerOverlapId = 0
+        innerOverlapId = .invalidId
         return innerOverlapId
     }
     
     func setOverlapActivityTime(overlapId: OverlapId, at timeRange: CMTimeRange) {
+        guard timeRange.duration != .zero else {
+            return
+        }
+        // TODO: jinfeng ，`hidden` 动画添加后没有立即作用，layer没有立即显示。会不会和`calayer`的隐式动画有关系？
         print("显示----- \(CMTimeRangeShow(timeRange))")
         let an = CABasicAnimation.init(keyPath: "hidden")
         an.fromValue = false
         an.toValue = false
         an.beginTime = CMTimeGetSeconds(timeRange.start)
         an.duration = CMTimeGetSeconds(timeRange.duration)
+        an.timingFunction = CAMediaTimingFunction(name: .default)
         an.isRemovedOnCompletion = false
         if let overlap = overlapMap[overlapId] {
             overlap.add(an, forKey: "hidden_\(overlapId)")

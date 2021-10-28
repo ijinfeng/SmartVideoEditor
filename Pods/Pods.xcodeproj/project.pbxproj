@@ -119,6 +119,7 @@
 		7491B2177E06AC59BA419E4419F21F97 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFF033F7587C4127B5ADD4848EF5EC1 /* MASConstraintMaker.m */; };
 		77C653E868F9CBE30126832BEAC9BF17 /* RangeReplaceableCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C6D5DE33E839D5A5C1472E570F54D /* RangeReplaceableCollectionExtensions.swift */; };
 		784EA281CE971D604E44BCAE4ECD37CA /* MASLayoutConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FE74CE8944EAF7C20A5CFBE6282597 /* MASLayoutConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		78DB04F9272A78E600A0669B /* GifOverlap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DB04F8272A78E600A0669B /* GifOverlap.swift */; };
 		7A7AEA198EE22F1D56ED2645FC8FB717 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B9CCCC020B3B8911926738216F007F /* Foundation.framework */; };
 		7BAAA0C90C8358DFF4CE0F10CDA5BB83 /* StringProtocolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242D54F8E09E492A76AE5D9089DBC8A0 /* StringProtocolExtensions.swift */; };
 		7C46D9CDEEF7DFE512EA9B57C945D69C /* BidirectionalCollectionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FAEF95ED8D59A808DD99FC086E20F8 /* BidirectionalCollectionExtensions.swift */; };
@@ -332,7 +333,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		000645E5EAFE6283C58185EC1D328B31 /* VideoEditor.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = VideoEditor.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		000645E5EAFE6283C58185EC1D328B31 /* VideoEditor.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = VideoEditor.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		008D52F9D7D26FF8F84CA238235C9991 /* VideoRecord.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoRecord.swift; path = VideoEditor/Classes/VideoRecord.swift; sourceTree = "<group>"; };
 		00B152FAEBD71F5F43E95225F5374500 /* VideoPreviewLayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoPreviewLayer.swift; path = VideoEditor/Classes/VideoPreviewLayer.swift; sourceTree = "<group>"; };
 		0114B5C0AFC9E1AD437BA62EBFE70A74 /* Pods-SmartVideoEditor-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SmartVideoEditor-Info.plist"; sourceTree = "<group>"; };
@@ -361,16 +362,16 @@
 		1671DBC4D10D5CB1F4C3AA9C371A7E32 /* MASViewConstraint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASViewConstraint.h; path = Masonry/MASViewConstraint.h; sourceTree = "<group>"; };
 		18708BAAE37B3E734484C0B2D691BA80 /* ConstraintAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintAttributes.swift; path = Source/ConstraintAttributes.swift; sourceTree = "<group>"; };
 		1A2CA3269733E86E560C9B0769A3C9FD /* SCNPlaneExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SCNPlaneExtensions.swift; path = Sources/SwifterSwift/SceneKit/SCNPlaneExtensions.swift; sourceTree = "<group>"; };
-		1B6AB070ECFA240E9E6A01FD053D2AD0 /* FileBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FileBox.framework; path = FileBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B6AB070ECFA240E9E6A01FD053D2AD0 /* FileBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FileBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B77CF7CDD76E32E12F6245569167291 /* ColorExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ColorExtensions.swift; path = Sources/SwifterSwift/Shared/ColorExtensions.swift; sourceTree = "<group>"; };
 		1CEDC14375B7AC42ADB2516CC818F857 /* VideoVisualEffects-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VideoVisualEffects-umbrella.h"; sourceTree = "<group>"; };
-		1D88140582C341EB132EA8DF0A3A1CD0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		1D88140582C341EB132EA8DF0A3A1CD0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1E0AC69FCB7AE4360C851C68AD84CF2A /* SCNSphereExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SCNSphereExtensions.swift; path = Sources/SwifterSwift/SceneKit/SCNSphereExtensions.swift; sourceTree = "<group>"; };
-		1E720BFCBE9CCE105916D11794119930 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		1FFED36A657123030ABB700256D73F15 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Masonry.framework; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E720BFCBE9CCE105916D11794119930 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		1FFED36A657123030ABB700256D73F15 /* Masonry.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Masonry.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		207FDED620409D81D29C20983F202F81 /* AVCaptureAdditions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AVCaptureAdditions.swift; path = VideoEditor/Classes/AVCaptureAdditions.swift; sourceTree = "<group>"; };
 		2168CD6E5B3C5A117D749EA16D5D18B9 /* SequenceExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SequenceExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/SequenceExtensions.swift; sourceTree = "<group>"; };
-		21F2D0FC282956671C4E2CCB83051DE5 /* VideoVisualEffects.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = VideoVisualEffects.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		21F2D0FC282956671C4E2CCB83051DE5 /* VideoVisualEffects.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = VideoVisualEffects.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		23C2540534D0F0DC7C7CDB93B7572FAA /* Pods-SmartVideoEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SmartVideoEditor.release.xcconfig"; sourceTree = "<group>"; };
 		242D54F8E09E492A76AE5D9089DBC8A0 /* StringProtocolExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StringProtocolExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/StringProtocolExtensions.swift; sourceTree = "<group>"; };
 		2473ADC8CE7BE99BDA4F175808A49C48 /* VideoExport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoExport.swift; path = VideoEditor/Classes/VideoExport.swift; sourceTree = "<group>"; };
@@ -385,7 +386,7 @@
 		30F098102009AD3BD60D2121D0BB3251 /* UIStackViewExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIStackViewExtensions.swift; path = Sources/SwifterSwift/UIKit/UIStackViewExtensions.swift; sourceTree = "<group>"; };
 		321BB0E5DBED5BD65B240BDAAD4ADA99 /* VideoVisualEffects.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = VideoVisualEffects.modulemap; sourceTree = "<group>"; };
 		3236FA8D0401CFD834F0ECB60CADBE9E /* BoolExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BoolExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/BoolExtensions.swift; sourceTree = "<group>"; };
-		358B83BB3577003E5BCA739DA3C9CF63 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		358B83BB3577003E5BCA739DA3C9CF63 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		359449B1B61B410254D2DDCFF7C68AEC /* ConstraintLayoutSupportDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintLayoutSupportDSL.swift; path = Source/ConstraintLayoutSupportDSL.swift; sourceTree = "<group>"; };
 		36314FE05DB160728D6E58FD948D3AB0 /* DisplayFileCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DisplayFileCell.swift; path = FileBox/FileBox/Classes/DisplayFileCell.swift; sourceTree = "<group>"; };
 		36B99C119A4AEB9B3DA6CDF3BB516244 /* NSColorExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NSColorExtensions.swift; path = Sources/SwifterSwift/AppKit/NSColorExtensions.swift; sourceTree = "<group>"; };
@@ -476,30 +477,31 @@
 		75374A583E6A6CA5E37025EBBC635F9E /* MKMapViewExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MKMapViewExtensions.swift; path = Sources/SwifterSwift/MapKit/MKMapViewExtensions.swift; sourceTree = "<group>"; };
 		75CD4560643044066ACBB9DFA72AD847 /* DataExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataExtensions.swift; path = Sources/SwifterSwift/Foundation/DataExtensions.swift; sourceTree = "<group>"; };
 		767D97B297AFC6E0886DA26DB1F37FDD /* MKPolylineExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MKPolylineExtensions.swift; path = Sources/SwifterSwift/MapKit/MKPolylineExtensions.swift; sourceTree = "<group>"; };
-		774BBBF8D0FB499A3248CBD083F11B52 /* VideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VideoEditor.framework; path = VideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		774BBBF8D0FB499A3248CBD083F11B52 /* VideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7765B34BCDC926020BDD196F7905D945 /* VideoVisualEffectsBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoVisualEffectsBuilder.swift; path = VideoVisualEffects/Classes/VideoVisualEffectsBuilder.swift; sourceTree = "<group>"; };
 		77ACF49D2F44F7F22F0EC4BC5ED059C3 /* NSArray+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+MASShorthandAdditions.h"; path = "Masonry/NSArray+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		77D56CFA8165D2B5D75A793AF9BB36EA /* UILayoutPriorityExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UILayoutPriorityExtensions.swift; path = Sources/SwifterSwift/UIKit/UILayoutPriorityExtensions.swift; sourceTree = "<group>"; };
+		78DB04F8272A78E600A0669B /* GifOverlap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GifOverlap.swift; path = VideoVisualEffects/Classes/GifOverlap.swift; sourceTree = "<group>"; };
 		79BECB7295D19530B3F743F6DBFB24C0 /* Debugging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Debugging.swift; path = Source/Debugging.swift; sourceTree = "<group>"; };
 		7A583294006408C25E7EFE038228C219 /* ConstraintMaker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMaker.swift; path = Source/ConstraintMaker.swift; sourceTree = "<group>"; };
 		7C93F574927DDF4866225AACDF68E10D /* CGPointExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGPointExtensions.swift; path = Sources/SwifterSwift/CoreGraphics/CGPointExtensions.swift; sourceTree = "<group>"; };
 		7DCFFE0B93B3EBF76E38A18E52335CA6 /* FileBox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FileBox.release.xcconfig; sourceTree = "<group>"; };
 		7E1C0CD2BEE227DB882D78F2412C6738 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMultiplierTarget.swift; path = Source/ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
-		7E382E2681201B39FB646E610235592C /* AlertMaker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AlertMaker.framework; path = AlertMaker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E382E2681201B39FB646E610235592C /* AlertMaker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlertMaker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EB2C3A86ED5C7D68AEFE71D72CE2F7F /* NSArray+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+MASAdditions.m"; path = "Masonry/NSArray+MASAdditions.m"; sourceTree = "<group>"; };
 		80F9B3863CD36BF2AB7C3E4F5BD250E9 /* XCCustomSheetView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCCustomSheetView.h; path = AlertMaker/AlertMaker/Classes/XCCustomSheetView.h; sourceTree = "<group>"; };
-		815D4FD25B28BCD0775E49DB25A12758 /* VideoTransition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VideoTransition.framework; path = VideoTransition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		815D4FD25B28BCD0775E49DB25A12758 /* VideoTransition.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VideoTransition.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB40CE556E3437F64893DC12B85134 /* Masonry-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Masonry-prefix.pch"; sourceTree = "<group>"; };
 		8212A8CCF6F64A5643F325EE80EFCBF9 /* UIColorExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIColorExtensions.swift; path = Sources/SwifterSwift/UIKit/UIColorExtensions.swift; sourceTree = "<group>"; };
 		8318FA680227B2D2191DE1A90B8B8218 /* UINavigationBarExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UINavigationBarExtensions.swift; path = Sources/SwifterSwift/UIKit/UINavigationBarExtensions.swift; sourceTree = "<group>"; };
 		835E7A982952D4FE0956349EFCD99693 /* VideoVisualEffects.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = VideoVisualEffects.release.xcconfig; sourceTree = "<group>"; };
-		84B1EE12A36C541FC66D90984328189A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		84B1EE12A36C541FC66D90984328189A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		85F8D30CAC775ADF0075500A4910C940 /* AlertMaker-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AlertMaker-Info.plist"; sourceTree = "<group>"; };
 		863B925F98C14B6267A9319393F555CD /* UITableViewExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UITableViewExtensions.swift; path = Sources/SwifterSwift/UIKit/UITableViewExtensions.swift; sourceTree = "<group>"; };
-		86A9CAA38FA9A0603FBF0B50B19B2089 /* VideoTransition.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = VideoTransition.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		86A9CAA38FA9A0603FBF0B50B19B2089 /* VideoTransition.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = VideoTransition.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		87A7ABBEF304C63DD30D3414F4FC4B95 /* SnapKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SnapKit.release.xcconfig; sourceTree = "<group>"; };
 		8AD991D73D77F7182A0C4A92D7FDE3AA /* VideoSessionError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoSessionError.swift; path = VideoEditor/Classes/VideoSessionError.swift; sourceTree = "<group>"; };
-		8C81A3F6D6E88BB13C101D6462262715 /* SwifterSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwifterSwift.framework; path = SwifterSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C81A3F6D6E88BB13C101D6462262715 /* SwifterSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwifterSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F9B6AD97E52B7A94839BC2C555A6980 /* FloatExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FloatExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/FloatExtensions.swift; sourceTree = "<group>"; };
 		9114C23DFA5F3AA8C248590E49EB4071 /* VideoVisualEffects-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "VideoVisualEffects-dummy.m"; sourceTree = "<group>"; };
 		916BC51FCBFB9949EF44FE5AD9E97EB0 /* NSRegularExpressionExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NSRegularExpressionExtensions.swift; path = Sources/SwifterSwift/Foundation/NSRegularExpressionExtensions.swift; sourceTree = "<group>"; };
@@ -508,11 +510,11 @@
 		93772E323C53A56E9CFBCC2637F62323 /* VideoVisualEffects-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VideoVisualEffects-prefix.pch"; sourceTree = "<group>"; };
 		94A1D0E2028FB880E9705D65D9F61D1F /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "View+MASShorthandAdditions.h"; path = "Masonry/View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		955BEA751A4B0743A711ED515E80FE58 /* UIAlertControllerExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIAlertControllerExtensions.swift; path = Sources/SwifterSwift/UIKit/UIAlertControllerExtensions.swift; sourceTree = "<group>"; };
-		956F627E3AC607EDD35BEFBF71C76990 /* FileBox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = FileBox.bundle; path = "FileBox-FileBox.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		956F627E3AC607EDD35BEFBF71C76990 /* FileBox.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FileBox.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		95F7392170473C2D9D3E1E07415CE3E2 /* UITextFieldExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UITextFieldExtensions.swift; path = Sources/SwifterSwift/UIKit/UITextFieldExtensions.swift; sourceTree = "<group>"; };
 		96A9D5AE46F8C3CD7D9247BA820F6C9A /* XCNormalButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = XCNormalButton.m; path = AlertMaker/AlertMaker/Classes/Button/XCNormalButton.m; sourceTree = "<group>"; };
 		96C38491A363DEAA6466940038089FF3 /* SignedNumericExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SignedNumericExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/SignedNumericExtensions.swift; sourceTree = "<group>"; };
-		979486118B3E90C08386079D57962701 /* SnapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SnapKit.framework; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		979486118B3E90C08386079D57962701 /* SnapKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97CF310EBB3B564EEE070DF462AA6BF6 /* VideoEditor-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VideoEditor-umbrella.h"; sourceTree = "<group>"; };
 		986CB9827131205ABE111F8F69F294CE /* XCButton.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCButton.h; path = AlertMaker/AlertMaker/Classes/Button/XCButton.h; sourceTree = "<group>"; };
 		99F176485CF2F79A6972C02330E549CF /* ConstraintRelation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintRelation.swift; path = Source/ConstraintRelation.swift; sourceTree = "<group>"; };
@@ -520,7 +522,7 @@
 		9BEAF9EA1030C0D3528BC131CB3583AD /* DecodableExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DecodableExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/DecodableExtensions.swift; sourceTree = "<group>"; };
 		9CEC466CB996CB69322FAD29880D3089 /* AlertMaker.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AlertMaker.modulemap; sourceTree = "<group>"; };
 		9D70C90DA511491219EFA7EE7D9656B7 /* SnapKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SnapKit.debug.xcconfig; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E655A1F0C1DF7516AC9EFFB1DF57DD8 /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
 		9F14FC23AB77D788454CF46B33FD4D1A /* MASUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MASUtilities.h; path = Masonry/MASUtilities.h; sourceTree = "<group>"; };
 		9F6AEFDB49E724A7054A42BFC68515BF /* VideoEditor.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = VideoEditor.modulemap; sourceTree = "<group>"; };
@@ -541,7 +543,7 @@
 		AA8A99811206CEAB7D566626A98166FC /* DateExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DateExtensions.swift; path = Sources/SwifterSwift/Foundation/DateExtensions.swift; sourceTree = "<group>"; };
 		AC112A2715E9219F8222A1E54BAE6DE3 /* XCCustomSheetView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = XCCustomSheetView.m; path = AlertMaker/AlertMaker/Classes/XCCustomSheetView.m; sourceTree = "<group>"; };
 		AC28C0E48A54D5CC8C04D8083E383A8D /* CalendarExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarExtensions.swift; path = Sources/SwifterSwift/Foundation/CalendarExtensions.swift; sourceTree = "<group>"; };
-		AC2FFF192D5579D31B8BB5D233C6AF12 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		AC2FFF192D5579D31B8BB5D233C6AF12 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		AD3297570819D7087132C6C39515A737 /* View+MASAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "View+MASAdditions.m"; path = "Masonry/View+MASAdditions.m"; sourceTree = "<group>"; };
 		AE018FC7F90A002B5EFCE85669BE107E /* UIBezierPathExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UIBezierPathExtensions.swift; path = Sources/SwifterSwift/UIKit/UIBezierPathExtensions.swift; sourceTree = "<group>"; };
 		AF5B9CBCB654EC7F636FD602297F2AB3 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = FileBox/FileBox/Assets/Assets.xcassets; sourceTree = "<group>"; };
@@ -560,7 +562,7 @@
 		B917C41CC59D05D3237BED64AC97C029 /* IntExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IntExtensions.swift; path = Sources/SwifterSwift/SwiftStdlib/IntExtensions.swift; sourceTree = "<group>"; };
 		B924DB20AFEE5B65316C8B79CE287C3A /* Constraint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constraint.swift; path = Source/Constraint.swift; sourceTree = "<group>"; };
 		B9708762F3E8450872B4E398F8D2D99E /* UserDefaultsExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UserDefaultsExtensions.swift; path = Sources/SwifterSwift/Foundation/UserDefaultsExtensions.swift; sourceTree = "<group>"; };
-		B992503AFE26B62F74CFB171936297CD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		B992503AFE26B62F74CFB171936297CD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B9A327CF5F01C7EF5925C68C5FD94DA4 /* Pods-SmartVideoEditor-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SmartVideoEditor-acknowledgements.plist"; sourceTree = "<group>"; };
 		B9C8726201194F7C7CA37FA33549107D /* VideoTransition.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = VideoTransition.debug.xcconfig; sourceTree = "<group>"; };
 		BA988DE8E0CB6AB15B6572FF0BC99622 /* TextOverlap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TextOverlap.swift; path = VideoVisualEffects/Classes/TextOverlap.swift; sourceTree = "<group>"; };
@@ -574,7 +576,7 @@
 		C0DE3ED6D1CE6579E1E8E0B9C7A00914 /* UINavigationItemExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UINavigationItemExtensions.swift; path = Sources/SwifterSwift/UIKit/UINavigationItemExtensions.swift; sourceTree = "<group>"; };
 		C402372353EEDF5E7B3600B0B49D08B9 /* LayoutConstraint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutConstraint.swift; path = Source/LayoutConstraint.swift; sourceTree = "<group>"; };
 		C478023B02219D8DCD58870B1616FD14 /* ConstraintMakerEditable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMakerEditable.swift; path = Source/ConstraintMakerEditable.swift; sourceTree = "<group>"; };
-		C4AC195734543324550D7896091A11E2 /* VideoVisualEffects.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VideoVisualEffects.framework; path = VideoVisualEffects.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4AC195734543324550D7896091A11E2 /* VideoVisualEffects.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VideoVisualEffects.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4F0D4FE9064999FCFC44DE478E5B1E9 /* XCCustomAlertMaker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCCustomAlertMaker.h; path = AlertMaker/AlertMaker/Classes/XCCustomAlertMaker.h; sourceTree = "<group>"; };
 		C56752F5BE7885F3B1D4BE90B8AEB2B0 /* VideoInfoReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoInfoReader.swift; path = VideoEditor/Classes/VideoInfoReader.swift; sourceTree = "<group>"; };
 		C58C4DECC6C25E314D00A83DD641A097 /* SwifterSwift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SwifterSwift-Info.plist"; sourceTree = "<group>"; };
@@ -594,7 +596,7 @@
 		D0D36E367598BB6424257793B8531D98 /* MASLayoutConstraint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASLayoutConstraint.m; path = Masonry/MASLayoutConstraint.m; sourceTree = "<group>"; };
 		D21BF954A9318A379A4FBCF016E93016 /* XCButtonAttribute.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCButtonAttribute.h; path = AlertMaker/AlertMaker/Classes/Button/XCButtonAttribute.h; sourceTree = "<group>"; };
 		D2875A95240E64412130E7C18AF08725 /* Pods-SmartVideoEditor-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SmartVideoEditor-acknowledgements.markdown"; sourceTree = "<group>"; };
-		D3203D165D23FDBCA472F6BD9832DBAA /* Pods_SmartVideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SmartVideoEditor.framework; path = "Pods-SmartVideoEditor.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3203D165D23FDBCA472F6BD9832DBAA /* Pods_SmartVideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SmartVideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40FE9AA868E18A485D6D4C173C5B221 /* URLRequestExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = URLRequestExtensions.swift; path = Sources/SwifterSwift/Foundation/URLRequestExtensions.swift; sourceTree = "<group>"; };
 		D4F298D9B470DB92BBB8DE1C09800565 /* ConstraintDSL.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintDSL.swift; path = Source/ConstraintDSL.swift; sourceTree = "<group>"; };
 		D684B3C544389D881366B76F0ED45790 /* TransitionItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransitionItem.swift; path = VideoTransition/Classes/TransitionItem.swift; sourceTree = "<group>"; };
@@ -832,7 +834,6 @@
 				5E13A835B30DE5CCC299B1CAAB4E1D25 /* ViewController+MASAdditions.m */,
 				968C4FD3D80410BC92B793172955BE01 /* Support Files */,
 			);
-			name = Masonry;
 			path = Masonry;
 			sourceTree = "<group>";
 		};
@@ -981,7 +982,6 @@
 				71F924E837551F6CBE45D5BAD18ADDD1 /* XCNormalButtonAttribute.m */,
 				7CA9DDAE3BC4576008B0F7EBDC2C0785 /* Support Files */,
 			);
-			name = AlertMaker;
 			path = AlertMaker;
 			sourceTree = "<group>";
 		};
@@ -1035,7 +1035,6 @@
 				572532F228895951D75EF90C6E1C3172 /* Resources */,
 				0455C6DBE23DD5C457EA99981138334C /* Support Files */,
 			);
-			name = FileBox;
 			path = FileBox;
 			sourceTree = "<group>";
 		};
@@ -1199,7 +1198,6 @@
 				122710B525B83BA24D6C7DFCD84E2006 /* SwiftStdlib */,
 				748EF28BA423FD96F4144A244E657968 /* UIKit */,
 			);
-			name = SwifterSwift;
 			path = SwifterSwift;
 			sourceTree = "<group>";
 		};
@@ -1268,6 +1266,7 @@
 			children = (
 				0172E4047F6CC85E15934F76EDC04F8B /* ImageOverlap.swift */,
 				BA988DE8E0CB6AB15B6572FF0BC99622 /* TextOverlap.swift */,
+				78DB04F8272A78E600A0669B /* GifOverlap.swift */,
 				61C0AAF34F4A9D3F47C17AB454E065F7 /* VideoOverlap.swift */,
 				7765B34BCDC926020BDD196F7905D945 /* VideoVisualEffectsBuilder.swift */,
 				7F9C614A6EA40F6218E510C314FCCF29 /* Pod */,
@@ -1316,7 +1315,6 @@
 				6C87C4E99BE110AE52BA33CFF0F1BEDB /* UILayoutSupport+Extensions.swift */,
 				F8AE638AE3B82F3681BE75676D7D24BA /* Support Files */,
 			);
-			name = SnapKit;
 			path = SnapKit;
 			sourceTree = "<group>";
 		};
@@ -2009,6 +2007,7 @@
 				E9AC2C3643A60C8ECC17EAE25931AE31 /* TextOverlap.swift in Sources */,
 				6394CD643B59FB39ECC6B2B5B7476902 /* VideoOverlap.swift in Sources */,
 				F336EF3C672F09B744CC2DDABFAFFA8E /* VideoVisualEffects-dummy.m in Sources */,
+				78DB04F9272A78E600A0669B /* GifOverlap.swift in Sources */,
 				C60D92D88C33A90E75716EF36A7F5ADD /* VideoVisualEffectsBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
