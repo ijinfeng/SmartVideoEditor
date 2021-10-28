@@ -1,5 +1,5 @@
 //
-//  GifOverlap.swift
+//  GifOverlay.swift
 //  VideoVisualEffects
 //
 //  Created by jinfeng on 2021/10/28.
@@ -8,7 +8,7 @@
 import UIKit
 import CoreMedia
 
-public class GifOverlap: VideoOverlap {
+public class GifOverlay: VideoOverlay {
     public private(set) var filePath: String!
     private var rect: CGRect!
     

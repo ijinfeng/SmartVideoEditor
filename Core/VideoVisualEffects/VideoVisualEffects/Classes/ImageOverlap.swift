@@ -1,5 +1,5 @@
 //
-//  ImageOverlap.swift
+//  ImageOverlay.swift
 //  VideoVisualEffects
 //
 //  Created by jinfeng on 2021/10/27.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class ImageOverlap: VideoOverlap {
+public class ImageOverlay: VideoOverlay {
     public private(set) var image: UIImage!
     private var rect: CGRect!
     

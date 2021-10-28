@@ -1,5 +1,5 @@
 //
-//  TextOverlap.swift
+//  TextOverlay.swift
 //  VideoVisualEffects
 //
 //  Created by jinfeng on 2021/10/27.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class TextOverlap: VideoOverlap {
+public class TextOverlay: VideoOverlay {
     public private(set) var text: NSAttributedString!
     private var rect: CGRect!
     

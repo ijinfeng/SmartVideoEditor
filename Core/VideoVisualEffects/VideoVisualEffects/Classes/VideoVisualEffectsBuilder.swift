@@ -13,14 +13,14 @@ public class VideoVisualEffectsBuilder: NSObject {
     private let playerItem: AVPlayerItem!
     fileprivate let syncLayer: AVSynchronizedLayer!
     
-    private var innerOverlapId: OverlapId!
-    private var overlapMap: [OverlapId: CALayer] = [:]
+    private var innerOverlayId: OverlayId!
+    private var OverlayMap: [OverlayId: CALayer] = [:]
     
     public init(playerItem: AVPlayerItem) {
         self.playerItem = playerItem
         syncLayer = AVSynchronizedLayer(playerItem: playerItem)
         super.init()
-        innerOverlapId = resetOverlapId()
+        innerOverlayId = resetOverlayId()
     }
     
     deinit {
@@ -30,7 +30,7 @@ public class VideoVisualEffectsBuilder: NSObject {
 
 // MARK: Public APi
 public extension VideoVisualEffectsBuilder {
-    typealias OverlapAnimatable = (_ begin: CMTime, _ duration: CMTime) -> [CAAnimation]
+    typealias OverlayAnimatable = (_ begin: CMTime, _ duration: CMTime) -> [CAAnimation]
     
     /// 添加文字贴图
     /// - Parameters:
@@ -39,9 +39,9 @@ public extension VideoVisualEffectsBuilder {
     ///   - timeRange: 需要展示的时间范围
     ///   - handler: 插入动画
     /// - Returns: 贴图id
-    @discardableResult func insert(text: NSAttributedString, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
-        let overlap = TextOverlap(text: text, rect: rect)
-        return insert(overlap: overlap, timeRange: timeRange, animation: handler)
+    @discardableResult func insert(text: NSAttributedString, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlayAnimatable? = nil) -> OverlayId {
+        let Overlay = TextOverlay(text: text, rect: rect)
+        return insert(Overlay: Overlay, timeRange: timeRange, animation: handler)
     }
     
     /// 添加图片贴图
@@ -51,9 +51,9 @@ public extension VideoVisualEffectsBuilder {
     ///   - timeRange: 需要展示的时间范围
     ///   - handler: 插入动画
     /// - Returns: 贴图id
-    @discardableResult func insert(image: UIImage, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
-        let overlap = ImageOverlap(image: image, rect: rect)
-        return insert(overlap: overlap, timeRange: timeRange, animation: handler)
+    @discardableResult func insert(image: UIImage, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlayAnimatable? = nil) -> OverlayId {
+        let Overlay = ImageOverlay(image: image, rect: rect)
+        return insert(Overlay: Overlay, timeRange: timeRange, animation: handler)
     }
     
     /// 插入gif图
@@ -63,69 +63,69 @@ public extension VideoVisualEffectsBuilder {
     ///   - timeRange: 需要展示的时间范围
     ///   - handler: 插入动画
     /// - Returns: 贴图id
-    @discardableResult func insert(gif filePath: String, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
+    @discardableResult func insert(gif filePath: String, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlayAnimatable? = nil) -> OverlayId {
         guard filePath.count > 0 else {
             return .invalidId
         }
-        let overlap = GifOverlap(filePath: filePath, rect: rect)
-        return insert(overlap: overlap, timeRange: timeRange, animation: handler)
+        let Overlay = GifOverlay(filePath: filePath, rect: rect)
+        return insert(Overlay: Overlay, timeRange: timeRange, animation: handler)
     }
     
     /// 插入贴图
     /// - Parameters:
-    ///   - overlap: 贴图对象
+    ///   - Overlay: 贴图对象
     ///   - timeRange: 需要展示的时间范围
     ///   - handler: 插入动画
     /// - Returns: 贴图id
-    @discardableResult func insert(overlap: VideoOverlap, timeRange: CMTimeRange, animation handler: OverlapAnimatable? = nil) -> OverlapId {
-        overlap.overlapId = autoIncreaseOverlapId()
-        overlap.timeRange = timeRange
+    @discardableResult func insert(Overlay: VideoOverlay, timeRange: CMTimeRange, animation handler: OverlayAnimatable? = nil) -> OverlayId {
+        Overlay.OverlayId = autoIncreaseOverlayId()
+        Overlay.timeRange = timeRange
         
-        let contentlayer = overlap.layerOfContent()
+        let contentlayer = Overlay.layerOfContent()
         contentlayer.isHidden = true
-        contentlayer.frame = overlap.rectOfContent()
+        contentlayer.frame = Overlay.rectOfContent()
         syncLayer.addSublayer(contentlayer)
-        overlapMap[overlap.overlapId] = contentlayer
+        OverlayMap[Overlay.OverlayId] = contentlayer
         
         // 添加显示动画
-        setOverlapActivityTime(overlapId: overlap.overlapId, at: timeRange)
+        setOverlayActivityTime(OverlayId: Overlay.OverlayId, at: timeRange)
         
         // 外部动画
         if let handler = handler {
-            let overlapAns = handler(timeRange.start, timeRange.duration)
-            for i in 0..<overlapAns.count {
-                let overlapAn = overlapAns[i]
-                overlapAn.isRemovedOnCompletion = false
-                contentlayer.add(overlapAn, forKey: "overlap_\(overlap.overlapId)_\(i)")
+            let OverlayAns = handler(timeRange.start, timeRange.duration)
+            for i in 0..<OverlayAns.count {
+                let OverlayAn = OverlayAns[i]
+                OverlayAn.isRemovedOnCompletion = false
+                contentlayer.add(OverlayAn, forKey: "Overlay_\(Overlay.OverlayId)_\(i)")
             }
         }
         
-        return overlap.overlapId
+        return Overlay.OverlayId
     }
     
     /// 移除某一贴图
-    /// - Parameter overlapId: 贴图id
-    func removeOverlap(_ overlapId: OverlapId) {
-        if let overlapLayer = overlapMap[overlapId] {
-            overlapLayer.removeFromSuperlayer()
-            overlapMap.removeValue(forKey: overlapId)
+    /// - Parameter OverlayId: 贴图id
+    func removeOverlay(_ OverlayId: OverlayId) {
+        if let OverlayLayer = OverlayMap[OverlayId] {
+            OverlayLayer.removeFromSuperlayer()
+            OverlayMap.removeValue(forKey: OverlayId)
         }
     }
 }
 
 // MARK: Private API
 private extension VideoVisualEffectsBuilder {
-    func autoIncreaseOverlapId() -> OverlapId {
-        innerOverlapId += 1
-        return innerOverlapId
+    func autoIncreaseOverlayId() -> OverlayId {
+        innerOverlayId += 1
+        return innerOverlayId
     }
     
-    func resetOverlapId() -> OverlapId {
-        innerOverlapId = .invalidId
-        return innerOverlapId
+    func resetOverlayId() -> OverlayId {
+        innerOverlayId = .invalidId
+        return innerOverlayId
     }
     
-    func setOverlapActivityTime(overlapId: OverlapId, at timeRange: CMTimeRange) {
+    func setOverlayActivityTime(OverlayId: OverlayId, at timeRange: CMTimeRange) {
         guard timeRange.duration != .zero else {
             return
         }
@@ -138,8 +138,8 @@ private extension VideoVisualEffectsBuilder {
         an.duration = CMTimeGetSeconds(timeRange.duration)
         an.isRemovedOnCompletion = false
 
-        if let overlap = overlapMap[overlapId] {
-            overlap.add(an, forKey: "hidden_\(overlapId)")
+        if let Overlay = OverlayMap[OverlayId] {
+            Overlay.add(an, forKey: "hidden_\(OverlayId)")
         }
     }
 }
