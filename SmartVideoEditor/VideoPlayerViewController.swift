@@ -21,9 +21,11 @@ class VideoPlayerViewController: UIViewController {
     
     var isPlaying: Bool = false
 
-    var builder: VideoVisualEffectsBuilder!
+    var builder: VideoOverlayBuilder!
     
     var timeLabel: UILabel = UILabel()
+    
+    var expoertButton: UIButton = UIButton()
     
     deinit {
         print("=============deinit==========")
@@ -37,7 +39,6 @@ class VideoPlayerViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        
         changeNavigationItem()
         navigationItem.rightBarButtonItem?.isEnabled = false
         
@@ -50,7 +51,8 @@ class VideoPlayerViewController: UIViewController {
         navigationItem.titleView = button
         
         
-    
+        
+        
         let path = Bundle.main.path(forResource: "vap", ofType: "mp4")
         
         let URL = URL(fileURLWithPath: path ?? "")
@@ -64,6 +66,7 @@ class VideoPlayerViewController: UIViewController {
         playerLayer.backgroundColor = UIColor.black.cgColor
         playerLayer.frame = view.bounds
         view.layer.insertSublayer(playerLayer, at: 0)
+        self.playerLayer = playerLayer
         
         slider = UISlider()
         slider.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - 88, width: view.bounds.size.width, height: 30)
@@ -90,9 +93,19 @@ class VideoPlayerViewController: UIViewController {
         }
         
         
+        expoertButton.setTitle("导出视频", for: .normal)
+        expoertButton.sizeToFit()
+        expoertButton.setTitleColor(.white, for: .normal)
+        expoertButton.addTarget(self, action: #selector(onLickExpoert), for: .touchUpInside)
+        view.addSubview(expoertButton)
+        expoertButton.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.top.equalTo(100)
+        }
         
-        builder = VideoVisualEffectsBuilder.init(playerItem: item)
-        playerLayer.apply(effectsBuilder: builder)
+        
+        builder = VideoOverlayBuilder.init(playerItem: item)
+        playerLayer.apply(builder: builder)
         
         
 //        let syncLayer = AVSynchronizedLayer(playerItem: item)
@@ -198,28 +211,26 @@ class VideoPlayerViewController: UIViewController {
     @objc func onClickButton() {
         print("添加贴图======= \(CMTimeGetSeconds(player.currentTime()))")
         
-        
         let text = NSMutableAttributedString.init(string: "你好好---")
         text.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20), NSAttributedString.Key.foregroundColor: UIColor.green], range: NSMakeRange(0, text.length))
         
         let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 20, timescale: 10))
         
 //        if arc4random() % 2 == 0 {
-//            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
+            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
 //        } else {
-            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 60, height: 60), timeRange: range) { begin, duration in
-                let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
-                        rotate.toValue = Double.pi * 2
-                        rotate.beginTime = CMTimeGetSeconds(begin)
-                        rotate.duration = CMTimeGetSeconds(duration)
-                        rotate.isRemovedOnCompletion = false
-                        return [rotate]
-            }
+//            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 100 + Int(arc4random()) % 300, width: 60, height: 60), timeRange: range) { begin, duration in
+//                let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
+//                        rotate.toValue = Double.pi * 2
+//                        rotate.beginTime = CMTimeGetSeconds(begin)
+//                        rotate.duration = CMTimeGetSeconds(duration)
+//                        rotate.isRemovedOnCompletion = false
+//                        return [rotate]
+//            }
 //            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
             
 //            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
 //        }
-        
         
     }
     
@@ -230,5 +241,32 @@ class VideoPlayerViewController: UIViewController {
         
         let t = CMTime.init(seconds: Double(slider.value), preferredTimescale: player.currentItem!.duration.timescale)
         player.seek(to: t, toleranceBefore: .zero, toleranceAfter: .zero)
+    }
+    
+    @objc func onLickExpoert() {
+        
+    }
+}
+
+
+extension VideoPlayerViewController : CAAnimationDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        testAn()
+    }
+    
+    func testAn() {
+//        let myLayer = CALayer()
+//        myLayer.frame = CGRect(x: 20, y: 100, width: 100, height: 100)
+//        myLayer.backgroundColor = UIColor.red.cgColor
+//        view.layer.addSublayer(myLayer)
+    }
+    
+    func animationDidStart(_ anim: CAAnimation) {
+        print("开始动画 - \(anim)")
+    }
+    
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        print("停止动画 - \(anim)")
     }
 }

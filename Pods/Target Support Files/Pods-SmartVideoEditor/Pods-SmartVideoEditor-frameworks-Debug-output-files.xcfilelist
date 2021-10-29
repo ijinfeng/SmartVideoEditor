@@ -6,3 +6,4 @@ ${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwifterSwift.framework
 ${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VideoEditor.framework
 ${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VideoTransition.framework
 ${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VideoVisualEffects.framework
+${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RevealServer.framework

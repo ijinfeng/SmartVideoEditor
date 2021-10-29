@@ -13,8 +13,6 @@ public class VideoExport: NSObject {
     private static let shared = VideoExport()
     private let exportQueue = DispatchQueue.init(label: "ijf_export_queue", qos: .default, attributes: .concurrent)
     
-    public static func hehe() {}
-    
     public static func exportVideo(assetURL: URL?,
                             asset: AVAsset?,
                             outputURL: URL,

@@ -4,6 +4,7 @@ PODS:
   - FileBox (0.4.1):
     - SnapKit
   - Masonry (1.1.0)
+  - Reveal-SDK (31)
   - SnapKit (4.2.0)
   - SwifterSwift (5.2.0):
     - SwifterSwift/AppKit (= 5.2.0)
@@ -37,6 +38,7 @@ PODS:
 DEPENDENCIES:
   - AlertMaker
   - FileBox (~> 0.4.1)
+  - Reveal-SDK
   - SnapKit
   - SwifterSwift
   - VideoEditor (from `./Core/VideoEditor`)
@@ -48,6 +50,7 @@ SPEC REPOS:
     - AlertMaker
     - FileBox
     - Masonry
+    - Reveal-SDK
     - SnapKit
     - SwifterSwift
 
@@ -63,12 +66,13 @@ SPEC CHECKSUMS:
   AlertMaker: 9a50b6247f938d712f93c07cfc18e05ca3066db7
   FileBox: f6ad69f8dab98a9f90ddb84b563e7f0804dc8ea2
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  Reveal-SDK: 62ae124d57732c4fe7e88635274ca24054dd2d29
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
   VideoEditor: 1a680b06a41638b4f3d09481e63749357f15bdd0
   VideoTransition: fddff5046be0221fd600f2e21066f75b0498cf26
   VideoVisualEffects: 1f95f3852d7c68e1c6f6ba40f9fd127f259a7c29
 
-PODFILE CHECKSUM: 1c361650cb21119aa67ef49433b93aa7764cd23e
+PODFILE CHECKSUM: ce1fb3cdb87b0ce1e7299155a96a047c7e00faec
 
 COCOAPODS: 1.10.1

@@ -19,7 +19,7 @@ target 'SmartVideoEditor' do
 #  pod 'FileBox', :path => './modules/FileBox'
   pod 'FileBox', '~> 0.4.1'
   pod 'AlertMaker'
-  
+  pod 'Reveal-SDK', :configurations => ['Debug']
   
   
   
