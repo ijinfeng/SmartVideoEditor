@@ -11,15 +11,17 @@ import AVFoundation
 /// 贴图构造器
 public class VideoOverlayBuilder: NSObject {
 
-    private let playerItem: AVPlayerItem!
-    fileprivate let syncLayer: AVSynchronizedLayer!
+    public let playerItem: AVPlayerItem!
+    public let syncLayer: AVSynchronizedLayer!
     
+    private let contentsLayer: CALayer!
     private var innerOverlayId: OverlayId!
     private var overlayMap: [OverlayId: CALayer] = [:]
     
     public init(playerItem: AVPlayerItem) {
         self.playerItem = playerItem
         syncLayer = AVSynchronizedLayer(playerItem: playerItem)
+        contentsLayer = CALayer()
         super.init()
         innerOverlayId = resetOverlayId()
     }
@@ -82,15 +84,22 @@ public extension VideoOverlayBuilder {
         overlay.overlayId = autoIncreaseOverlayId()
         overlay.timeRange = timeRange
         
+        // 这句必须加上，否则每个首次添加贴图都会加不上去
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0)
+        defer {
+            CATransaction.commit()
+        }
+        
         let contentlayer = overlay.layerOfContent()
-        contentlayer.isHidden = false
+        contentlayer.isHidden = true
         contentlayer.frame = overlay.rectOfContent()
         syncLayer.addSublayer(contentlayer)
         overlayMap[overlay.overlayId] = contentlayer
         
         
         // 添加显示动画
-//        setOverlayActivityTime(OverlayId: overlay.OverlayId, at: timeRange)
+        setOverlayActivityTime(overlayId: overlay.overlayId, at: timeRange)
         
         // 外部动画
         if let handler = handler {
@@ -136,8 +145,6 @@ private extension VideoOverlayBuilder {
         guard timeRange.duration != .zero else {
             return
         }
-        // TODO: jinfeng ，`hidden` 动画添加后没有立即作用，layer没有立即显示。但是不修改当前时间，继续添加就可以了。会不会和`calayer`的隐式动画有关系？
-        print("显示----- \(CMTimeRangeShow(timeRange))")
         let an = CABasicAnimation.init(keyPath: "hidden")
         an.fromValue = false
         an.toValue = false

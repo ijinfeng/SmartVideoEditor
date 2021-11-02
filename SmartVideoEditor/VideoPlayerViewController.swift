@@ -27,6 +27,8 @@ class VideoPlayerViewController: UIViewController {
     
     var expoertButton: UIButton = UIButton()
     
+    var playerItem: AVPlayerItem!
+    
     deinit {
         print("=============deinit==========")
         player.removeObserver(self, forKeyPath: "status")
@@ -58,7 +60,7 @@ class VideoPlayerViewController: UIViewController {
         let URL = URL(fileURLWithPath: path ?? "")
         
         let item = AVPlayerItem.init(url: URL)
-        
+        self.playerItem = item
         
         player = AVPlayer.init(playerItem: item)
 
@@ -82,6 +84,8 @@ class VideoPlayerViewController: UIViewController {
         timeLabel.frame = CGRect(x: 0, y: slider.frame.minY + 25, width: view.frame.size.width, height: 25)
         
         
+        
+        
         player.addPeriodicTimeObserver(forInterval: CMTime.init(value: CMTimeValue(1), timescale: 10), queue: DispatchQueue.main) { [weak self] t in
 //            print("tttt= \(CMTimeShow(t))")
             
@@ -90,6 +94,9 @@ class VideoPlayerViewController: UIViewController {
             let seconds = CMTimeGetSeconds(t)
             
             self?.timeLabel.text = "00:"+String(format: "%02.0f", seconds)
+            
+            
+            
         }
         
         
@@ -108,27 +115,7 @@ class VideoPlayerViewController: UIViewController {
         playerLayer.apply(builder: builder)
         
         
-//        let syncLayer = AVSynchronizedLayer(playerItem: item)
-//        syncLayer.frame = view.bounds
-//
-//        let textLayer = CATextLayer()
-//        let string = NSMutableAttributedString.init(string: "Hello AV")
-//        string.addAttribute(NSAttributedString.Key.font, value:UIFont.systemFont(ofSize: 30), range: NSMakeRange(0, string.length))
-//        string.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSMakeRange(0, string.length))
-//        textLayer.string = string
-//        textLayer.bounds = CGRect(x: 0, y: 0, width: 100, height: 60)
-//        textLayer.position = CGPoint(x: view.size.width / 2, y: view.size.height / 2)
-//        syncLayer.addSublayer(textLayer)
-//        playerLayer.addSublayer(syncLayer)
-//
-//
-//        let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
-//        rotate.toValue = Double.pi * 2
-//        rotate.beginTime = 2
-//        rotate.duration = 2
-//        rotate.isRemovedOnCompletion = false
-//        textLayer.add(rotate, forKey: "rotate")
-//
+
 //
         player.addObserver(self, forKeyPath: "status", options: .new, context: nil)
         item.addObserver(self, forKeyPath: "duration", options: .new, context: nil)
@@ -163,6 +150,15 @@ class VideoPlayerViewController: UIViewController {
 //        }
     }
     
+    func logSyncLayer() {
+        print("============================== BEGIN")
+        print("currentTime: \(CMTimeShow(builder.syncLayer.playerItem!.currentTime()))")
+        print("beginTime: \(builder.syncLayer.beginTime)")
+        print("duration: \(builder.syncLayer.duration)")
+//        print("syncLayer.subs: \(builder.syncLayer.sublayers)")
+        print("present: \(builder.syncLayer.presentation())")
+        print("============================== END \n\n")
+    }
     
     override  func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if let path = keyPath {
@@ -217,19 +213,19 @@ class VideoPlayerViewController: UIViewController {
         let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 20, timescale: 10))
         
 //        if arc4random() % 2 == 0 {
-            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
+//            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
 //        } else {
-//            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 100 + Int(arc4random()) % 300, width: 60, height: 60), timeRange: range) { begin, duration in
-//                let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
-//                        rotate.toValue = Double.pi * 2
-//                        rotate.beginTime = CMTimeGetSeconds(begin)
-//                        rotate.duration = CMTimeGetSeconds(duration)
-//                        rotate.isRemovedOnCompletion = false
-//                        return [rotate]
-//            }
-//            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
+            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 100 + Int(arc4random()) % 300, width: 60, height: 60), timeRange: range) { begin, duration in
+                let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
+                        rotate.toValue = Double.pi * 2
+                        rotate.beginTime = CMTimeGetSeconds(begin)
+                        rotate.duration = CMTimeGetSeconds(duration)
+                        rotate.isRemovedOnCompletion = false
+                        return [rotate]
+            }
+            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
             
-//            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
+            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
 //        }
         
     }
@@ -252,14 +248,69 @@ class VideoPlayerViewController: UIViewController {
 extension VideoPlayerViewController : CAAnimationDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        testAn()
+        
+        print("点击了++++++++++++")
+        
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0)
+        
+//        let empty = CALayer()
+        //        empty.isHidden = false
+//        empty.frame = CGRect(x: Int(arc4random_uniform(200)), y: Int(arc4random_uniform(500)), width: 40, height: 40)
+//        empty.backgroundColor = UIColor.red.cgColor
+//        builder.syncLayer.addSublayer(empty)
+        self.testAn()
+        
+        CATransaction.commit()
+        
+//        DispatchQueue.main.async {
+//            self.testAn()
+//        }
+//
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.testAn()
+//        }
     }
     
+    /// 发现没显示是layer的presentLayer上没有添加进去我们的子layer
+    
     func testAn() {
-//        let myLayer = CALayer()
-//        myLayer.frame = CGRect(x: 20, y: 100, width: 100, height: 100)
-//        myLayer.backgroundColor = UIColor.red.cgColor
-//        view.layer.addSublayer(myLayer)
+        
+        
+        logSyncLayer()
+        
+        view.layer.addSublayer(builder.syncLayer)
+        builder.syncLayer.frame = view.bounds
+
+        
+        let textLayer = CATextLayer()
+        textLayer.isHidden = false
+        let string = NSMutableAttributedString.init(string: "Hello AV")
+        string.addAttribute(NSAttributedString.Key.font, value:UIFont.systemFont(ofSize: 30), range: NSMakeRange(0, string.length))
+        string.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSMakeRange(0, string.length))
+        textLayer.string = string
+        textLayer.frame = CGRect(x: Int(arc4random_uniform(200)), y: Int(arc4random_uniform(500)), width: 100, height: 60)
+        builder.syncLayer.addSublayer(textLayer)
+
+        print("在位置\(textLayer.frame)处添加")
+
+//        let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
+//        rotate.fromValue = Double.pi
+//        rotate.toValue = Double.pi * 2
+//        rotate.beginTime = AVCoreAnimationBeginTimeAtZero
+//        rotate.duration = 2
+//        rotate.isRemovedOnCompletion = false
+//        textLayer.add(rotate, forKey: "rotate")
+//
+//        let hidden = CABasicAnimation.init(keyPath: "hidden")
+//        hidden.fromValue = false
+//        hidden.toValue = false
+//        hidden.beginTime = AVCoreAnimationBeginTimeAtZero
+//        hidden.duration = 3
+//        hidden.isRemovedOnCompletion = false
+//        textLayer.add(hidden, forKey: "hidden")
+        
+        logSyncLayer()
     }
     
     func animationDidStart(_ anim: CAAnimation) {
