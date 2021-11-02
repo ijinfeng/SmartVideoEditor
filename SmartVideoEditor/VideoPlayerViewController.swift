@@ -10,7 +10,7 @@ import AVFoundation
 import MediaPlayer
 import AVKit
 import AVKit.AVPlayerViewController
-import VideoVisualEffects
+import VideoEditor
 
 class VideoPlayerViewController: UIViewController {
 
@@ -29,6 +29,8 @@ class VideoPlayerViewController: UIViewController {
     
     var playerItem: AVPlayerItem!
     
+    var addbutton = UIButton()
+    
     deinit {
         print("=============deinit==========")
         player.removeObserver(self, forKeyPath: "status")
@@ -44,13 +46,13 @@ class VideoPlayerViewController: UIViewController {
         changeNavigationItem()
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        let button = UIButton()
-        button.setTitle("添加贴图", for: .normal)
-        button.sizeToFit()
-        button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(onClickButton), for: .touchUpInside)
         
-        navigationItem.titleView = button
+        addbutton.setTitle("添加贴图", for: .normal)
+        addbutton.sizeToFit()
+        addbutton.setTitleColor(.white, for: .normal)
+        addbutton.addTarget(self, action: #selector(onClickButton), for: .touchUpInside)
+        
+        navigationItem.titleView = addbutton
         
         
         
@@ -215,7 +217,7 @@ class VideoPlayerViewController: UIViewController {
 //        if arc4random() % 2 == 0 {
 //            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
 //        } else {
-            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 100 + Int(arc4random()) % 300, width: 60, height: 60), timeRange: range) { begin, duration in
+            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 60, width: 60, height: 60), timeRange: range) { begin, duration in
                 let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
                         rotate.toValue = Double.pi * 2
                         rotate.beginTime = CMTimeGetSeconds(begin)
@@ -223,9 +225,9 @@ class VideoPlayerViewController: UIViewController {
                         rotate.isRemovedOnCompletion = false
                         return [rotate]
             }
-            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
+//            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
             
-            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
+//            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
 //        }
         
     }
@@ -239,8 +241,109 @@ class VideoPlayerViewController: UIViewController {
         player.seek(to: t, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
+    // MARK: 导出视频
     @objc func onLickExpoert() {
+//        let _path = Bundle.main.path(forResource: "vap", ofType: "mp4")
+//        let URL = URL(fileURLWithPath: _path ?? "")
+//        let asset = AVURLAsset.init(url: URL)
+//        let composition = AVMutableComposition()
+//        guard let videoTrack = asset.tracks(withMediaType: .video).first else {
+//            return
+//        }
+//        let videoComTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+//        try? videoComTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: videoTrack, at: .zero)
+//        if let audioTrack = asset.tracks(withMediaType: .audio).first {
+//            let audioComTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+//            try? audioComTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: audioTrack, at: .zero)
+//        }
+//
+//
+//        let videoComposition = AVMutableVideoComposition()
+//        let duration = asset.duration
+//        guard let videoTrack = asset.tracks(withMediaType: .video).first else {
+//            return
+//        }
+//
+//        var instructions: [AVMutableVideoCompositionInstruction] = []
+//        let videoInstruction = AVMutableVideoCompositionInstruction()
+//        videoInstruction.timeRange = CMTimeRange(start: .zero, duration: duration)
+//        let videoLayerInstruction = AVMutableVideoCompositionLayerInstruction.init(assetTrack: videoTrack)
+//        videoInstruction.layerInstructions = [videoLayerInstruction]
+//        instructions.append(videoInstruction)
+//
+//        videoComposition.instructions = instructions
+//        videoComposition.renderSize = videoTrack.naturalSize
+//        videoComposition.frameDuration = CMTime.init(value: 1, timescale: 30)
         
+        let videoComposition = builder.getVideoComposition()
+        videoComposition.apply(builer: builder)
+        
+//        let videoLayer = CALayer()
+//        let animationLayer = CALayer()
+//        animationLayer.isGeometryFlipped = true
+//        animationLayer.addSublayer(videoLayer)
+//
+//        let renderSize = videoTrack.naturalSize
+//
+//        let renderRect = CGRect(x: 0, y: 0, width: renderSize.width, height: renderSize.height)
+//
+//        videoLayer.frame = renderRect
+//        animationLayer.frame = renderRect
+
+//        builer.videoOverlayMap.forEach { (overlayId: OverlayId, overlay: VideoOverlay) in
+//            let contentlayer = overlay.layerOfContent()
+//            contentlayer.isHidden = true
+//            contentlayer.frame = overlay.rectOfContent()
+//            animationLayer.addSublayer(contentlayer)
+//
+//            builer.setOverlayActivityTime(overlayId: overlayId, overlayLayer: contentlayer, at: overlay.timeRange)
+//        }
+        
+//        videoComposition.animationTool = AVVideoCompositionCoreAnimationTool.init(postProcessingAsVideoLayer: videoLayer, in: animationLayer)
+        
+        
+        
+        let path = VideoRecordConfig.defaultRecordOutputDirPath
+        FileHelper.createDir(at: path)
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd-HH:mm:ss"
+        let videoName = f.string(from: Date())
+        let outputURL = path + "\(videoName).mp4"
+        do {
+            print("开始导出....")
+            
+            let export = AVAssetExportSession.init(asset: playerItem.asset, presetName: AVAssetExportPresetHighestQuality)
+            export?.outputURL = outputURL.fileURL
+            export?.outputFileType = .mp4
+            export?.shouldOptimizeForNetworkUse = true
+            export?.videoComposition = videoComposition
+            export?.exportAsynchronously {
+                DispatchQueue.main.async {
+                    switch export!.status {
+                    case .completed:
+                        print("导出成功")
+                        
+                        self.addbutton.setTitle("导出成功", for: .normal)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self.addbutton.setTitle("添加贴图", for: .normal)
+                        }
+                        
+                        
+                    default:
+#if DEBUG
+                        if export!.error != nil {
+                            print("====> export error detail:\n\t \(export!.error!)")
+                        }
+#endif
+                    }
+                }
+            }
+//            try VideoExport.exportVideo(assetURL: nil, asset: composition, outputURL: outputURL.fileURL, ouputFileType: .mp4, videoComposition: videoComposition) { finished in
+//                print("导出\(finished)")
+//            }
+        } catch {
+            print(error)
+        }
     }
 }
 
@@ -249,19 +352,19 @@ extension VideoPlayerViewController : CAAnimationDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        print("点击了++++++++++++")
-        
-        CATransaction.begin()
-        CATransaction.setAnimationDuration(0)
+//        print("点击了++++++++++++")
+//
+//        CATransaction.begin()
+//        CATransaction.setAnimationDuration(0)
         
 //        let empty = CALayer()
         //        empty.isHidden = false
 //        empty.frame = CGRect(x: Int(arc4random_uniform(200)), y: Int(arc4random_uniform(500)), width: 40, height: 40)
 //        empty.backgroundColor = UIColor.red.cgColor
 //        builder.syncLayer.addSublayer(empty)
-        self.testAn()
+//        self.testAn()
         
-        CATransaction.commit()
+//        CATransaction.commit()
         
 //        DispatchQueue.main.async {
 //            self.testAn()

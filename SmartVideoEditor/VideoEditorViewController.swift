@@ -12,7 +12,6 @@ import SnapKit
 import QuickLook
 import SwifterSwift
 import AVKit
-import VideoTransition
 
 class MyCell: UICollectionViewCell {
     
@@ -72,7 +71,8 @@ class VideoEditorViewController: UIViewController {
         }
     }()
     
-    let editor = TransitionComposition()
+    let editor = VideoTransitionComposition()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()

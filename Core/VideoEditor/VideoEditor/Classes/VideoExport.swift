@@ -70,6 +70,11 @@ public class VideoExport: NSObject {
                         case .completed:
                             complication(true)
                         default:
+#if DEBUG
+                            if export.error != nil {
+                                print("====> export error detail:\n\t \(export.error!)")
+                            }
+#endif
                             complication(false)
                         }
                     }

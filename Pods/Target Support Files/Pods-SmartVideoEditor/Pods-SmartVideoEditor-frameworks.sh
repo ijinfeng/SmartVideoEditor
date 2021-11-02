@@ -181,8 +181,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SwifterSwift/SwifterSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VideoEditor/VideoEditor.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/VideoTransition/VideoTransition.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/VideoVisualEffects/VideoVisualEffects.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/RevealServer/RevealServer.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -192,8 +190,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SwifterSwift/SwifterSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/VideoEditor/VideoEditor.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/VideoTransition/VideoTransition.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/VideoVisualEffects/VideoVisualEffects.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

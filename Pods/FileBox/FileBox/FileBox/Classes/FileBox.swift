@@ -50,6 +50,7 @@ public class FileBox: NSObject {
         let vc = FileBoxTableViewController()
         vc.fileNode = node
         let navi = UINavigationController(rootViewController: vc)
+        navi.modalPresentationStyle = .fullScreen
         return navi
     }
 }

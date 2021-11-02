@@ -5,5 +5,3 @@ ${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
 ${BUILT_PRODUCTS_DIR}/SwifterSwift/SwifterSwift.framework
 ${BUILT_PRODUCTS_DIR}/VideoEditor/VideoEditor.framework
-${BUILT_PRODUCTS_DIR}/VideoTransition/VideoTransition.framework
-${BUILT_PRODUCTS_DIR}/VideoVisualEffects/VideoVisualEffects.framework

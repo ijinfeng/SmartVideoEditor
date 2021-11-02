@@ -32,8 +32,6 @@ PODS:
   - SwifterSwift/SwiftStdlib (5.2.0)
   - SwifterSwift/UIKit (5.2.0)
   - VideoEditor (0.1.0)
-  - VideoTransition (0.1.0)
-  - VideoVisualEffects (0.1.0)
 
 DEPENDENCIES:
   - AlertMaker
@@ -42,8 +40,6 @@ DEPENDENCIES:
   - SnapKit
   - SwifterSwift
   - VideoEditor (from `./Core/VideoEditor`)
-  - VideoTransition (from `./Core/VideoTransition`)
-  - VideoVisualEffects (from `./Core/VideoVisualEffects`)
 
 SPEC REPOS:
   trunk:
@@ -57,10 +53,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   VideoEditor:
     :path: "./Core/VideoEditor"
-  VideoTransition:
-    :path: "./Core/VideoTransition"
-  VideoVisualEffects:
-    :path: "./Core/VideoVisualEffects"
 
 SPEC CHECKSUMS:
   AlertMaker: 9a50b6247f938d712f93c07cfc18e05ca3066db7
@@ -70,9 +62,7 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
   VideoEditor: 1a680b06a41638b4f3d09481e63749357f15bdd0
-  VideoTransition: fddff5046be0221fd600f2e21066f75b0498cf26
-  VideoVisualEffects: 1f95f3852d7c68e1c6f6ba40f9fd127f259a7c29
 
-PODFILE CHECKSUM: ce1fb3cdb87b0ce1e7299155a96a047c7e00faec
+PODFILE CHECKSUM: 2ddd91b4c36537e0de3ebd1b3dda402242a9edac
 
 COCOAPODS: 1.10.1

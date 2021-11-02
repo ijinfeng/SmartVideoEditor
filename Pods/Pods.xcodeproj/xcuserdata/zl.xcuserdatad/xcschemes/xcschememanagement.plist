@@ -49,16 +49,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>VideoTransition.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>VideoVisualEffects.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict/>

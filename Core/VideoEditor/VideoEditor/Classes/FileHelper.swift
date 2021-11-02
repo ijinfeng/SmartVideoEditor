@@ -46,6 +46,8 @@ public class FileHelper {
 
 
 extension String {
+    
+    /// 根据字符串返回本地`URL`
     public var fileURL: URL {
         URL(fileURLWithPath: self)
     }

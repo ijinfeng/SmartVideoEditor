@@ -45,7 +45,7 @@ public extension VideoOverlayBuilder {
     ///   - handler: 插入动画
     /// - Returns: 贴图id
     @discardableResult func insert(text: NSAttributedString, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlayAnimatable? = nil) -> OverlayId {
-        let Overlay = TextOverlay(text: text, rect: rect)
+        let Overlay = VideoOverlayText(text: text, rect: rect)
         return insert(overlay: Overlay, timeRange: timeRange, animation: handler)
     }
     
@@ -57,7 +57,7 @@ public extension VideoOverlayBuilder {
     ///   - handler: 插入动画
     /// - Returns: 贴图id
     @discardableResult func insert(image: UIImage, rect: CGRect, timeRange: CMTimeRange, animation handler: OverlayAnimatable? = nil) -> OverlayId {
-        let Overlay = ImageOverlay(image: image, rect: rect)
+        let Overlay = VideoOverlayImage(image: image, rect: rect)
         return insert(overlay: Overlay, timeRange: timeRange, animation: handler)
     }
     
@@ -72,7 +72,7 @@ public extension VideoOverlayBuilder {
         guard filePath.count > 0 else {
             return .invalidId
         }
-        let Overlay = GifOverlay(filePath: filePath, rect: rect)
+        let Overlay = VideoOverlayGif(filePath: filePath, rect: rect)
         return insert(overlay: Overlay, timeRange: timeRange, animation: handler)
     }
     
@@ -221,11 +221,14 @@ public extension AVMutableVideoComposition {
         for (overId, overlay) in builer.videoOverlayMap {
             let contentlayer = overlay.layerOfContent()
             contentlayer.isHidden = true
+            // 这个是相对屏幕的位置，显示在视频上需要转换
+            // TODO: jinfeng
             let contentRect = overlay.rectOfContent()
             let screenSize = UIScreen.main.bounds.size
-            
-            let realRect = CGRect(x: <#T##CGFloat#>, y: <#T##CGFloat#>, width: <#T##CGFloat#>, height: <#T##CGFloat#>)
-            contentlayer.frame = realRect
+            let scale = screenSize.width / renderSize.width
+            let realRect = CGRect(x: 0 , y: 0, width: contentRect.width / scale, height: contentRect.height / scale)
+            contentlayer.bounds = realRect
+            contentlayer.position = CGPoint(x: renderSize.width - contentRect.midX, y: contentRect.midY)
             animationLayer.addSublayer(contentlayer)
             
             // 注意 `animationLayer` 的尺寸

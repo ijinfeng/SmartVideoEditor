@@ -58,8 +58,11 @@ extension VideoRecordConfig {
 }
 
 extension VideoRecordConfig {
+    
+    /// 默认导出的录像文件夹地址
     public static let defaultRecordOutputDirPath: String =
         NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first! + "/record/"
     
+    /// 录制片段存放地址
     public static let recordPartsDirPath: String = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first! + "/record/parts/"
 }
