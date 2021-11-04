@@ -38,6 +38,16 @@ class VideoPlayerViewController: UIViewController {
         player.pause()
     }
     
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        navigationController?.setNavigationBarHidden(true, animated: true)
+//    }
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        navigationController?.setNavigationBarHidden(false, animated: true)
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,7 +67,7 @@ class VideoPlayerViewController: UIViewController {
         
         
         
-        let path = Bundle.main.path(forResource: "vap", ofType: "mp4")
+        let path = Bundle.main.path(forResource: "guide", ofType: "mp4")
         
         let URL = URL(fileURLWithPath: path ?? "")
         

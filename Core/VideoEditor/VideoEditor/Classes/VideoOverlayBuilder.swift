@@ -211,6 +211,7 @@ public extension AVMutableVideoComposition {
         let animationLayer = CALayer()
         animationLayer.isGeometryFlipped = true
         let renderSize = self.renderSize
+        
         let renderRect = CGRect(x: 0, y: 0, width: renderSize.width, height: renderSize.height)
         
         animationLayer.addSublayer(videoLayer)
@@ -222,18 +223,13 @@ public extension AVMutableVideoComposition {
             let contentlayer = overlay.layerOfContent()
             contentlayer.isHidden = true
             // 这个是相对屏幕的位置，显示在视频上需要转换
-            // TODO: jinfeng
             let contentRect = overlay.rectOfContent()
             let screenSize = UIScreen.main.bounds.size
             let scale = screenSize.width / renderSize.width
             let realRect = CGRect(x: 0 , y: 0, width: contentRect.width / scale, height: contentRect.height / scale)
             contentlayer.bounds = realRect
-            contentlayer.position = CGPoint(x: renderSize.width - contentRect.midX, y: contentRect.midY)
+            contentlayer.position = CGPoint(x: contentRect.midX / scale, y: contentRect.midY)
             animationLayer.addSublayer(contentlayer)
-            
-            // 注意 `animationLayer` 的尺寸
-            // contentLayer: <CALayer: 0x283860860>, frame: (10.0, 60.0, 60.0, 60.0)
-//        animationLayer: <CALayer: 0x283860020>, frame: (0.0, 0.0, 1024.0, 1504.0)
             
             builer.setOverlayActivityTime(overlayId: overId, overlayLayer: contentlayer, at: overlay.timeRange)
             

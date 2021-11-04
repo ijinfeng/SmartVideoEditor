@@ -107,7 +107,7 @@ class FileBoxTableViewController: UITableViewController {
                 case .audio, .video:
                     let vc = AVPlayerViewController()
                     vc.player = AVPlayer.init(url: URL(fileURLWithPath: fileNode.path))
-                    navigationController?.pushViewController(vc, animated: true)
+                    navigationController?.present(vc, animated: true, completion: nil)
                     return
                 default:
                     let vc = QLPreviewController()
