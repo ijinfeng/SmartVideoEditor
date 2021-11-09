@@ -125,41 +125,11 @@ class VideoPlayerViewController: UIViewController {
         
         builder = VideoOverlayBuilder.init(playerItem: item)
         playerLayer.apply(builder: builder)
-        
-        
 
-//
         player.addObserver(self, forKeyPath: "status", options: .new, context: nil)
         item.addObserver(self, forKeyPath: "duration", options: .new, context: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(didPlayEnd), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-//
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-//            print("添加新的图层")
-//            let imageLayer = CALayer()
-//            imageLayer.opacity = 0
-//            imageLayer.frame = CGRect(x: 100, y: 200, width: 80, height: 80)
-//            imageLayer.contents = UIImage(named: "YJFMusicCollection")?.cgImage
-//            syncLayer.addSublayer(imageLayer)
-//
-//            let an = CABasicAnimation.init(keyPath: "opacity")
-//            an.fromValue = 0
-//            an.toValue = 1
-//            an.beginTime = 3.5
-//            an.duration = 3
-//            an.isRemovedOnCompletion = false
-//            imageLayer.add(an, forKey: "opacity")
-//
-//            let an2 = CABasicAnimation.init(keyPath: "opacity")
-//            an2.fromValue = 1
-//            an2.toValue = 0
-//            an2.beginTime = 6.5
-//            an2.duration = 2
-//            an2.isRemovedOnCompletion = false
-//            imageLayer.add(an2, forKey: "opacity2")
-           
-            
-//        }
     }
     
     func logSyncLayer() {
@@ -225,7 +195,7 @@ class VideoPlayerViewController: UIViewController {
         let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 20, timescale: 10))
         
 //        if arc4random() % 2 == 0 {
-//            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
+            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
 //        } else {
             builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 60, width: 60, height: 60), timeRange: range) { begin, duration in
                 let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")

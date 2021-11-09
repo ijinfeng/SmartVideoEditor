@@ -20,7 +20,7 @@ target 'SmartVideoEditor' do
   pod 'FileBox', '~> 0.4.1'
   pod 'AlertMaker'
   pod 'Reveal-SDK', :configurations => ['Debug']
-  
+  pod 'VFCabbage'
   
   
 end

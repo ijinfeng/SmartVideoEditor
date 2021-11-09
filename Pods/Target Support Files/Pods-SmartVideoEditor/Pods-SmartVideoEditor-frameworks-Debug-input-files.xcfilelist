@@ -4,5 +4,6 @@ ${BUILT_PRODUCTS_DIR}/FileBox/FileBox.framework
 ${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
 ${BUILT_PRODUCTS_DIR}/SwifterSwift/SwifterSwift.framework
+${BUILT_PRODUCTS_DIR}/VFCabbage/VFCabbage.framework
 ${BUILT_PRODUCTS_DIR}/VideoEditor/VideoEditor.framework
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/RevealServer/RevealServer.framework/RevealServer

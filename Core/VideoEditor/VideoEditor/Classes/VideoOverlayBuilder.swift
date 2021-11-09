@@ -150,21 +150,6 @@ public extension VideoOverlayBuilder {
         
         return videoComposition
     }
-    
-    func getMixComposition() -> AVMutableComposition {
-        let asset = playerItem.asset
-        let composition = AVMutableComposition()
-        guard let videoTrack = asset.tracks(withMediaType: .video).first else {
-            return composition
-        }
-        let videoComTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-        try? videoComTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: videoTrack, at: .zero)
-        if let audioTrack = asset.tracks(withMediaType: .audio).first {
-            let audioComTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-            try? audioComTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: audioTrack, at: .zero)
-        }
-        return composition
-    }
 }
 
 // MARK: Private API
@@ -195,6 +180,9 @@ private extension VideoOverlayBuilder {
 
 // MARK: 为Layer添加铁贴纸
 public extension CALayer {
+    
+    /// 在视频播放的`Layer`上添加贴图
+    /// - Parameter builder: 贴图构造器
     func apply(builder: VideoOverlayBuilder) {
         builder.syncLayer.frame = self.bounds
         builder.contentsLayer.frame = builder.syncLayer.bounds
@@ -205,6 +193,9 @@ public extension CALayer {
 
 // MARK: 为导出的视频添加贴图
 public extension AVMutableVideoComposition {
+    
+    /// 为`AVVideoComposition`对象添加`animationTool`
+    /// - Parameter builer: 贴图构造器
     func apply(builer: VideoOverlayBuilder) {
         let videoLayer = CALayer()
         videoLayer.masksToBounds = true

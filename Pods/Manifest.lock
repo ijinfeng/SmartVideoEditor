@@ -31,6 +31,7 @@ PODS:
   - SwifterSwift/StoreKit (5.2.0)
   - SwifterSwift/SwiftStdlib (5.2.0)
   - SwifterSwift/UIKit (5.2.0)
+  - VFCabbage (0.5.1)
   - VideoEditor (0.1.0)
 
 DEPENDENCIES:
@@ -39,6 +40,7 @@ DEPENDENCIES:
   - Reveal-SDK
   - SnapKit
   - SwifterSwift
+  - VFCabbage
   - VideoEditor (from `./Core/VideoEditor`)
 
 SPEC REPOS:
@@ -49,6 +51,7 @@ SPEC REPOS:
     - Reveal-SDK
     - SnapKit
     - SwifterSwift
+    - VFCabbage
 
 EXTERNAL SOURCES:
   VideoEditor:
@@ -61,8 +64,9 @@ SPEC CHECKSUMS:
   Reveal-SDK: 62ae124d57732c4fe7e88635274ca24054dd2d29
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwifterSwift: 334181863c416882d97b7a60c05054d9e4d799e2
+  VFCabbage: eb7c401e002e66a9f641590f274d9d5a6bfa85e2
   VideoEditor: 1a680b06a41638b4f3d09481e63749357f15bdd0
 
-PODFILE CHECKSUM: 2ddd91b4c36537e0de3ebd1b3dda402242a9edac
+PODFILE CHECKSUM: 7f9b3924dba63c2122983b181dbd763b808e211a
 
 COCOAPODS: 1.10.1

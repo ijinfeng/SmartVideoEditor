@@ -22,6 +22,7 @@ public class VideoOverlayText: VideoOverlay {
     
     public override func layerOfContent() -> CALayer {
         let textLayer = CATextLayer()
+        textLayer.contentsScale = UIScreen.main.scale
         textLayer.string = text
         textLayer.isHidden = true
         return textLayer
