@@ -24,6 +24,7 @@ public class StaticImageOverlay: OverlayProvider {
     
     public init(image: CIImage) {
         self.image = image
+        frame = CGRect(origin: .zero, size: image.extent.size)
     }
     
     private init() {}

@@ -10,7 +10,7 @@ import Foundation
 public struct ElementIdentiferBuilder {
     private var eid: VisualElementIdentifer = .invalid
     
-    public mutating func get() -> VisualElementIdentifer {
+    public mutating func `get`() -> VisualElementIdentifer {
         eid += 1
         return eid
     }

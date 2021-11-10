@@ -128,6 +128,7 @@ class VideoEditorViewController: UIViewController {
 //        }
         
         editor.renderSize = CGSize(width: 320, height: 400)
+        view.topAnchor
         
         let asset1 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip1", ofType: "m4v") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
         let asset2 = AVURLAsset(url: URL(fileURLWithPath: Bundle.main.path(forResource: "sample_clip2", ofType: "mov") ?? ""), options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])

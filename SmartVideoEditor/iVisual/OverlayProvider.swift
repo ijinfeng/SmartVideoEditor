@@ -8,6 +8,6 @@
 import Foundation
 import CoreGraphics
 
-public protocol OverlayProvider: TimingProvider, VisualProvider {
+public protocol OverlayProvider: VisualProvider {
     var frame: CGRect { set get }
 }

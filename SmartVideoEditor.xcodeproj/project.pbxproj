@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		37D4714326F8BF63000A4610 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4714226F8BF63000A4610 /* AppDelegate.swift */; };
-		37D4714526F8BF63000A4610 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4714426F8BF63000A4610 /* SceneDelegate.swift */; };
 		37D4714726F8BF63000A4610 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4714626F8BF63000A4610 /* ViewController.swift */; };
 		37D4714A26F8BF63000A4610 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37D4714826F8BF63000A4610 /* Main.storyboard */; };
 		37D4714C26F8BF65000A4610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37D4714B26F8BF65000A4610 /* Assets.xcassets */; };
 		37D4714F26F8BF65000A4610 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37D4714D26F8BF65000A4610 /* LaunchScreen.storyboard */; };
+		78407DC0273BC66D000A2854 /* DynamicImageOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78407DBF273BC66D000A2854 /* DynamicImageOverlay.swift */; };
 		784E50A02739073C005A0E19 /* CustomVideoCompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784E509F2739073C005A0E19 /* CustomVideoCompositionViewController.swift */; };
 		784E50A22739077A005A0E19 /* VideoCustomComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784E50A12739077A005A0E19 /* VideoCustomComposition.swift */; };
 		78CD6C6926FC84D000F3D583 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD6C6826FC84D000F3D583 /* RecordViewController.swift */; };
@@ -43,7 +43,6 @@
 		1EB54F102C271E9BDCE3ED83 /* Pods_SmartVideoEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SmartVideoEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37D4713F26F8BF63000A4610 /* SmartVideoEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartVideoEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37D4714226F8BF63000A4610 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		37D4714426F8BF63000A4610 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		37D4714626F8BF63000A4610 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		37D4714926F8BF63000A4610 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		37D4714B26F8BF65000A4610 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,6 +50,7 @@
 		37D4715026F8BF65000A4610 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		595CBB1CCBD342A4192D02BA /* Pods-SmartVideoEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartVideoEditor.release.xcconfig"; path = "Target Support Files/Pods-SmartVideoEditor/Pods-SmartVideoEditor.release.xcconfig"; sourceTree = "<group>"; };
 		7831FFE22721419500FCF92E /* SmartVideoEditor-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SmartVideoEditor-Bridging-Header.h"; sourceTree = "<group>"; };
+		78407DBF273BC66D000A2854 /* DynamicImageOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicImageOverlay.swift; sourceTree = "<group>"; };
 		784E509F2739073C005A0E19 /* CustomVideoCompositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVideoCompositionViewController.swift; sourceTree = "<group>"; };
 		784E50A12739077A005A0E19 /* VideoCustomComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCustomComposition.swift; sourceTree = "<group>"; };
 		78CD6C6826FC84D000F3D583 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
@@ -111,7 +111,6 @@
 			isa = PBXGroup;
 			children = (
 				37D4714226F8BF63000A4610 /* AppDelegate.swift */,
-				37D4714426F8BF63000A4610 /* SceneDelegate.swift */,
 				37D4714626F8BF63000A4610 /* ViewController.swift */,
 				78CD6C6826FC84D000F3D583 /* RecordViewController.swift */,
 				78E026B12715621E00C0E03B /* VideoEditorViewController.swift */,
@@ -163,6 +162,7 @@
 				78F47299273A5936000F71ED /* VisualProvider.swift */,
 				78F47293273A5341000F71ED /* OverlayProvider.swift */,
 				78F4729B273A5AE2000F71ED /* StaticImageOverlay.swift */,
+				78407DBF273BC66D000A2854 /* DynamicImageOverlay.swift */,
 				78F47295273A536D000F71ED /* SpecialEffectsProvider.swift */,
 				78F472A1273A68DB000F71ED /* CGExtensions.swift */,
 				78F472A3273A6D19000F71ED /* CMExtensions.swift */,
@@ -305,6 +305,7 @@
 				78F47292273A52C0000F71ED /* TimingProvider.swift in Sources */,
 				78F4729E273A5C26000F71ED /* ElementIdentiferBuilder.swift in Sources */,
 				37D4714326F8BF63000A4610 /* AppDelegate.swift in Sources */,
+				78407DC0273BC66D000A2854 /* DynamicImageOverlay.swift in Sources */,
 				78F4729A273A5936000F71ED /* VisualProvider.swift in Sources */,
 				78F47298273A5466000F71ED /* VideoCompositionBuilder.swift in Sources */,
 				78FCEAEC2717CD190011C07B /* VideoPlayerViewController.swift in Sources */,
@@ -313,7 +314,6 @@
 				78F472A2273A68DB000F71ED /* CGExtensions.swift in Sources */,
 				78F47294273A5341000F71ED /* OverlayProvider.swift in Sources */,
 				784E50A22739077A005A0E19 /* VideoCustomComposition.swift in Sources */,
-				37D4714526F8BF63000A4610 /* SceneDelegate.swift in Sources */,
 				78F4729C273A5AE2000F71ED /* StaticImageOverlay.swift in Sources */,
 				78F47290273A5003000F71ED /* TimeLine.swift in Sources */,
 				784E50A02739073C005A0E19 /* CustomVideoCompositionViewController.swift in Sources */,
@@ -470,7 +470,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C73846B37C;
 				INFOPLIST_FILE = SmartVideoEditor/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -494,7 +494,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C73846B37C;
 				INFOPLIST_FILE = SmartVideoEditor/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

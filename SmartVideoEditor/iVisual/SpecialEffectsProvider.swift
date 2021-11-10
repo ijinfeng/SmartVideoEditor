@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol SpecialEffectsProvider: TimingProvider, VisualProvider {
+public protocol SpecialEffectsProvider: VisualProvider {
     
 }

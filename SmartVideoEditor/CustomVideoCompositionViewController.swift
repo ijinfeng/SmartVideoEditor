@@ -29,6 +29,13 @@ class CustomVideoCompositionViewController: UIViewController {
         exportButton.addTarget(self, action: #selector(onClickExport), for: .touchUpInside)
         
         
+        
+        let Line20 = UIView()
+        Line20.backgroundColor = .red
+        Line20.frame = CGRect(x: 20, y: 0, width: 1, height: view.frame.height)
+        UIApplication.shared.keyWindow?.addSubview(Line20)
+
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -57,7 +64,7 @@ class CustomVideoCompositionViewController: UIViewController {
 
 
     func buildCustomVideoComposition() {
-        let path = Bundle.main.path(forResource: "bamboo", ofType: "mp4")
+        let path = Bundle.main.path(forResource: "guide", ofType: "mp4")
         let URL = URL(fileURLWithPath: path ?? "")
         let asset = AVURLAsset(url: URL)
         
@@ -79,14 +86,23 @@ class CustomVideoCompositionViewController: UIViewController {
             return nil
         }
         let timeLine = TimeLine(asset: asset)
+        timeLine.contentMode = .scaleAspectFill
+        timeLine.renderSize = CGSize(width: 1800, height: 1800)
+        timeLine.backgroundColor = UIColor.blue
         
         let uiimage = UIImage(named: "biaozhun")!
         let ciimage = CIImage(cgImage: uiimage.cgImage!)
 
         let image = StaticImageOverlay.init(image: ciimage)
-        image.timeRange = CMTimeRange.init(start: CMTime.init(value: 2, timescale: 1), end: CMTime.init(value: 4, timescale: 1))
-        image.frame = CGRect(x: 20, y: 100, width: 60, height: 60)
-        timeLine.insert(element: image)
+        image.timeRange = CMTimeRange.init(start: CMTime.init(value: 0, timescale: 1), end: CMTime.init(value: 2, timescale: 1))
+        image.frame = CGRect(x: 20, y: 20, width: 160, height: 60)
+//        timeLine.insert(element: image)
+        
+        let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
+        let gif = DynamicImageOverlay(filePath: filePath)
+        gif.timeRange = CMTimeRange.init(start: CMTime.init(value: 1, timescale: 1), duration: CMTime.init(value: 8, timescale: 1))
+        gif.frame = CGRect(x: 20, y: 100, width: 100, height: 80)
+        timeLine.insert(element: gif)
         
         let builder = VideoCompositionBuilder(exist: nil)
         let videoCompostion = builder.buildVideoCompositon(with: timeLine)

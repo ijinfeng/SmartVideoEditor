@@ -45,15 +45,25 @@ extension CGAffineTransform {
     /// - Returns: 仿射矩阵
     static func transform(rect: CGRect, aspectFit toRect: CGRect) -> CGAffineTransform {
         let _rect = rect.aspectFit(to: toRect)
-        return self
+        let xRatio = _rect.size.width / rect.size.width
+        let yRatio = _rect.size.height / rect.size.height
+        return CGAffineTransform(translationX: _rect.origin.x - rect.origin.x * xRatio, y: _rect.origin.y - rect.origin.y * yRatio).scaledBy(x: xRatio, y: yRatio)
     }
     
     static func transform(rect: CGRect, aspectFill toRect: CGRect) -> CGAffineTransform {
-        return self
+        let _rect = rect.aspectFill(to: toRect)
+        let xRatio = _rect.size.width / rect.size.width
+        let yRatio = _rect.size.height / rect.size.height
+        let mx = _rect.origin.x - rect.origin.x * xRatio
+        let my = _rect.origin.y - rect.origin.y * yRatio
+        return CGAffineTransform(translationX: mx, y: my).scaledBy(x: xRatio, y: yRatio)
     }
     
     static func transform(rect: CGRect, fill toRect: CGRect) -> CGAffineTransform {
-        return self
+        let _rect = rect.fill(to: toRect)
+        let xRatio = _rect.size.width / rect.size.width
+        let yRatio = _rect.size.height / rect.size.height
+        return CGAffineTransform(scaleX: xRatio, y: yRatio)
     }
 }
 
@@ -61,21 +71,29 @@ extension CGAffineTransform {
 extension CGRect {
     func aspectFit(to rect: CGRect) -> CGRect {
         let _size = size.aspectFit(in: rect.size)
-        let x: CGFloat = 0
+        let x = (rect.size.width - _size.width) / 2
         let y = (rect.size.height - _size.height) / 2
         return CGRect(origin: CGPoint(x: x, y: y), size: _size)
     }
     
     func fill(to rect: CGRect) -> CGRect {
         let _size = size.fill(to: rect.size)
-        return CGRect(origin: .zero, size: _size)
+        return CGRect(origin: rect.origin, size: _size)
     }
     
     func aspectFill(to rect: CGRect) -> CGRect {
         let _size = size.aspectFill(to: rect.size)
-        let x = (_size.width - rect.size.width) / 2
-        let y = (_size.height - rect.size.height) / 2
+        let x = (rect.size.width - _size.width) / 2
+        let y = (rect.size.height - _size.height) / 2
         return CGRect(origin: CGPoint(x: x, y: y), size: _size)
+    }
+    
+    func scale(by ratio: CGFloat) -> CGRect {
+        scale(by: ratio, yRatio: ratio)
+    }
+    
+    func scale(by xRatio: CGFloat, yRatio: CGFloat) -> CGRect {
+        CGRect(x: origin.x * xRatio, y: origin.y * yRatio, width: size.width * xRatio, height: size.height * yRatio)
     }
 }
 

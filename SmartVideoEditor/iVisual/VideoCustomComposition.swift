@@ -78,16 +78,20 @@ private extension VideoCustomComposition {
         if let instruction =  request.videoCompositionInstruction as? AVVideoCompositionInstruction {
             backgroundColor = instruction.backgroundColor ?? UIColor.black.cgColor
         }
+        if let coordinator = coordinator {
+            if let timeLineBackgroundColor = coordinator.timeLine.backgroundColor {
+                backgroundColor = timeLineBackgroundColor.cgColor
+            }
+        }
         
         // 填充背景色
         let backgroundImage = CIImage(color: CIColor(cgColor: backgroundColor)).cropped(to: CGRect(x: 0, y: 0, width: width, height: height))
-        image = backgroundImage
         
         // 真实的视频帧画面
         for trackID in request.sourceTrackIDs {
             if let sourcePixelBuffer = request.sourceFrame(byTrackID: trackID.int32Value) {
                 let sourceImage = CIImage(cvPixelBuffer: sourcePixelBuffer)
-                image = sourceImage.composited(over: image)
+                image = sourceImage
             }
         }
         
@@ -95,6 +99,8 @@ private extension VideoCustomComposition {
         if let coordinator = coordinator {
             image = coordinator.apply(source: image, at: request.compositionTime)
         }
+        
+        image = image.composited(over: backgroundImage)
         
         // 将最终画面输出到像素缓冲区
         VideoCustomComposition.ciContext.render(image, to: pixelBuffer)
