@@ -15,8 +15,6 @@ extension VisualElementIdentifer {
 }
 
 public protocol VisualProvider: AnyObject, TimingProvider {
-    func applyEffect(at time: CMTime) -> CIImage?
-    
     /// `id` 由框架自动生成，一般不需要手动设置
     var visualElementId: VisualElementIdentifer { set get }
 }

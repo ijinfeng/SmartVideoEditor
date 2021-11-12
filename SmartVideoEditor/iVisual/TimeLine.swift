@@ -27,6 +27,8 @@ public class TimeLine {
     }
     public var contentMode: ContentMode = .scaleAspectFit
     public var backgroundColor: UIColor?
+    /// 当前播放到那一帧的时间
+    public private(set) var currentTime: CMTime = .zero
     
     private var eidBuilder = ElementIdentiferBuilder()
     private var overlayElementDic: [VisualElementIdentifer: OverlayProvider] = [:]
@@ -61,6 +63,8 @@ public extension TimeLine {
 
 extension TimeLine {
     func apply(source: CIImage, at time: CMTime) -> CIImage {
+        currentTime = time
+        
         var image = source
         
         // 修改视频布局显示 `contentMode`
@@ -99,6 +103,15 @@ extension TimeLine {
                 }
             }
         }
+        
+        specialEffectsElementDic.values.forEach { provider in
+            if CMTimeRangeContainsTime(provider.timeRange, time: time) {
+                if let effectImage = provider.applyEffect(image: image, at: time) {
+                    image = effectImage
+                }
+            }
+        }
+        
         return image
     }
 }

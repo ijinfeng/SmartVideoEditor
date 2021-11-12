@@ -44,9 +44,9 @@ class ViewController: UIViewController {
     }
     
     @IBAction func onClickWclRecord(_ sender: Any) {
-//        let vc = CustomVideoCompositionViewController()
+        let vc = CustomVideoCompositionViewController()
 //        let vc = VideoEditorViewController()
-        let vc = VideoPlayerViewController()
+//        let vc = VideoPlayerViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     

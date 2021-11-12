@@ -7,9 +7,13 @@
 
 import Foundation
 import CoreGraphics
+import CoreImage
+import CoreMedia
 
 public protocol OverlayProvider: VisualProvider {
     var frame: CGRect { set get }
     var extent: CGRect { set get }
     var userTransform: CGAffineTransform { set get }
+    
+    func applyEffect(at time: CMTime) -> CIImage?
 }

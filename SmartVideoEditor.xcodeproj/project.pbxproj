@@ -15,6 +15,7 @@
 		78156B59273CBA6100C15EC3 /* AnimationOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78156B58273CBA6100C15EC3 /* AnimationOverlay.swift */; };
 		78156B5B273CC90C00C15EC3 /* CIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78156B5A273CC90C00C15EC3 /* CIExtensions.swift */; };
 		781800A4273E428D0030F011 /* OpenGLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781800A3273E428D0030F011 /* OpenGLViewController.swift */; };
+		78180311273E6F9D0030F011 /* DistortionEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78180310273E6F9D0030F011 /* DistortionEffects.swift */; };
 		78407DC0273BC66D000A2854 /* DynamicImageOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78407DBF273BC66D000A2854 /* DynamicImageOverlay.swift */; };
 		784E50A02739073C005A0E19 /* CustomVideoCompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784E509F2739073C005A0E19 /* CustomVideoCompositionViewController.swift */; };
 		784E50A22739077A005A0E19 /* VideoCustomComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784E50A12739077A005A0E19 /* VideoCustomComposition.swift */; };
@@ -55,6 +56,7 @@
 		78156B58273CBA6100C15EC3 /* AnimationOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationOverlay.swift; sourceTree = "<group>"; };
 		78156B5A273CC90C00C15EC3 /* CIExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIExtensions.swift; sourceTree = "<group>"; };
 		781800A3273E428D0030F011 /* OpenGLViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGLViewController.swift; sourceTree = "<group>"; };
+		78180310273E6F9D0030F011 /* DistortionEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistortionEffects.swift; sourceTree = "<group>"; };
 		7831FFE22721419500FCF92E /* SmartVideoEditor-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SmartVideoEditor-Bridging-Header.h"; sourceTree = "<group>"; };
 		78407DBF273BC66D000A2854 /* DynamicImageOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicImageOverlay.swift; sourceTree = "<group>"; };
 		784E509F2739073C005A0E19 /* CustomVideoCompositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVideoCompositionViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				78407DBF273BC66D000A2854 /* DynamicImageOverlay.swift */,
 				78156B58273CBA6100C15EC3 /* AnimationOverlay.swift */,
 				78F47295273A536D000F71ED /* SpecialEffectsProvider.swift */,
+				78180310273E6F9D0030F011 /* DistortionEffects.swift */,
 				78F472A1273A68DB000F71ED /* CGExtensions.swift */,
 				78F472A3273A6D19000F71ED /* CMExtensions.swift */,
 				78156B5A273CC90C00C15EC3 /* CIExtensions.swift */,
@@ -318,6 +321,7 @@
 				78407DC0273BC66D000A2854 /* DynamicImageOverlay.swift in Sources */,
 				78F4729A273A5936000F71ED /* VisualProvider.swift in Sources */,
 				78156B59273CBA6100C15EC3 /* AnimationOverlay.swift in Sources */,
+				78180311273E6F9D0030F011 /* DistortionEffects.swift in Sources */,
 				78F47298273A5466000F71ED /* VideoCompositionBuilder.swift in Sources */,
 				78FCEAEC2717CD190011C07B /* VideoPlayerViewController.swift in Sources */,
 				78F472A4273A6D19000F71ED /* CMExtensions.swift in Sources */,

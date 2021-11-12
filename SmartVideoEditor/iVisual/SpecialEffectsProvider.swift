@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import CoreImage
+import CoreMedia
 
 public protocol SpecialEffectsProvider: VisualProvider {
-    
+    func applyEffect(image: CIImage, at time: CMTime) -> CIImage?
 }

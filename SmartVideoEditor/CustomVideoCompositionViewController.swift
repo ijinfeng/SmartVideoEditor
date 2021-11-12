@@ -82,8 +82,9 @@ class CustomVideoCompositionViewController: UIViewController {
         let ciimage = CIImage(cgImage: uiimage.cgImage!)
         let image = StaticImageOverlay.init(image: ciimage)
         image.timeRange = CMTimeRange.init(start: CMTime.init(value: 0, timescale: 1), end: CMTime.init(value: 2, timescale: 1))
-        image.frame = CGRect(x: 20, y: 20, width: 160, height: 60)
-//        timeLine.insert(element: image)
+        image.frame = CGRect(x: 20, y: 220, width: 160, height: 60)
+        image.userTransform = CGAffineTransform.init(translationX: 20, y: 0)
+        timeLine.insert(element: image)
         
         
         
@@ -143,6 +144,12 @@ class CustomVideoCompositionViewController: UIViewController {
         overlay.add(animation: key2, for: "k2")
 
         timeLine.insert(element: overlay)
+        
+        
+        
+        let spe = DistortionEffects()
+        spe.timeRange = CMTimeRange.init(start: CMTime.init(value: 1, 1), duration: CMTime.init(value: 4, 1))
+        timeLine.insert(element: spe)
         
         
         let builder = VideoCompositionBuilder(exist: nil, timeLine: timeLine)
