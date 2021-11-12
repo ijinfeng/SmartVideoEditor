@@ -145,8 +145,8 @@ class CustomVideoCompositionViewController: UIViewController {
         timeLine.insert(element: overlay)
         
         
-        let builder = VideoCompositionBuilder(exist: nil)
-        let videoCompostion = builder.buildVideoCompositon(with: timeLine)
+        let builder = VideoCompositionBuilder(exist: nil, timeLine: timeLine)
+        let videoCompostion = builder.buildVideoCompositon()
         return videoCompostion
     }
     

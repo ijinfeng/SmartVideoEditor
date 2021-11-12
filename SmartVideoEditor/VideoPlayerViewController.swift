@@ -21,7 +21,7 @@ class VideoPlayerViewController: UIViewController {
     
     var isPlaying: Bool = false
 
-    var builder: VideoOverlayBuilder!
+//    var builder: VideoOverlayBuilder!
     
     var timeLabel: UILabel = UILabel()
     
@@ -31,6 +31,9 @@ class VideoPlayerViewController: UIViewController {
     
     var addbutton = UIButton()
     
+    var timeLine: TimeLine!
+    var builder: VideoCompositionBuilder!
+    
     deinit {
         print("=============deinit==========")
         player.removeObserver(self, forKeyPath: "status")
@@ -38,16 +41,7 @@ class VideoPlayerViewController: UIViewController {
         player.pause()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        navigationController?.setNavigationBarHidden(true, animated: true)
-//    }
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        navigationController?.setNavigationBarHidden(false, animated: true)
-//    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,8 +65,22 @@ class VideoPlayerViewController: UIViewController {
         
         let URL = URL(fileURLWithPath: path ?? "")
         
-        let item = AVPlayerItem.init(url: URL)
+        let asset = AVURLAsset(url: URL)
+        
+        let item = AVPlayerItem.init(asset: asset)
         self.playerItem = item
+        
+        
+        let timeLine = TimeLine(asset: asset)
+        timeLine.contentMode = .scaleAspectFill
+        timeLine.renderSize = CGSize(width: 1800, height: 1800)
+        timeLine.backgroundColor = UIColor.blue
+        
+        self.timeLine = timeLine
+        builder = VideoCompositionBuilder.init(exist: nil, timeLine: timeLine)
+        
+        item.videoComposition = builder.buildVideoCompositon()
+        
         
         player = AVPlayer.init(playerItem: item)
 
@@ -123,8 +131,8 @@ class VideoPlayerViewController: UIViewController {
         }
         
         
-        builder = VideoOverlayBuilder.init(playerItem: item)
-        playerLayer.apply(builder: builder)
+//        builder = VideoOverlayBuilder.init(playerItem: item)
+//        playerLayer.apply(builder: builder)
 
         player.addObserver(self, forKeyPath: "status", options: .new, context: nil)
         item.addObserver(self, forKeyPath: "duration", options: .new, context: nil)
@@ -133,13 +141,13 @@ class VideoPlayerViewController: UIViewController {
     }
     
     func logSyncLayer() {
-        print("============================== BEGIN")
-        print("currentTime: \(CMTimeShow(builder.syncLayer.playerItem!.currentTime()))")
-        print("beginTime: \(builder.syncLayer.beginTime)")
-        print("duration: \(builder.syncLayer.duration)")
-//        print("syncLayer.subs: \(builder.syncLayer.sublayers)")
-        print("present: \(builder.syncLayer.presentation())")
-        print("============================== END \n\n")
+//        print("============================== BEGIN")
+//        print("currentTime: \(CMTimeShow(builder.syncLayer.playerItem!.currentTime()))")
+//        print("beginTime: \(builder.syncLayer.beginTime)")
+//        print("duration: \(builder.syncLayer.duration)")
+////        print("syncLayer.subs: \(builder.syncLayer.sublayers)")
+//        print("present: \(builder.syncLayer.presentation())")
+//        print("============================== END \n\n")
     }
     
     override  func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -186,25 +194,101 @@ class VideoPlayerViewController: UIViewController {
         }
     }
     
+    
+    func buildVideoComposition() -> AVVideoComposition? {
+        // 静态贴纸
+        let uiimage = UIImage(named: "biaozhun")!
+        let ciimage = CIImage(cgImage: uiimage.cgImage!)
+        let image = StaticImageOverlay.init(image: ciimage)
+        image.timeRange = CMTimeRange.init(start: CMTime.init(value: 0, timescale: 1), end: CMTime.init(value: 2, timescale: 1))
+        image.frame = CGRect(x: 20, y: 20, width: 160, height: 60)
+//        timeLine.insert(element: image)
+        
+        
+        
+        // 动态贴纸
+        let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
+        let gif = DynamicImageOverlay(filePath: filePath)
+        gif.timeRange = CMTimeRange.init(start: CMTime.init(value: 1, timescale: 1), duration: CMTime.init(value: 8, timescale: 1))
+        gif.frame = CGRect(x: 20, y: 100, width: 100, height: 80)
+//        timeLine.insert(element: gif)
+        
+        
+        // 动画贴纸
+        let overlay = AnimationOverlay(image: ciimage)
+        overlay.timeRange = CMTimeRange.init(start: CMTime.init(value: 0, 1), duration: CMTime.init(value: 6, 1))
+        overlay.frame = CGRect(x: 20, y: 0, width: 80, height: 80)
+        // 渐变动画
+        let an = BasicAnimation()
+        an.duration = CMTime.init(value: 3, 2)
+        an.isAutoreverse = true
+        an.isRepeat = false
+        an.type = .opacity
+        an.from = 0.5
+        an.to = 1
+//        overlay.add(animation: an, for: nil)
+        // 旋转动画
+        let rotate = BasicAnimation()
+        rotate.type = .rotate
+        rotate.from = 30/180
+        rotate.to = 1
+//        overlay.add(animation: rotate, for: "roatt")
+        // 缩放动画
+        let sacle = BasicAnimation()
+        sacle.type = .scale
+        sacle.from = 1.0
+        sacle.to = 2.0
+//        overlay.add(animation: sacle, for: "sacle")
+        
+        // 位移
+        let tt = BasicAnimation()
+        tt.type = .translate
+        tt.from = CGPoint.zero
+        tt.to = CGPoint(x: -20, y: 0)
+        tt.duration = CMTime.init(value: 1, 2)
+        tt.isAutoreverse = true
+//        overlay.add(animation: tt, for: "tt")
+        
+        // 关键帧动画
+        let key1 = KeyFrameAnimation()
+        key1.type = .opacity
+        key1.values = [0.5, 1, 0.2, 1, 0.5]
+        key1.keyTimes = nil
+        overlay.add(animation: key1, for: "k1")
+
+        let key2 = KeyFrameAnimation()
+        key2.type = .translate
+        key2.values = [CGPoint(x: 50, y: 50),CGPoint(x: 0, y: 0),CGPoint(x: 50, y: 100),CGPoint(x: -20, y: 30) ]
+        overlay.add(animation: key2, for: "k2")
+
+        timeLine.insert(element: overlay)
+        
+        let videoCompostion = builder.buildVideoCompositon()
+        return videoCompostion
+    }
+    
     @objc func onClickButton() {
         print("添加贴图======= \(CMTimeGetSeconds(player.currentTime()))")
         
-        let text = NSMutableAttributedString.init(string: "你好好---")
-        text.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20), NSAttributedString.Key.foregroundColor: UIColor.green], range: NSMakeRange(0, text.length))
+        playerItem.videoComposition = buildVideoComposition()
+        player.replaceCurrentItem(with: playerItem)
         
-        let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 20, timescale: 10))
-        
-//        if arc4random() % 2 == 0 {
-            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
-//        } else {
-            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 60, width: 60, height: 60), timeRange: range) { begin, duration in
-                let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
-                        rotate.toValue = Double.pi * 2
-                        rotate.beginTime = CMTimeGetSeconds(begin)
-                        rotate.duration = CMTimeGetSeconds(duration)
-                        rotate.isRemovedOnCompletion = false
-                        return [rotate]
-            }
+//        let text = NSMutableAttributedString.init(string: "你好好---")
+//        text.addAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20), NSAttributedString.Key.foregroundColor: UIColor.green], range: NSMakeRange(0, text.length))
+//
+//        let range = CMTimeRange.init(start: player.currentTime(), duration: CMTime.init(value: 20, timescale: 10))
+//
+////        if arc4random() % 2 == 0 {
+//            builder.insert(text: text, rect: CGRect(x: 0, y: 100 + Int(arc4random()) % 300, width: 120, height: 40), timeRange: range, animation: nil)
+////        } else {
+//            builder.insert(image: UIImage(named: "bailan")!, rect: CGRect(x: Int(arc4random() % 300), y: 60, width: 60, height: 60), timeRange: range) { begin, duration in
+//                let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
+//                        rotate.toValue = Double.pi * 2
+//                        rotate.beginTime = CMTimeGetSeconds(begin)
+//                        rotate.duration = CMTimeGetSeconds(duration)
+//                        rotate.isRemovedOnCompletion = false
+//                        return [rotate]
+//            }
 //            let filePath = Bundle.main.path(forResource: "shafa", ofType: "gif") ?? ""
             
 //            builder.insert(gif: filePath, rect: CGRect(x: 100, y: 100 + Int(arc4random()) % 300, width: 160, height: 80), timeRange: range, animation: nil)
@@ -255,8 +339,8 @@ class VideoPlayerViewController: UIViewController {
 //        videoComposition.renderSize = videoTrack.naturalSize
 //        videoComposition.frameDuration = CMTime.init(value: 1, timescale: 30)
         
-        let videoComposition = builder.getVideoComposition()
-        videoComposition.apply(builer: builder)
+//        let videoComposition = builder.getVideoComposition()
+//        videoComposition.apply(builer: builder)
         
 //        let videoLayer = CALayer()
 //        let animationLayer = CALayer()
@@ -296,7 +380,7 @@ class VideoPlayerViewController: UIViewController {
             export?.outputURL = outputURL.fileURL
             export?.outputFileType = .mp4
             export?.shouldOptimizeForNetworkUse = true
-            export?.videoComposition = videoComposition
+            export?.videoComposition = builder.buildVideoCompositon()
             export?.exportAsynchronously {
                 DispatchQueue.main.async {
                     switch export!.status {
@@ -360,22 +444,22 @@ extension VideoPlayerViewController : CAAnimationDelegate {
     func testAn() {
         
         
-        logSyncLayer()
-        
-        view.layer.addSublayer(builder.syncLayer)
-        builder.syncLayer.frame = view.bounds
-
-        
-        let textLayer = CATextLayer()
-        textLayer.isHidden = false
-        let string = NSMutableAttributedString.init(string: "Hello AV")
-        string.addAttribute(NSAttributedString.Key.font, value:UIFont.systemFont(ofSize: 30), range: NSMakeRange(0, string.length))
-        string.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSMakeRange(0, string.length))
-        textLayer.string = string
-        textLayer.frame = CGRect(x: Int(arc4random_uniform(200)), y: Int(arc4random_uniform(500)), width: 100, height: 60)
-        builder.syncLayer.addSublayer(textLayer)
-
-        print("在位置\(textLayer.frame)处添加")
+//        logSyncLayer()
+//
+//        view.layer.addSublayer(builder.syncLayer)
+//        builder.syncLayer.frame = view.bounds
+//
+//
+//        let textLayer = CATextLayer()
+//        textLayer.isHidden = false
+//        let string = NSMutableAttributedString.init(string: "Hello AV")
+//        string.addAttribute(NSAttributedString.Key.font, value:UIFont.systemFont(ofSize: 30), range: NSMakeRange(0, string.length))
+//        string.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red, range: NSMakeRange(0, string.length))
+//        textLayer.string = string
+//        textLayer.frame = CGRect(x: Int(arc4random_uniform(200)), y: Int(arc4random_uniform(500)), width: 100, height: 60)
+//        builder.syncLayer.addSublayer(textLayer)
+//
+//        print("在位置\(textLayer.frame)处添加")
 
 //        let rotate = CABasicAnimation.init(keyPath: "transform.rotation.z")
 //        rotate.fromValue = Double.pi

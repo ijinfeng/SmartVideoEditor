@@ -21,14 +21,14 @@ struct CompositionCoordinator {
 class CompositionCoordinatorPool {
     static let shared = CompositionCoordinatorPool()
     
-    private var coordinators: [CompositionCoordinator] = []
+    private var coordinator: CompositionCoordinator?
     
     func pop() -> CompositionCoordinator? {
-        coordinators.popLast()
+        coordinator
     }
     
     func add(coordinator: CompositionCoordinator) {
-        coordinators.append(coordinator)
+        self.coordinator = coordinator
     }
     
     private init() {}

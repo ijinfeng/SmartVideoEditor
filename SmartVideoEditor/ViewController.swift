@@ -44,10 +44,17 @@ class ViewController: UIViewController {
     }
     
     @IBAction func onClickWclRecord(_ sender: Any) {
-        let vc = CustomVideoCompositionViewController()
+//        let vc = CustomVideoCompositionViewController()
 //        let vc = VideoEditorViewController()
+        let vc = VideoPlayerViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    @IBAction func onClickOpenGl(_ sender: Any) {
+        let vc = OpenGLViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard var image = ciImage else {

@@ -66,6 +66,15 @@
                                     <action selector="onClickWclRecord:" destination="BYZ-38-t0r" eventType="touchUpInside" id="82S-Ht-1Kz"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jog-b0-bcX">
+                                <rect key="frame" x="164" y="256" width="87" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="opengl es"/>
+                                <connections>
+                                    <action selector="onClickOpenGl:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1hM-Jg-P1l"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
