@@ -11,6 +11,9 @@ import CoreImage
 
 class ViewController: UIViewController {
 
+    var ciImage: CIImage?
+    
+    let imageView = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +22,13 @@ class ViewController: UIViewController {
 //        try? FileManager.default.removeItem(atPath: VideoRecordConfig.defaultRecordOutputDirPath)
         view.contentMode = .scaleAspectFit
         let uiImage = UIImage(named: "biaozhun")
-        let ciImage = CIImage.init(image: uiImage!)
+        ciImage = CIImage.init(image: uiImage!)
+        
+        imageView.image = uiImage
+        
+        
+        view.addSubview(imageView)
+        imageView.frame = CGRect(x: 20, y: 300, width: 100, height: 100)
     }
 
     @IBAction func onClickRecord(_ sender: Any) {
@@ -39,5 +48,17 @@ class ViewController: UIViewController {
 //        let vc = VideoEditorViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard var image = ciImage else {
+            return
+        }
+        image = image.transformed(by: CGAffineTransform.init(rotationAngle: angle))
+        ciImage = image
+        imageView.image = UIImage(ciImage: image)
+        angle += 0.1
+        print("旋转---\(angle)")
+    }
 }
 
+var angle: CGFloat = 0

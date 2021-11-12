@@ -10,4 +10,6 @@ import CoreGraphics
 
 public protocol OverlayProvider: VisualProvider {
     var frame: CGRect { set get }
+    var extent: CGRect { set get }
+    var userTransform: CGAffineTransform { set get }
 }

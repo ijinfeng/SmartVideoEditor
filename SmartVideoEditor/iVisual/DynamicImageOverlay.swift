@@ -10,10 +10,10 @@ import CoreMedia
 import CoreImage
 import UIKit
 
+/// 动图贴纸
 public class DynamicImageOverlay: OverlayProvider {
     public var frame: CGRect = .zero
     public var timeRange: CMTimeRange = .zero
-    public var visualElementId: VisualElementIdentifer = .invalid
     public let filePath: String!
     /// 每帧画面的持续时间
     public var frameDuration: TimeInterval = 0.15
@@ -21,6 +21,10 @@ public class DynamicImageOverlay: OverlayProvider {
     public var totalDuration: TimeInterval {
         frameDuration * Double(frameCount)
     }
+    
+    public var extent: CGRect = .zero
+    public var visualElementId: VisualElementIdentifer = .invalid
+    public var userTransform: CGAffineTransform = .identity
     
     private var imageSource: CGImageSource?
     /// 总共有几帧画面
@@ -41,6 +45,15 @@ public class DynamicImageOverlay: OverlayProvider {
                             }
                             frameDuration = delayTime
                         }
+                        var width: CGFloat = 0
+                        var height: CGFloat = 0
+                        if let _width = properties[kCGImagePropertyPixelWidth  as String] as? Double {
+                            width = _width
+                        }
+                        if let _height = properties[kCGImagePropertyPixelHeight  as String] as? Double {
+                            height = _height
+                        }
+                        extent = CGRect(origin: .zero, size: CGSize(width: width, height: height))
                     }
                 }
             }

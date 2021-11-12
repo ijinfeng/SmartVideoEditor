@@ -83,16 +83,17 @@ extension TimeLine {
         overlayElementDic.values.forEach { provider in
             if CMTimeRangeContainsTime(provider.timeRange, time: time) {
                 if var effectImage = provider.applyEffect(at: time) {
+                    // 图片一旦旋转，那么，它的extent会发生改变，但是图片的bounds是不变的
+                    let bounds = provider.extent
                     // 转换坐标系，默认原点在左下角
-                    var fillRect = effectImage.extent.fill(to: provider.frame)
+                    var fillRect = bounds.fill(to: provider.frame)
                     fillRect.origin = provider.frame.origin
-                    // 当作用在 1080x1920的画布上时，由于图片尺寸为外部传入的60，因此在适配到屏幕后会出现缩小现象，因此在一开始做缩放转换的时候，就需要乘上这个屏幕的缩放比例
+                    // 这段代码的目的就是将左下角的图片移动到正确的位置，并且缩放到正常比例
                     let screenScale = image.extent.width / UIScreen.main.bounds.width
                     fillRect = fillRect.scale(by: screenScale)
-                    let yratio = fillRect.height / effectImage.extent.height
-                    let xratio = fillRect.width / effectImage.extent.width
-                    let t = CGAffineTransform.transform(rect: effectImage.extent, fill: provider.frame.scale(by: screenScale))
-                        .translatedBy(x: fillRect.origin.x / xratio, y: (renderRect.height - fillRect.height - fillRect.origin.y) / yratio)
+                    let yratio = fillRect.height / bounds.height
+                    let xratio = fillRect.width / bounds.width
+                    let t = CGAffineTransform.transform(rect: bounds, fill: provider.frame.scale(by: screenScale)).translatedBy(x: fillRect.origin.x / xratio, y: (renderRect.height - fillRect.height - fillRect.origin.y) / yratio)
                     effectImage = effectImage.transformed(by: t)
                     image = effectImage.composited(over: image)
                 }

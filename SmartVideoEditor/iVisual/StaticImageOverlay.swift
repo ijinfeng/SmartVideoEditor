@@ -15,7 +15,10 @@ public class StaticImageOverlay: OverlayProvider {
     public var frame: CGRect = .zero
     public var timeRange: CMTimeRange = .zero
     
+    public var extent: CGRect = .zero
     public var visualElementId: VisualElementIdentifer = .invalid
+    public var userTransform: CGAffineTransform = .identity
+    
     public var image: CIImage!
     
     public func applyEffect(at time: CMTime) -> CIImage? {
@@ -25,6 +28,7 @@ public class StaticImageOverlay: OverlayProvider {
     public init(image: CIImage) {
         self.image = image
         frame = CGRect(origin: .zero, size: image.extent.size)
+        extent = image.extent
     }
     
     private init() {}

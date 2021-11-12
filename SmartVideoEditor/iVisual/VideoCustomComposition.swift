@@ -72,7 +72,7 @@ private extension VideoCustomComposition {
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
         
-        var image: CIImage!
+        var image: CIImage?
         
         var backgroundColor: CGColor = UIColor.black.cgColor
         if let instruction =  request.videoCompositionInstruction as? AVVideoCompositionInstruction {
@@ -95,15 +95,21 @@ private extension VideoCustomComposition {
             }
         }
         
-        // 外部处理这帧画面
-        if let coordinator = coordinator {
-            image = coordinator.apply(source: image, at: request.compositionTime)
+        // 当没有视频画面的时候，返回默认背景色
+        guard var videoImage = image else {
+            VideoCustomComposition.ciContext.render(backgroundImage, to: pixelBuffer)
+            return pixelBuffer
         }
         
-        image = image.composited(over: backgroundImage)
+        // 外部处理这帧画面
+        if let coordinator = coordinator {
+            videoImage = coordinator.apply(source: videoImage, at: request.compositionTime)
+        }
+        
+        videoImage = videoImage.composited(over: backgroundImage)
         
         // 将最终画面输出到像素缓冲区
-        VideoCustomComposition.ciContext.render(image, to: pixelBuffer)
+        VideoCustomComposition.ciContext.render(videoImage, to: pixelBuffer)
         
         return pixelBuffer
     }
